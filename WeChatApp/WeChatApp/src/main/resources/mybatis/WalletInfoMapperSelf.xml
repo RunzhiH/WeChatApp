@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.WalletInfoMapperSelf">
+	<update id="updateWalletInfoByRecordId">
+		UPDATE 
+		  wallet_info a,
+		  wallet_change_record b 
+		SET
+		  rmb = IF(
+		    b.record_status = 1,
+		    rmb + b.record_price,
+		    rmb - b.record_price
+		  ) 
+		WHERE a.member_no = b.member_no 
+		  AND b.record_id = '${record_id}' 
+	</update>
+	<select id="getMemberIncomeByMemberNo" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    a.*,
+		    @row := @row + 1 row_num 
+		  FROM
+		    (SELECT 
+		      a.*,
+		      b.server_name,
+		      b.appointment_time,
+		      b.order_code,
+		      b.server_address,
+		      @row := 0 
+		    FROM
+		      wallet_change_record a 
+		      LEFT JOIN order_info b 
+		        ON a.relation = b.order_id 
+		    WHERE a.member_no = '${member_no}'
+		      AND a.record_status = 1 
+		    ORDER BY a.create_time desc) a) a 
+		<if test="begin != null and end != null">
+		WHERE row_num >= ${begin} 
+		 <![CDATA[  
+		  AND row_num <= ${end}
+		  ]]>
+		  </if>
+	</select>
+	<select id="getMemberTotalIncome" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    IFNULL(SUM(a.record_price),0) day_income 
+		  FROM
+		    wallet_change_record a 
+		  WHERE a.member_no = '${member_no}' 
+		    AND DATE_FORMAT(a.create_time, '%y-%m-%d ') = DATE_FORMAT(NOW(), '%y-%m-%d')
+		    AND a.record_status = 1) a,
+		  (SELECT 
+		    IFNULL(SUM(a.record_price),0) month_income 
+		  FROM
+		    wallet_change_record a 
+		  WHERE a.member_no = '${member_no}' 
+		    AND DATE_FORMAT(a.create_time, '%y-%m ') = DATE_FORMAT(NOW(), '%y')
+		    AND a.record_status = 1 ) b,
+		  (SELECT 
+		    IFNULL(SUM(a.record_price),0) year_income 
+		  FROM
+		    wallet_change_record a 
+		  WHERE a.member_no = '${member_no}' 
+		    AND DATE_FORMAT(a.create_time, '%y') = DATE_FORMAT(NOW(), '%y')
+		    AND a.record_status = 1 ) c 
+	</select>
+</mapper>

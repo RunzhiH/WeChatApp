@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/js/ztree/css/zTreeStyle/zTreeStyle.css"></link>
+<head th:include="layout :: htmlhead" th:with="title='角色管理'"></head>
+<script type="text/javascript" src="/js/dateUtils.js"></script>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--头-->
+    <div th:replace="fragments/head :: header"></div>
+    <div class="layui-body">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li id="shopListLi" class="layui-this">商家列表</li>
+                <li id="verifyShopLi">审核列表</li>
+                <li id="updateShopLi" style="display:none;">信息更新</li>
+            </ul>
+            <div class="layui-tab-content" style="height: 100px;">
+                <div id="shopListDiv" class="layui-tab-item layui-show">
+                    <div th:include="shop/shopList :: shopList"></div>
+                </div>
+                <div id="verifyShopDiv" class="layui-tab-item">
+                    <div th:include="shop/shop :: role"></div>
+                </div>
+                <!-- <div  id="updateShopDiv" class="layui-tab-item" style="display:none;">
+                    <div th:include="shop/shopUpdate :: updateShop"></div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <!--底部-->
+    <div th:replace="fragments/footer :: footer"></div>
+    <script src="/js/auth/roleManage.js"></script>
+    <script th:inline="javascript">
+        var flag=/*[[${flag==null ?'':flag}]]*/;
+    </script>
+</div>
+</body>
+</html>

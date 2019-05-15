@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.AreaInfoMapperSelf">
+	<select id="getSheng" resultType="Map">
+		select * from area_info where level_type = 1
+	</select>
+	<select id="getNextAreaInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  area_info 
+		WHERE parent_area_id = '${area_code}' 
+	</select>
+</mapper>

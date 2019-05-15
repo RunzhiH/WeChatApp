@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.WalletChangeRecordMapperSelf">
+	<insert id="insertWalletChangeRecordForServerShop" parameterType="String">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  a.record_price + b.rmb left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  '${record_id}' record_id,
+		  a.member_no,
+		  a.record_price,
+		  '1' record_status,
+		  '商家场地收益' note,
+		  NOW() create_time,
+		  '1' record_type,
+		  relation 
+		FROM
+		  (SELECT 
+		    b.member_no,
+		    TRUNCATE(a.pay_price * 0.15, 2) record_price,
+		    a.order_id relation 
+		  FROM
+		    order_info a,
+		    shop_info b 
+		  WHERE a.shop_id = b.shop_id 
+		    AND a.order_id = '${order_id}') a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+	</insert>
+	<insert id="insertWalletChangeRecordForShareShop" parameterType="String">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  '${record_id}' record_id,
+		  a.member_no,
+		  a.record_price,
+		  '1' record_status,
+		  '商家推荐收益' note,
+		  a.record_price + b.rmb left_rmb,
+		  NOW() create_time,
+		  '2' record_type,
+		  relation 
+		FROM
+		  (SELECT 
+		    c.member_no,
+		    TRUNCATE(a.pay_price * 0.15, 2) record_price,
+		    a.order_id relation 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    shop_info c 
+		  WHERE a.member_no = b.member_no 
+		    AND b.share_shop_id = c.shop_id 
+		    AND a.order_id = '${order_id}') a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+	</insert>
+	<insert id="insertWalletChangeRecordForServerMember">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  '${record_id}' record_id,
+		  a.member_no,
+		  a.record_price,
+		  '1' record_status,
+		  '技术收益' note,
+		  a.record_price + b.rmb left_rmb,
+		  NOW() create_time,
+		  '3' record_type,
+		  relation 
+		FROM
+		  (SELECT 
+		    b.member_no,
+		    TRUNCATE(a.pay_price * 0.4, 2) record_price,
+		    a.order_id relation 
+		  FROM
+		    order_info a,
+		    member_info b 
+		  WHERE a.server_member_no = b.member_no 
+		    AND a.order_id = '${order_id}') a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+	</insert>
+	<insert id="insertWalletChangeRecordForFirstShareShop">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  '${record_id}' record_id,
+		  a.member_no,
+		  a.record_price,
+		  '1' record_status,
+		  '商家推荐收益' note,
+		  a.record_price + b.rmb left_rmb,
+		  NOW() create_time,
+		  '2' record_type,
+		  relation 
+		FROM
+		  (SELECT 
+		    c.member_no,
+		    TRUNCATE(a.pay_price * 0.3, 2) record_price,
+		    a.order_id relation 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    shop_info c 
+		  WHERE a.member_no = b.member_no 
+		    AND b.share_shop_id = c.shop_id 
+		    AND a.order_id = '${order_id}') a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+	</insert>
+	
+</mapper>

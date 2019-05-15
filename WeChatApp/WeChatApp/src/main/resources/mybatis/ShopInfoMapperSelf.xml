@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.ShopInfoMapperSelf">
+
+	<select id="getShopInfoListByCondition" parameterType="String" resultType="Map" >
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    *,
+		    (@row := @row + 1) AS row_num 
+		  FROM
+		    (SELECT DISTINCT 
+		      a.*,
+		      <if test="user_x != null and user_y != null">
+		      ROUND(
+		        6378.138 * 2 * ASIN(
+		          SQRT(
+		            POW(
+		              SIN(
+		                (
+		                  '${user_y}' * PI() / 180 - a.shop_y * PI() / 180
+		                ) / 2
+		              ),
+		              2
+		            ) + COS('${user_y}' * PI() / 180) * COS(a.shop_y * PI() / 180) * POW(
+		              SIN(
+		                (
+		                  '${user_x}' * PI() / 180 - a.shop_x * PI() / 180
+		                ) / 2
+		              ),
+		              2
+		            )
+		          )
+		        ) * 1000
+		      ) AS juli,
+		      </if>
+		      @row := 0 
+		    FROM
+		      shop_info a
+		    WHERE 
+		    a.shop_shi = '${shi_code}' 
+		    <if test="shop_qu != null and shop_qu != ''">
+		    a.shop_qu = '${shop_qu}' 
+		    </if>
+		    <if test="shop_class_id != null and shop_class_id != ''">
+		     AND LOCATE( '${shop_class_id}',a.shop_class_id)>0
+		    </if>
+		    <if test="shop_status != null and shop_status != ''">
+		    AND a.shop_status IN (${shop_status})
+		    </if>
+		    <if test="shop_name != null and shop_name != ''">
+		    AND a.shop_name like '%${shop_name}%'
+		    </if>
+		    ORDER BY <choose>
+				<when test="praise_points_type !=null and praise_points_type != ''">a.praise_points DESC</when>
+				<otherwise>a.praise_points</otherwise>
+			</choose>) a
+		     <if test="juli != null and juli != ''">
+		     <![CDATA[  
+			  WHERE juli <= ${juli}
+			  ]]> 
+		     </if>
+		     <if test="juli_sort !=null and juli_sort != ''">
+		     ORDER BY juli
+		     </if>
+		    ) a 
+		 <if test="begin != null and end != null">
+		WHERE row_num >= ${begin} 
+		 <![CDATA[  
+		  AND row_num <= ${end}
+		  ]]>
+		  </if>
+	</select>
+	<select id="getShopInfoByShopId" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  shop_info 
+		WHERE shop_id = '${shop_id}' 
+	</select>
+	<delete id="deleteShopByShopId"  parameterType="String">
+		DELETE 
+		FROM
+		  shop_info 
+		WHERE shop_id IN 
+		<foreach close=")" collection="shop_id_list" item="shop_id" open="(" separator=",">
+        	#{shop_id}
+        </foreach>
+	</delete>
+	<insert id="insertShopLable"  parameterType="String">
+		INSERT INTO shop_lable (
+		  shop_lable_id,
+		  shop_id,
+		  lable_id,
+		  praise_points
+		) 
+		VALUES
+		  <foreach close=")" collection="lable_id_list" item="lable_id" open="(" separator=",">
+		    REPLACE(UUID(), '-', ''),
+		    '${shop_id}',
+		    '#{lable_id}',
+		    0
+		  </foreach>
+	</insert>
+	<insert id="insertShopServer"  parameterType="String">
+		INSERT INTO shop_server (
+		  shop_server_id,
+		  server_name,
+		  server_desc,
+		  server_price,
+		  server_url,
+		  shop_id,
+		  server_sale_num
+		) 
+		VALUES
+		  <foreach close=")" collection="server_list" item="server" open="(" separator=",">
+		    REPLACE(UUID(), '-', ''),
+		    #{server.server_name},
+		    #{server.server_desc},
+		    #{server.server_price},
+		    #{server.server_url},
+		    ${shop_id}',
+		    0
+		  </foreach>
+	</insert>
+	<select id="getShopLableByShopId"  parameterType="String" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.shop_id,
+		  b.praise_points 
+		FROM
+		  lable_info a,
+		  shop_lable b 
+		WHERE a.lable_id = b.lable_id 
+		  AND b.shop_id = '${shop_id}' 
+	</select>
+	<select id="getShopServerByshopId"  parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  shop_server 
+		WHERE shop_id = '${shop_id}' 
+	</select>
+	<select id="getShopInRankByShopId" parameterType="String" resultType="Map">
+		SELECT 
+		  *,
+  		  IF(c.praise_history_id IS NULL, 0, 1) is_like  
+		FROM
+		  (SELECT 
+		    a.*,
+		    @rownum := @rownum + 1 AS rank_num 
+		  FROM
+		    (SELECT 
+		      @rownum := 0) r,
+		    (SELECT 
+		      *
+		    FROM
+		      shop_info 
+		    WHERE shop_shi = '${shi_code}' 
+		    ORDER BY praise_points DESC) a) a 
+		  LEFT JOIN shop_praise_history c 
+		    ON a.shop_id = c.shop_id 
+		    AND c.member_on = '${member_no}' 
+		WHERE a.shop_id = '${shop_id}' 
+	</select>
+	<update id="updatShopPraiseNum" parameterType="String">
+		UPDATE 
+		  shop_info 
+		SET
+		 
+		  <if test='is_like == "1"'>
+		  praise_points = praise_points - 1
+		  </if> 
+		   <if test='is_like == "0"'>
+		  praise_points = praise_points + 1
+		  </if>
+		WHERE shop_id = '${shop_id}'
+	</update>
+	<select id="getMyLatelyShopList" parameterType="String" resultType="Map">
+		SELECT DISTINCT 
+		  a.* 
+		FROM
+		  shop_info a,
+		  order_info b 
+		WHERE a.shop_id = b.shop_id 
+		  AND b.member_no = '${member_no}' 
+		  AND b.order_status IN (1,3) 
+		  AND b.create_time > DATE_SUB(NOW(), INTERVAL 1 MONTH) 
+		ORDER BY b.create_time DESC 
+	</select>
+	<select id="getRecommendShopList" parameterType="String" resultType="Map">
+		SELECT DISTINCT 
+		  d.* 
+		FROM
+		  shop_server a,
+		  shop_id d 
+		WHERE a.shop_id = d.shop_id 
+		  AND d.shop_status = 1 
+		  AND a.shop_server_id='${shop_server_id}'
+		ORDER BY d.praise_points DESC 
+	</select>
+	<select id="getShopPraiseHistoryByMemberAndShopId"  parameterType="String" resultType="Map">
+		SELECT * FROM shop_praise_history WHERE member_on = '${member_no}' AND shop_id= '${shop_id}'
+	</select>
+	<select id="getshopInfoByMemberNo"  parameterType="String" resultType="Map">
+		select * FROM shop_info WHERE member_no = '${member_no}'
+	</select>
+	<select id="getShopInfoByShopIdAndClassId" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  shop_info 
+		WHERE shop_id = '${shop_id}' 
+		  AND LOCATE(
+		    '${server_class_id}',
+		    server_class_id_str
+		  ) > 0 
+	</select>
+	<select id="getShopHasServerList" parameterType="String" resultType="Map">
+		SELECT 
+		  a.server_class_id ,
+		  a.server_class_name,
+		  IF(b.server_class_id IS NULL ,0,1) has_server
+		FROM
+		  server_class a 
+		  LEFT JOIN 
+		    (SELECT 
+		      a.*,
+		      b.server_class_id 
+		    FROM
+		      shop_info a,
+		      server_class b 
+		    WHERE LOCATE(
+		        b.server_class_id,
+		        a.server_class_id_str
+		      ) 
+		      AND a.member_no ='${member_no}')b 
+		      ON a.server_class_id = b.server_class_id;
+	</select>
+</mapper>

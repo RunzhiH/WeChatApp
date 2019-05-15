@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.MessageMapperSelf">
+	<select id="getOrderInfoWithMessageInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_id,
+		  a.order_code,
+		  a.create_time,
+		  a.order_price,
+		  a.order_desc,
+		  a.server_address,
+		  a.server_name,
+		  a.appointment_time,
+		  a.order_phone,
+		  a.order_nickname,
+		  c.nickname,
+		  c.openid,
+		  c.phone,
+		  d.temp_no,
+		  d.wx_template_id,
+		  e.message_body,
+		  e.message_url,
+		  e.message_title,
+		  e.send_message_type,
+		  f.form_id
+		FROM
+		  order_info a,
+		  shop_info b,
+		  member_info c,
+		  message_temp_info d,
+		  send_message_info e,
+		  (SELECT 
+			  * 
+			FROM
+			  form_info h 
+			WHERE 
+			  AND c.openid = h.open_id 
+			  AND h.is_use = 0 
+			ORDER BY create_time 
+			LIMIT 1 ) f
+		WHERE a.order_id = '${order_id}' 
+		  AND b.is_default = 1 
+		  AND c.member_no = b.server_member_no 
+		  AND e.send_message_type = '${message_type}' 
+		  AND d.message_temp_id = e.message_temp_id 
+		  AND c.openid = f.open_id 
+		  
+	</select>
+	<select id="getOrderInfoWithMessageInfoAndShopInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_id,
+		  a.order_code,
+		  a.create_time,
+		  a.order_price,
+		  a.order_desc,
+		  a.server_address,
+		  a.server_name,
+		  a.appointment_time,
+		  a.order_phone,
+		  a.order_nickname,
+		  c.nickname,
+		  c.openid,
+		  c.phone,
+		  b.shop_name,
+		  d.temp_no,
+		  d.wx_template_id,
+		  e.message_body,
+		  e.message_url,
+		  e.message_title,
+		  e.send_message_type,
+		  f.form_id
+		FROM
+		  order_info a,
+		  shop_info b,
+		  member_info c,
+		  message_temp_info d,
+		  send_message_info e,
+		  (SELECT 
+			  * 
+			FROM
+			  form_info h 
+			WHERE 
+			  AND c.openid = h.open_id 
+			  AND h.is_use = 0 
+			ORDER BY create_time 
+			LIMIT 1 ) f 
+		WHERE a.order_id = '${order_id}' 
+		  AND a.shop_id = b.shop_id 
+		  AND c.member_no = b.member_no 
+		  AND e.send_message_type = '${message_type}' 
+		  AND d.message_temp_id = e.message_temp_id 
+		  AND c.openid = f.open_id 
+	</select>
+	<select id="getOrderInfoWithMessageInfoAndServerMemberInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_id,
+		  a.order_code,
+		  a.create_time,
+		  a.order_price,
+		  a.order_desc,
+		  a.server_address,
+		  a.server_name,
+		  a.appointment_time,
+		  a.order_phone,
+		  a.order_nickname,
+		  b.nickname,
+		  b.openid,
+		  b.phone,
+		  c.temp_no,
+		  c.wx_template_id,
+		  d.message_body,
+		  d.message_url,
+		  d.message_title,
+		  d.send_message_type 
+		FROM
+		  order_info a,
+		  member_info b,
+		  message_temp_info c,
+		  send_message_info d,
+		  (SELECT 
+			  * 
+			FROM
+			  form_info h 
+			WHERE 
+			  AND b.openid = h.open_id 
+			  AND h.is_use = 0 
+			ORDER BY create_time 
+			LIMIT 1 ) f
+		WHERE a.order_id = '${order_id}' 
+		  AND a.server_member_no = b.member_no 
+		  AND d.send_message_type = '${message_type}' 
+		  AND c.message_temp_id = d.message_temp_id 
+		  AND b.openid = f.open_id 
+	</select>
+	<select id="getOrderInfoWithMessageInfoAndMemberInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_id,
+		  a.order_code,
+		  a.create_time,
+		  a.order_price,
+		  a.order_desc,
+		  a.server_address,
+		  a.server_name,
+		  a.appointment_time,
+		  a.order_phone,
+		  a.order_nickname,
+		  b.nickname,
+		  b.openid,
+		  b.phone,
+		  c.temp_no,
+		  c.wx_template_id,
+		  d.message_body,
+		  d.message_url,
+		  d.message_title,
+		  d.send_message_type,
+		  e.nickname server_member_name,
+		  e.phone server_member_phone,
+		  f.form_id
+		FROM
+		  order_info a,
+		  member_info b,
+		  message_temp_info c,
+		  send_message_info d ,
+		  memebr_info e,
+		  (SELECT 
+			  * 
+			FROM
+			  form_info h 
+			WHERE 
+			  AND b.openid = h.open_id 
+			  AND h.is_use = 0 
+			ORDER BY create_time 
+			LIMIT 1 ) f
+		WHERE a.order_id = '${order_id}' 
+		  AND a.member_no = b.member_no 
+		  AND d.send_message_type = '${message_type}' 
+		  AND c.message_temp_id = d.message_temp_id 
+		  AND a.server_member_no = e.member_no
+		  AND b.openid = f.open_id 
+	</select>
+	<select id="getRefundOrderInfoWithMessageInfoAndMemberInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  b.order_id,
+		  b.order_code,
+		  b.create_time,
+		  b.order_price,
+		  b.order_desc,
+		  b.server_address,
+		  b.server_name,
+		  b.appointment_time,
+		  a.order_phone,
+		  a.order_nickname,
+		  c.nickname,
+		  c.openid,
+		  c.phone,
+		  d.temp_no,
+		  d.wx_template_id,
+		  e.message_body,
+		  e.message_url,
+		  e.message_title,
+		  e.send_message_type,
+		  f.form_id
+		FROM
+		  refund_order_info a,
+		  order_info b,
+		  member_info c,
+		  message_temp_info d,
+		  send_message_info e,
+		  (SELECT 
+			  * 
+			FROM
+			  form_info h 
+			WHERE 
+			  AND c.openid = h.open_id 
+			  AND h.is_use = 0 
+			ORDER BY create_time 
+			LIMIT 1 ) f
+		WHERE a.order_id = b.order_id 
+		  AND b.member_no = c.member_no 
+		  AND a.refund_order_id = '${refund_order_id}' 
+		  AND e.send_message_type = '${message_type}' 
+		  AND d.message_temp_id = e.message_temp_id 
+		  AND c.openid = f.open_id 
+	</select>
+	<delete id="deleteFormIdByOvertime">
+		DELETE 
+		FROM
+		  form_info 
+		WHERE NOW() > DATE_ADD(create_time, INTERVAL 7 DAY)
+	</delete>
+</mapper>

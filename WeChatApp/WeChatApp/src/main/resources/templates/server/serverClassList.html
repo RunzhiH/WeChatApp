@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead" th:with="title='权限管理'"></head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--头-->
+    <div th:replace="fragments/head :: header"></div>
+
+    <div class="layui-body" style="margin: 1%">
+        <div class="demoTable">
+            &nbsp;&nbsp;<button class="layui-btn" onclick="add('{{r.serverClassId}}',0)">添加服务类目</button>
+        </div>
+
+        <div id="serverClassTable" class="grid">
+        </div>
+        <script id="view" type="text/html">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>服务类目名称</th>
+                    <th>服务类目图片</th>
+                    <th>服务类目说明</th>
+                    <th>服务类目等级</th>
+                    <th style="width:140px;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# layui.each(d.rows,function(index,r){ }}
+                <tr>
+                    <td>{{r.serverClassName}}</td>
+                    <td><img src='{{r.serverClassImg==null?'':r.serverClassImg}}'/></td>
+                    <td>{{r.serverClassDesc}}</td>
+                    <td>{{r.serverClassLevel}}</td>
+                    <td><a class="layui-btn layui-btn-primary layui-btn-xs" onclick="update('{{r.serverClassId}}',0);">编辑</a>
+                        <a class="layui-btn layui-btn-xs" onclick="add('{{r.serverClassId}}',1)">添加子节点</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="del('{{r.serverClassId}}','{{r.serverClassName}}')">删除</a>
+                    </td>
+                </tr>
+                {{# }); }}
+                </tbody>
+            </table>
+        </script>
+    </div>
+
+    <!--添加或编辑权限-->
+    <div id="updateServerClass" class="layer_self_wrap" style="width:600px;display:none;">
+        <form id="serverClassForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+            <input id="type" type="hidden" name="type"/>
+            <input id="serverClassPid" type="hidden" name="serverClassPid"/>
+            <input id="serverClassId" type="hidden" name="serverClassId"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                   <input name="serverClassName" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-block">
+                     <button class="layui-btn" id="test-upload-normal" type="button">上传图片</button>
+							<img style="width: 140px" alt=""  id="serverClassImg" src="">
+							<input style="display: none" name="serverClassImg" lay-verify="required" autocomplete="off" class="layui-input" type="text" />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">说明</label>
+                <div class="layui-input-inline">
+                    <input name="serverClassDesc" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">等级</label>
+                <div class="layui-input-inline">
+                    <input name="serverClassLevel" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left: 10px;">
+                    <button class="layui-btn"  lay-submit="" lay-filter="serverClassSubmit">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+
+    <!--底部-->
+    <div th:replace="fragments/footer :: footer"></div>
+    <script src="/js/server/serverClassList.js"></script>
+    <script th:inline="javascript">
+        var serverClassList=[[${serverClassList}]];
+    </script>
+</div>
+</body>
+</html>

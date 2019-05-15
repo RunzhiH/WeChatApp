@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.ExperMapperSelf">
+	<select id="getExperList" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    *,
+		    (@row := @row + 1) AS row_num 
+		  FROM
+		    (SELECT 
+		      a.*,
+		      c.nickname,
+		      @row := 0,
+		      IF(b.exper_praise_histroy_id IS NULL,0,1) is_like
+		    FROM
+		      experience_info a
+		      LEFT JOIN exper_praise_histroy b
+		      ON a.experience_id=b.experience_id
+		      AND b.member_no='${member_no}',
+		      member_info c
+		    WHERE a.member_no=c.member_no
+		    <if test="server_class_id != null and server_class_id != ''">
+		    AND (a.server_class_id1='${server_class_id}' 
+		    OR a.server_class_id2='${server_class_id}'
+		    OR a.server_class_id3='${server_class_id}'
+		    OR a.server_class_id4='${server_class_id}'
+		    OR a.server_class_id5='${server_class_id}')</if>
+		    ) a) a 
+		 <if test="begin != null and end != null">
+		WHERE row_num >= ${begin} 
+		 <![CDATA[  
+		  AND row_num <= ${end}
+		  ]]>
+		  </if>
+	</select>
+	<update id="updateExperPraiseNum">
+		UPDATE 
+		  experience_info 
+		SET
+		  <if test="is_like == 0">
+		  praise_points = praise_points + 1
+		  </if>
+		  <if test="is_like == 1">
+		  praise_points = praise_points - 1
+		  </if> 
+		WHERE experience_id = '${exper_id}'
+	</update>
+	<select id="getAllExperList" resultType="Map">
+		SELECT 
+		  a.*,
+		  DATE_FORMAT(
+		    a.`create_time`,
+		    "%Y-%m-%d %H:%i:%s"
+		  ) create_time_str ,
+		  b.nickname
+		FROM
+		  experience_info a,
+		  member_info b 
+		WHERE a.member_no = b.member_no 
+	</select>
+</mapper>

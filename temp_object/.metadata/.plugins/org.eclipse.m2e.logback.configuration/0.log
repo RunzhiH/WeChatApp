@@ -1,0 +1,71 @@
+2019-05-04 19:42:40,232 [Worker-4: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2019-05-04 19:49:33,716 [Worker-2: Import Getting Started Content] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.HZ:temp_object:0.0.1-SNAPSHOT @ C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\pom.xml.
+2019-05-04 19:49:34,659 [Worker-2: Import Getting Started Content] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for org.hibernate.validator:hibernate-validator:jar:6.0.16.Final is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+2019-05-04 19:49:40,020 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/main/java
+2019-05-04 19:49:40,021 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-04 19:49:40,037 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-04 19:49:40,056 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/test/java
+2019-05-04 19:49:43,423 [Worker-2: Import Getting Started Content] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Imported and configured 1 project(s) in 20 sec
+2019-05-04 19:49:43,427 [Worker-2: Import Getting Started Content] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2019-05-04 19:49:45,190 [Worker-2: Import Getting Started Content] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.HZ:temp_object:0.0.1-SNAPSHOT @ C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\pom.xml.
+2019-05-04 19:49:45,681 [Worker-2: Import Getting Started Content] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for org.hibernate.validator:hibernate-validator:jar:6.0.16.Final is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+2019-05-04 19:49:47,149 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/main/java
+2019-05-04 19:49:47,150 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-04 19:49:47,151 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-04 19:49:47,154 [Worker-2: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/test/java
+2019-05-04 19:49:48,066 [Worker-2: Import Getting Started Content] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 4 sec
+2019-05-04 19:49:49,817 [Worker-11: Building workspace] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for org.hibernate.validator:hibernate-validator:jar:6.0.16.Final is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+2019-05-04 19:49:50,162 [Worker-11: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-04 19:49:50,173 [Worker-11: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-05-04 19:49:50,240 [Worker-11: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-04 19:49:50,247 [Worker-11: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-04 19:49:50,249 [Worker-11: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources
+2019-05-15 16:04:55,370 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2019-05-15 16:05:13,337 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Updating Gradle version information cache failed. Using outdated cache.
+2019-05-15 16:06:43,507 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2019-05-15 16:08:19,812 [Worker-0: Import Getting Started Content] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.HZ:temp_object:0.0.1-SNAPSHOT @ C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\pom.xml.
+2019-05-15 16:08:20,978 [Worker-0: Import Getting Started Content] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for org.hibernate.validator:hibernate-validator:jar:6.0.16.Final is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+2019-05-15 16:08:29,522 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/main/java
+2019-05-15 16:08:29,523 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-15 16:08:29,539 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-15 16:08:29,561 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/test/java
+2019-05-15 16:08:37,892 [Worker-0: Import Getting Started Content] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Imported and configured 1 project(s) in 28 sec
+2019-05-15 16:08:37,896 [Worker-0: Import Getting Started Content] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2019-05-15 16:08:39,245 [Worker-0: Import Getting Started Content] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.HZ:temp_object:0.0.1-SNAPSHOT @ C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\pom.xml.
+2019-05-15 16:08:39,491 [Worker-0: Import Getting Started Content] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for org.hibernate.validator:hibernate-validator:jar:6.0.16.Final is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+2019-05-15 16:08:40,697 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/main/java
+2019-05-15 16:08:40,698 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-15 16:08:40,701 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /demo/src/main/resources
+2019-05-15 16:08:40,780 [Worker-0: Import Getting Started Content] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /demo/src/test/java
+2019-05-15 16:08:41,930 [Worker-0: Import Getting Started Content] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 4 sec
+2019-05-15 16:08:43,867 [Worker-7: Building workspace] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for org.hibernate.validator:hibernate-validator:jar:6.0.16.Final is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+2019-05-15 16:08:44,226 [Worker-7: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 16:08:44,234 [Worker-7: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-05-15 16:08:44,259 [Worker-7: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 16:08:44,274 [Worker-7: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 16:08:44,288 [Worker-7: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources
+2019-05-15 17:05:40,549 [Worker-12: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:05:40,552 [Worker-12: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:05:40,554 [Worker-12: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:05:40,558 [Worker-12: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:05:40,560 [Worker-12: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources
+2019-05-15 17:07:35,614 [Worker-14: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:07:35,646 [Worker-14: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:07:35,649 [Worker-14: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:07:35,655 [Worker-14: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:07:35,655 [Worker-14: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources
+2019-05-15 17:20:01,598 [Worker-21: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:20:01,640 [Worker-21: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-05-15 17:20:01,644 [Worker-21: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:20:01,652 [Worker-21: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:20:01,652 [Worker-21: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources
+2019-05-15 17:20:51,394 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:20:51,404 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-05-15 17:20:51,407 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:20:51,475 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:20:51,475 [Worker-24: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources
+2019-05-15 17:21:19,503 [Worker-23: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:21:19,506 [Worker-23: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2019-05-15 17:21:19,566 [Worker-23: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2019-05-15 17:21:19,589 [Worker-23: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2019-05-15 17:21:19,593 [Worker-23: Building workspace] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Users\hongrunzhi\Documents\workspace\temp_object\demo\src\test\resources

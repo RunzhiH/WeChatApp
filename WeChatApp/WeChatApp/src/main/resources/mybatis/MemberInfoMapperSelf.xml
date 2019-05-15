@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.MemberInfoMapperSelf">
+	<insert id="insertNewMemberInfo" parameterType="com.jisu.WeChatApp.pojo.MemberInfo">
+		INSERT INTO member_info (member_id, member_no,openid,create_time)
+		SELECT
+		REPLACE(UUID(), "-", ""),
+		(SELECT
+		MAX(member_no) + 1
+		FROM
+		member_info),
+		"${openid}",
+		NOW()
+	</insert>
+	<select id="getMemberListByCondition">
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    *,
+		    (@row := @row + 1) AS row_num 
+		  FROM
+		    (SELECT 
+		      *,
+		      @row := 0  
+				FROM
+				  member_info 
+				WHERE 1 = 1 
+				<if test="nick_name != null and nick_name != ''">
+				  AND nickname LIKE '%${nick_name}%' 
+				  </if>
+				  <if test="member_type != null and member_type != ''">
+				  AND member_type IN ($ { member_type })
+				  </if>
+				  ORDER BY member_no
+		  ) a) a 
+		  <if test="begin != null and end != null">
+		WHERE row_num >= ${begin} 
+		 <![CDATA[  
+		  AND row_num <= ${end}
+		  ]]>
+		  </if>
+	</select>
+	<select id="getMemberDefaultAddress" parameterType="String" resultType="Map">
+		SELECT * FROM member_address
+		WHERE member_no='${member_no}'
+	</select>
+	<select id="getServerMemberHasServer" parameterType="String" resultType="Map">
+		SELECT 
+		  a.server_class_id ,
+		  a.server_class_name,
+		  IF(b.server_class_id IS NULL ,0,1) has_server
+		FROM
+		  server_class a 
+		  LEFT JOIN 
+		    (SELECT 
+		      a.*,
+		      b.server_class_id 
+		    FROM
+		      server_member_info a,
+		      server_class b 
+		    WHERE LOCATE(
+		        b.server_class_id,
+		        a.server_class_id_str
+		      ) 
+		      AND a.member_no ='${member_no}')b 
+		  ON a.server_class_id = b.server_class_id
+		WHERE a.server_class_level = 1
+	</select>
+	<select id="getServerMemebrInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.server_member_desc,
+		  b.end_time,
+		  b.order_takes_type,
+		  b.server_class_id_str,
+		  b.server_member_id,
+		  b.shop_id,
+		  b.strat_time
+		FROM
+		  member_info a,
+		  server_member_info b
+		  WHERE a.member_no = b.member_no 
+		  AND a.member_no = '${member_no}'
+	</select>
+	<select id="getMemebrListByShopId" parameterType="String" resultType="Map">
+		SELECT DISTINCT 
+		  a.* 
+		FROM
+		  member_info a,
+		  order_info b,
+		  shop_info c 
+		WHERE a.member_no = b.member_no 
+		  AND b.shop_id = c.shop_id 
+		  AND c.shop_id = '${shop_id}' 
+	</select>
+</mapper>

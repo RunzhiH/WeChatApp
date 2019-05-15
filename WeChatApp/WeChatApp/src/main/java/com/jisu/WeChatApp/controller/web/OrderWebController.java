@@ -1,0 +1,159 @@
+package com.jisu.WeChatApp.controller.web;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.jisu.WeChatApp.dao.OrderInfoMapper;
+import com.jisu.WeChatApp.entity.OrderSearchDTO;
+import com.jisu.WeChatApp.pojo.OrderInfo;
+import com.jisu.WeChatApp.pojo.PageDataResult;
+import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
+import com.jisu.WeChatApp.tool.util.MsgModel;
+
+@RequestMapping("/web/order")
+@Controller
+public class OrderWebController {
+
+	@Autowired
+	private OrderInfoServiceImpl orderInfoServiceImpl;
+	@Autowired
+	private OrderInfoMapper orderInfoMapper;
+
+	@RequestMapping("orderManage")
+	public ModelAndView orderManage() {
+		return new ModelAndView("order/orderManage");
+	}
+
+	@RequestMapping(value = "getOrderList", method = RequestMethod.POST)
+	@ResponseBody
+	@RequiresPermissions(value = "orderList")
+	public PageDataResult getOrderList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, OrderSearchDTO orderSearchDTO) {
+		PageDataResult pdr = new PageDataResult();
+		try {
+			if (null == page) {
+				page = 1;
+			}
+			if (null == limit) {
+				limit = 10;
+			}
+			// 获取用户和角色列表
+			pdr = orderInfoServiceImpl.getOrderList(page, limit, orderSearchDTO);
+			pdr.setCode(200);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pdr;
+	}
+
+	@RequestMapping(value = "getCheckOrderList", method = RequestMethod.POST)
+	@ResponseBody
+	@RequiresPermissions(value = "orderCheck")
+	public PageDataResult getCheckOrderList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, OrderSearchDTO orderSearchDTO) {
+		PageDataResult pdr = new PageDataResult();
+		try {
+			if (null == page) {
+				page = 1;
+			}
+			if (null == limit) {
+				limit = 10;
+			}
+			// 获取用户和角色列表
+			orderSearchDTO.setOrderStatus("0");
+			pdr = orderInfoServiceImpl.getOrderList(page, limit, orderSearchDTO);
+			pdr.setCode(200);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pdr;
+	}
+
+	@RequestMapping("orderDatil/{order_id}")
+	@ResponseBody
+	public ModelAndView getOrderDatil(@PathVariable("order_id") String id) {
+		ModelAndView mv = new ModelAndView("order/orderManage");
+		try {
+			if (null == id) {
+				mv.addObject("msg", "请求参数有误，请您稍后再试");
+				return mv;
+			}
+			OrderInfo orderInfo = orderInfoServiceImpl.getOrder(id);
+			mv.addObject("flag", "orderDatil");
+			mv.addObject("orderInfo", orderInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			mv.addObject("msg", "请求异常，请您稍后再试");
+		}
+		return mv;
+	}
+
+	@RequestMapping("getOrder")
+	@ResponseBody
+	public OrderInfo getOrder(@RequestParam("order_id") String id) {
+		OrderInfo order_info=null;
+		try {
+			if (null != id) {
+				order_info= orderInfoServiceImpl.getOrder(id);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return order_info;
+	}
+
+	@RequestMapping(value = "updateServerMember", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateServerMember(OrderInfo orderInfo) {
+		if(null==orderInfo.getServerMemberNo()) {
+			return "请选择技术人员";
+		}
+		try {
+			if (null != orderInfo) {
+				orderInfo.setOrderStatus(1);
+				orderInfoServiceImpl.updateServerMember(orderInfo);
+				return "ok";
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return "修改订单出错，请您稍后再试";
+	}
+
+	/**
+	 * 关闭订单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "closeOrderById", method = RequestMethod.POST)
+	@ResponseBody
+	public String closeOrderById(HttpServletRequest request, HttpServletResponse response) {
+		String order_id = request.getParameter("order_id");
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setOrderId(order_id);
+		orderInfo.setOrderStatus(5);
+		orderInfo.setCloseTime(new Date());
+		int num = orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+		if (num > 0) {
+			return "ok";
+		} else {
+			return "出错了,请稍后重试";
+		}
+	}
+}

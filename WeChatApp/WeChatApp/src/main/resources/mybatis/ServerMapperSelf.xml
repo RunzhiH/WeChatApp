@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.ServerMapperSelf">
+	<select id="getAllServerList" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.server_class_name,
+		  IF(server_type=1,'参考价','需咨询') server_type_str
+		FROM
+		  shop_server a,
+		  server_class b 
+		WHERE a.server_class_id = b.server_class_id 
+	</select>
+	<select id="getServerMemberByOrderId" parameterType="String" resultType="Map">
+		SELECT 
+		  c.member_no,
+		  d.nickname,
+		  d.phone,
+		  CONCAT(d.nickname, "--", d.phone) server_name_phone 
+		FROM
+		  order_info a,
+		  shop_server b,
+		  server_member_info c,
+		  member_info d 
+		WHERE a.shop_server_id = b.shop_server_id 
+		  AND LOCATE(
+		    b.server_class_id,
+		    c.server_class_id_str
+		  ) > 0 
+		  AND c.member_no = d.member_no 
+		  AND c.order_takes_type IN (1, 2)
+		  AND a.order_id= #{order_id}
+	</select>
+	<select id="getServerListByClassId" parameterType="String" resultType="Map">
+		select * from shop_server where server_class_id= '${server_class_id}'
+	</select>
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.OrderInfoMapperSelf">
+	<select id="getFinishOrderIdList" resultType="String">
+		SELECT 
+		  order_id 
+		FROM
+		  order_info 
+		WHERE NOW() > DATE_ADD(create_time, INTERVAL 24 HOUR)
+		  AND order_status = 1
+	</select>
+	<select id="getOrderListByCondition" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    *,
+		    (@row := @row + 1) AS row_num 
+		  FROM
+		    (SELECT 
+			  a.*,
+			  b.nickname,
+			  b.phone,
+			  b.openid,
+			  b.photo,
+			  c.shop_name,
+			  c.shop_address,
+			  c.shop_logo_url,
+			  @row := 0
+			FROM
+			  order_info a 
+			  LEFT JOIN shop_info c 
+			    ON a.shop_id = c.shop_id,
+			  member_info b
+			WHERE a.member_no = b.member_no 
+			  <if test = "order_status != null and order_status != ''">
+			  AND a.order_status IN (${order_status}) 
+			  </if>
+			  <if test = "shop_id != null and shop_id != ''">
+			  AND a.shop_id = '${shop_id}' 
+			  </if>
+			  <if test = "order_desc != null and order_desc != ''">
+			  AND a.order_desc LIKE '%${order_desc}%' 
+			  </if>
+			  <if test = "order_type != null and order_type != ''">
+			  AND a.order_type IN (${order_type}) 
+			  </if>
+			  <if test = "pay_way != null and pay_way != ''">
+			  AND a.pay_way ='${pay_way}' 
+			  </if>
+			  <if test = "area_code != null and area_code != ''">
+			  AND (
+			    a.sheng_code = '${area_code}' 
+			    OR a.shi_code = '${area_code}' 
+			    OR a.qu_code = '${area_code}'
+			  ) </if>
+			  <if test = "nickname != null and nickname != ''">
+			  AND a.order_nickname LIKE '%${nickname}%' 
+			  </if>
+			  <if test = "order_memebr != null and order_memebr != ''">
+			  AND b.member_no = '${order_memebr}' 
+			  </if>
+			  <if test = "server_member_no != null and server_member_no != ''">
+			  AND a.server_member_no = '${server_member_no}' 
+			  </if>
+			  <if test = "shop_id_check != null and shop_id_check != ''">
+			  AND a.shop_is_check = '${shop_id_check}' 
+			  </if>
+			  <if test = "server_member_is_check != null and server_member_is_check != ''">
+			  AND a.server_member_is_check = '${server_member_is_check}'
+			  </if>
+			  ORDER BY create_time DESC
+			  ) a) a 
+		  <if test="begin != null and end != null">
+		WHERE row_num >= ${begin} 
+		 <![CDATA[  
+		  AND row_num <= ${end}
+		  ]]>
+		  </if>
+	</select>
+	<update id="finishOrder">
+		UPDATE 
+		  order_info 
+		SET
+		  order_status = 3 
+		WHERE NOW() > DATE_ADD(create_time, INTERVAL 24 HOUR) 
+		  AND order_status = 1 
+	</update>
+	<select id="getOrderList" resultType="Map">
+		SELECT * FROM
+		(SELECT 
+		  a.*,
+		  c.nickname,
+		  d.nickname server_member,
+		  DATE_FORMAT(a.create_time ,'%y-%m-%d %h:%i:%s') create_time_str,
+		  CASE order_status
+	        WHEN 0 THEN '未确认'
+	        WHEN 1 THEN '已下单'
+	        WHEN 3 THEN '已完成'
+	        WHEN 5 THEN '已取消'
+	        ELSE '未知'
+	      END order_status_tr
+		FROM
+		  order_info a 
+		  LEFT JOIN member_info d 
+		    ON a.server_member_no = d.member_no,
+		  shop_server b,
+		  member_info c 
+		WHERE a.member_no = c.member_no 
+		  AND a.shop_server_id = b.shop_server_id ) a
+		  where 1=1
+		  <if test="orderSearch.orderCode != null and orderSearch.orderCode != ''">
+	    	and a.order_code = '${orderSearch.orderCode}'
+	   	  </if>
+	      <if test="orderSearch.serverName != null and orderSearch.serverName !=''">
+	    	and a.server_name = '${orderSearch.serverName}'	
+	      </if>
+	      <if test="orderSearch.startTime != null and orderSearch.startTime !=''">
+				AND a.create_time &gt;= #{orderSearch.startTime}
+			</if>
+			<if test="orderSearch.endTime !=null and orderSearch.endTime !=''">
+				AND a.create_time &lt;= #{orderSearch.endTime}
+			</if>
+			<if test="orderSearch.orderStatus != null and orderSearch.orderStatus != ''">
+				AND a.order_status = #{orderSearch.orderStatus}
+			</if>
+			ORDER BY a.create_time DESC
+	</select>
+	<select id="getOrderDatil" parameterType="String" resultType="Map">
+		SELECT 
+		  a.*,
+		  c.nickname,
+		  d.nickname server_member 
+		FROM
+		  order_info a 
+		  LEFT JOIN member_info d 
+		    ON a.server_member_no = d.member_no,
+		  shop_server b,
+		  member_info c 
+		WHERE a.member_no = c.member_no 
+		  AND a.shop_server_id = b.shop_server_id 
+		  AND a.order_id ='${order_id}'
+	</select>
+</mapper>
