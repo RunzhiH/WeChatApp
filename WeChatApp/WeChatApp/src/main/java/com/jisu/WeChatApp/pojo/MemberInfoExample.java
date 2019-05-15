@@ -1102,6 +1102,66 @@ public class MemberInfoExample {
 			addCriterion("super_shop_id not between", value1, value2, "superShopId");
 			return (Criteria) this;
 		}
+
+		public Criteria andShareShopTimeIsNull() {
+			addCriterion("share_shop_time is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeIsNotNull() {
+			addCriterion("share_shop_time is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeEqualTo(Date value) {
+			addCriterion("share_shop_time =", value, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeNotEqualTo(Date value) {
+			addCriterion("share_shop_time <>", value, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeGreaterThan(Date value) {
+			addCriterion("share_shop_time >", value, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeGreaterThanOrEqualTo(Date value) {
+			addCriterion("share_shop_time >=", value, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeLessThan(Date value) {
+			addCriterion("share_shop_time <", value, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeLessThanOrEqualTo(Date value) {
+			addCriterion("share_shop_time <=", value, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeIn(List<Date> values) {
+			addCriterion("share_shop_time in", values, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeNotIn(List<Date> values) {
+			addCriterion("share_shop_time not in", values, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeBetween(Date value1, Date value2) {
+			addCriterion("share_shop_time between", value1, value2, "shareShopTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andShareShopTimeNotBetween(Date value1, Date value2) {
+			addCriterion("share_shop_time not between", value1, value2, "shareShopTime");
+			return (Criteria) this;
+		}
 	}
 
 	/**

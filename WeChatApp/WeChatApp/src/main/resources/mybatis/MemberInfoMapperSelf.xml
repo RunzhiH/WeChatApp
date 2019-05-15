@@ -88,10 +88,36 @@
 		  a.* 
 		FROM
 		  member_info a,
-		  order_info b,
-		  shop_info c 
-		WHERE a.member_no = b.member_no 
-		  AND b.shop_id = c.shop_id 
-		  AND c.shop_id = '${shop_id}' 
+		  shop_info b 
+		WHERE a.share_shop_id = b.shop_id 
+		  AND b.shop_id = '${shop_id}' 
+	</select>
+	<select id="getMemberCountByShopId" parameterType="String" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    COUNT(a.member_no) day_count 
+		  FROM
+		    member_info a,
+		    shop_info b 
+		  WHERE a.share_shop_id = b.shop_id 
+		    AND DATE_FORMAT(a.share_shop_time, '%y-%m-%d ') = DATE_FORMAT(NOW(), '%y-%m-%d') 
+		    AND b.shop_id = '${shop_id}') a,
+		  (SELECT 
+		    COUNT(a.member_no) month_count 
+		  FROM
+		    member_info a,
+		    shop_info b 
+		  WHERE a.share_shop_id = b.shop_id 
+		    AND DATE_FORMAT(a.share_shop_time, '%y-%m') = DATE_FORMAT(NOW(), '%y-%m') 
+		    AND b.shop_id = '${shop_id}') b,
+		  (SELECT 
+		    COUNT(a.member_no) all_count 
+		  FROM
+		    member_info a,
+		    shop_info b 
+		  WHERE a.share_shop_id = b.shop_id 
+		    AND b.shop_id = '${shop_id}') c 
 	</select>
 </mapper>

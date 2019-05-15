@@ -39,6 +39,6 @@ public interface MemberInfoService {
 	
 	public Map<String, Object> getServerMemberInfoAndHasServer(String member_no);
 	
-	public List<Map<String, String>> getMemebrListByShopId(String shop_id);
+	public Map<String, Object> getMemebrListByShopId(String shop_id);
 	
 }

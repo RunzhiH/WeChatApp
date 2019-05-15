@@ -33,6 +33,6 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		
-		<table tableName="server_member_info" domainObjectName="ServerMemberInfo"></table>
+		<table tableName="member_info" domainObjectName="MemberInfo"></table>
 	</context>
 </generatorConfiguration>

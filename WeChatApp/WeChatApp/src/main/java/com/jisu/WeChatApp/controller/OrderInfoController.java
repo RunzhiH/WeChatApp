@@ -98,6 +98,7 @@ public class OrderInfoController {
 			if (StringUtils.isBlank(share_shop_id)) {
 				// 绑定商家
 				member_info.setShareShopId(shop_id);
+				member_info.setShareShopTime(new Date());
 				memberInfoMapper.updateByPrimaryKeySelective(member_info);
 				// 绑定商家结束
 			}

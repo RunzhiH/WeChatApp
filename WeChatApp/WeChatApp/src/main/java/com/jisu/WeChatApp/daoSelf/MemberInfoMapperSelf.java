@@ -38,4 +38,6 @@ public interface MemberInfoMapperSelf {
 	public Map<String, String> getServerMemebrInfo(Map<String, String> member_no_map);
 
 	public List<Map<String, String>> getMemebrListByShopId(Map<String, String> map);
+
+	public Map<String,String> getMemberCountByShopId(Map<String, String> map);
 }

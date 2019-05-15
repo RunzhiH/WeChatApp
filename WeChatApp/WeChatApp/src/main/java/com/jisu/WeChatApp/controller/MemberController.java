@@ -349,7 +349,7 @@ public class MemberController {
 	@RequestMapping("getMemebrListByShopId")
 	public MsgModel getMemebrListByShopId(HttpServletRequest request, HttpServletResponse response) {
 		String shop_id = request.getParameter("shop_id");
-		List<Map<String, String>> member_list = memberInfoServiceImpl.getMemebrListByShopId(shop_id);
+		Map<String, Object> member_list = memberInfoServiceImpl.getMemebrListByShopId(shop_id);
 		MsgModel msg = new MsgModel();
 		msg.setContext(member_list);
 		msg.setStatus(MsgModel.SUCCESS);

@@ -116,10 +116,14 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 		result_map.put("server_list", memberInfoMapperSelf.getServerMemberHasServer(member_no_map));
 		return result_map;
 	}
-	
-	public List<Map<String, String>> getMemebrListByShopId(String shop_id){
+	@Override
+	public Map<String, Object> getMemebrListByShopId(String shop_id){
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("shop_id", shop_id);
-		return memberInfoMapperSelf.getMemebrListByShopId(map);
+		Map<String, Object>  result_map= new HashMap<String, Object>();
+		List<Map<String, String>> member_list= memberInfoMapperSelf.getMemebrListByShopId(map);
+		result_map.put("member_list", member_list);
+		result_map.putAll(memberInfoMapperSelf.getMemberCountByShopId(map));
+		return result_map;
 	}
 }
