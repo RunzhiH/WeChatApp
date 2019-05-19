@@ -41,4 +41,6 @@ public interface MemberInfoService {
 	
 	public Map<String, Object> getMemebrListByShopId(String shop_id);
 	
+	public void autoCloseMemberProhi();
+	
 }

@@ -23,6 +23,7 @@ import com.jisu.WeChatApp.dao.ShopInfoMapper;
 import com.jisu.WeChatApp.dao.ShopServerMapper;
 import com.jisu.WeChatApp.pojo.MemberInfo;
 import com.jisu.WeChatApp.pojo.ShopInfo;
+import com.jisu.WeChatApp.pojo.ShopInfoExample;
 import com.jisu.WeChatApp.pojo.ShopPraiseHistory;
 import com.jisu.WeChatApp.pojo.ShopServer;
 import com.jisu.WeChatApp.service.impl.ShopInfoServiceImpl;
@@ -178,6 +179,7 @@ public class ShopController {
 		}
 		int save_num = 0;
 		if (StringUtils.isNotBlank(shop_id)) {
+
 			shopInfo.setShopId(shop_id);
 			save_num = shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
 		} else {
@@ -185,7 +187,7 @@ public class ShopController {
 			shop_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
 			shopInfo.setShopId(shop_id);
 			shopInfo.setPraisePoints(0);
-			shopInfo.setShopStatus(0);
+			shopInfo.setShopStatus(1);
 			shopInfo.setOperatorMemberId(operator_member_id);
 //			try {
 //				// 加密密码
@@ -195,6 +197,16 @@ public class ShopController {
 //				e.printStackTrace();
 //			}
 			if (StringUtils.isNotBlank(member_no)) {
+				// 判断是否已有商家
+				ShopInfoExample example = new ShopInfoExample();
+				example.createCriteria().andMemberNoEqualTo(member_no);
+				List<ShopInfo> shopList = shopInfoMapper.selectByExample(example);
+				if (shopList.size() > 0) {
+					msg.setStatus(MsgModel.ERROR);
+					msg.setMessage("该会员下已有入驻的商家");
+					return msg;
+				}
+				// 判断是否已有商家
 				shopInfo.setMemberNo(member_no);
 			}
 			save_num = shopInfoMapper.insertSelective(shopInfo);
@@ -517,6 +529,16 @@ public class ShopController {
 		Map<String, String> shop_info = shopInfoServiceImpl.getShopInfoByShopIdAndClassId(shop_id, server_class_id);
 		MsgModel msg = new MsgModel();
 		msg.setContext(shop_info);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
+	@RequestMapping("getFreeServerShopList")
+	public MsgModel getFreeServerShopList(HttpServletRequest request) {
+		String shop_server_id = request.getParameter("shop_server_id");
+		List<Map<String, String>> shop_list = shopInfoServiceImpl.getFreeServerShopList(shop_server_id);
+		MsgModel msg = new MsgModel();
+		msg.setContext(shop_list);
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}

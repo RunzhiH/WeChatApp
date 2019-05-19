@@ -43,8 +43,24 @@ public class ServerController {
 	public MsgModel getServerListByClassId(HttpServletRequest request) {
 		String id = request.getParameter("server_class_id");
 		List<Map<String, String>> server_list = serverServiceImpl.getServerListByClassId(id);
-		MsgModel msg= new MsgModel();
+		MsgModel msg = new MsgModel();
 		msg.setContext(server_list);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
+	/**
+	 * 获取空闲的技术人员
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("getFreeServerMemberList")
+	public MsgModel getFreeServerMemberList(HttpServletRequest request) {
+		String shop_server_id = request.getParameter("shop_server_id");
+		List<Map<String, String>> server_member_list = serverServiceImpl.getFreeServerMemberList(shop_server_id);
+		MsgModel msg = new MsgModel();
+		msg.setContext(server_member_list);
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}

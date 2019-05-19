@@ -228,6 +228,7 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "saveServerMember", method = RequestMethod.POST)
 	public MsgModel saveServerMember(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+		MsgModel msg = new MsgModel();
 		String member_no = request.getParameter("member_no");
 		String name = request.getParameter("name");
 		String photo = request.getParameter("photo");
@@ -245,6 +246,7 @@ public class MemberController {
 		serverMemberInfo.setServerMemberDesc(desc);
 		// serverMemberInfo.setEndTime(sdf.parse(end_time));
 		serverMemberInfo.setMemberNo(member_no);
+		
 		serverMemberInfo.setOrderTakesType(Integer.valueOf(order_takes_type));
 		serverMemberInfo.setServerClassIdStr(server_class_id_str);
 		// serverMemberInfo.setStratTime(sdf.parse(start_time));
@@ -255,12 +257,16 @@ public class MemberController {
 		int num = 0;
 		if (serverMemberInfoList.size() > 0) {
 			serverMemberInfo.setServerMemberId(serverMemberInfoList.get(0).getServerMemberId());
+			if(5==serverMemberInfoList.get(0).getOrderTakesType()) {
+				serverMemberInfo.setOrderTakesType(5);
+				msg.setMessage("禁单中咱不能修改接单方式");
+			}
 			num = serverMemberInfoMapper.updateByPrimaryKeySelective(serverMemberInfo);
 		} else {
 			serverMemberInfo.setServerMemberId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
 			num = serverMemberInfoMapper.insertSelective(serverMemberInfo);
 		}
-		MsgModel msg = new MsgModel();
+		
 		if (num > 0) {
 			MemberInfo memberInfo = new MemberInfo();
 			memberInfo.setMemberNo(member_no);
@@ -270,6 +276,7 @@ public class MemberController {
 			memberInfo.setPhone(phone);
 			userInfoServiceImpl.editMember(memberInfo);
 			msg.setStatus(MsgModel.SUCCESS);
+			
 		} else {
 			msg.setStatus(MsgModel.ERROR);
 		}

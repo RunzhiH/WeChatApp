@@ -31,6 +31,9 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="is_default" jdbcType="INTEGER" property="isDefault" />
     <result column="desc_photo_url" jdbcType="VARCHAR" property="descPhotoUrl" />
+    <result column="server_class_id_str" jdbcType="VARCHAR" property="serverClassIdStr" />
+    <result column="open_time" jdbcType="VARCHAR" property="openTime" />
+    <result column="in_prohi" jdbcType="INTEGER" property="inProhi" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -106,7 +109,7 @@
     shop_id, shop_name, shop_describe, shop_photo_url, shop_address, shop_sheng, shop_shi, 
     shop_qu, shop_status, create_time, shop_logo_url, shop_phone, praise_points, shop_class_id, 
     shop_x, shop_y, member_no, authorization_book_url, qq, weChat, operator_member_id, 
-    is_open, password, is_default, desc_photo_url
+    is_open, password, is_default, desc_photo_url, server_class_id_str, open_time, in_prohi
   </sql>
   <select id="selectByExample" parameterType="com.jisu.WeChatApp.pojo.ShopInfoExample" resultMap="BaseResultMap">
     <!--
@@ -167,7 +170,8 @@
       shop_y, member_no, authorization_book_url, 
       qq, weChat, operator_member_id, 
       is_open, password, is_default, 
-      desc_photo_url)
+      desc_photo_url, server_class_id_str, open_time, 
+      in_prohi)
     values (#{shopId,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{shopDescribe,jdbcType=VARCHAR}, 
       #{shopPhotoUrl,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, #{shopSheng,jdbcType=VARCHAR}, 
       #{shopShi,jdbcType=VARCHAR}, #{shopQu,jdbcType=VARCHAR}, #{shopStatus,jdbcType=INTEGER}, 
@@ -176,7 +180,8 @@
       #{shopY,jdbcType=DECIMAL}, #{memberNo,jdbcType=VARCHAR}, #{authorizationBookUrl,jdbcType=VARCHAR}, 
       #{qq,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{operatorMemberId,jdbcType=VARCHAR}, 
       #{isOpen,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{isDefault,jdbcType=INTEGER}, 
-      #{descPhotoUrl,jdbcType=VARCHAR})
+      #{descPhotoUrl,jdbcType=VARCHAR}, #{serverClassIdStr,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, 
+      #{inProhi,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.jisu.WeChatApp.pojo.ShopInfo">
     <!--
@@ -260,6 +265,15 @@
       <if test="descPhotoUrl != null">
         desc_photo_url,
       </if>
+      <if test="serverClassIdStr != null">
+        server_class_id_str,
+      </if>
+      <if test="openTime != null">
+        open_time,
+      </if>
+      <if test="inProhi != null">
+        in_prohi,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopId != null">
@@ -336,6 +350,15 @@
       </if>
       <if test="descPhotoUrl != null">
         #{descPhotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="serverClassIdStr != null">
+        #{serverClassIdStr,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null">
+        #{openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="inProhi != null">
+        #{inProhi,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -431,6 +454,15 @@
       <if test="record.descPhotoUrl != null">
         desc_photo_url = #{record.descPhotoUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.serverClassIdStr != null">
+        server_class_id_str = #{record.serverClassIdStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openTime != null">
+        open_time = #{record.openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inProhi != null">
+        in_prohi = #{record.inProhi,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -466,7 +498,10 @@
       is_open = #{record.isOpen,jdbcType=INTEGER},
       password = #{record.password,jdbcType=VARCHAR},
       is_default = #{record.isDefault,jdbcType=INTEGER},
-      desc_photo_url = #{record.descPhotoUrl,jdbcType=VARCHAR}
+      desc_photo_url = #{record.descPhotoUrl,jdbcType=VARCHAR},
+      server_class_id_str = #{record.serverClassIdStr,jdbcType=VARCHAR},
+      open_time = #{record.openTime,jdbcType=VARCHAR},
+      in_prohi = #{record.inProhi,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -550,6 +585,15 @@
       <if test="descPhotoUrl != null">
         desc_photo_url = #{descPhotoUrl,jdbcType=VARCHAR},
       </if>
+      <if test="serverClassIdStr != null">
+        server_class_id_str = #{serverClassIdStr,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null">
+        open_time = #{openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="inProhi != null">
+        in_prohi = #{inProhi,jdbcType=INTEGER},
+      </if>
     </set>
     where shop_id = #{shopId,jdbcType=VARCHAR}
   </update>
@@ -582,7 +626,10 @@
       is_open = #{isOpen,jdbcType=INTEGER},
       password = #{password,jdbcType=VARCHAR},
       is_default = #{isDefault,jdbcType=INTEGER},
-      desc_photo_url = #{descPhotoUrl,jdbcType=VARCHAR}
+      desc_photo_url = #{descPhotoUrl,jdbcType=VARCHAR},
+      server_class_id_str = #{serverClassIdStr,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=VARCHAR},
+      in_prohi = #{inProhi,jdbcType=INTEGER}
     where shop_id = #{shopId,jdbcType=VARCHAR}
   </update>
   <select id="getAllShopList" resultMap="BaseResultMap">

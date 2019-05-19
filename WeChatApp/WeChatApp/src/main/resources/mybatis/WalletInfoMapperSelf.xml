@@ -25,7 +25,8 @@
 		    (SELECT 
 		      a.*,
 		      b.server_name,
-		      b.appointment_time,
+		      b.appointment_time_start,
+		  	  b.appointment_time_end,
 		      b.order_code,
 		      b.server_address,
 		      @row := 0 

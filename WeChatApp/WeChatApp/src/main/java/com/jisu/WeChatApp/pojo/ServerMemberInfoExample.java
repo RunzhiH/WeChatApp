@@ -692,6 +692,66 @@ public class ServerMemberInfoExample {
 			addCriterion("order_takes_type not between", value1, value2, "orderTakesType");
 			return (Criteria) this;
 		}
+
+		public Criteria andInProhiIsNull() {
+			addCriterion("in_prohi is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiIsNotNull() {
+			addCriterion("in_prohi is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiEqualTo(Integer value) {
+			addCriterion("in_prohi =", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiNotEqualTo(Integer value) {
+			addCriterion("in_prohi <>", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiGreaterThan(Integer value) {
+			addCriterion("in_prohi >", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiGreaterThanOrEqualTo(Integer value) {
+			addCriterion("in_prohi >=", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiLessThan(Integer value) {
+			addCriterion("in_prohi <", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiLessThanOrEqualTo(Integer value) {
+			addCriterion("in_prohi <=", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiIn(List<Integer> values) {
+			addCriterion("in_prohi in", values, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiNotIn(List<Integer> values) {
+			addCriterion("in_prohi not in", values, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiBetween(Integer value1, Integer value2) {
+			addCriterion("in_prohi between", value1, value2, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiNotBetween(Integer value1, Integer value2) {
+			addCriterion("in_prohi not between", value1, value2, "inProhi");
+			return (Criteria) this;
+		}
 	}
 
 	/**

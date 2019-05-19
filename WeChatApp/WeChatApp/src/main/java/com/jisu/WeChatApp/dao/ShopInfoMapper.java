@@ -74,6 +74,6 @@ public interface ShopInfoMapper {
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(ShopInfo record);
-	
+
 	List<ShopInfo> getAllShopList();
 }

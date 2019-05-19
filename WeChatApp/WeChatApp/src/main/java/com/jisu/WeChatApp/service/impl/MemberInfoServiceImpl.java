@@ -126,4 +126,10 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 		result_map.putAll(memberInfoMapperSelf.getMemberCountByShopId(map));
 		return result_map;
 	}
+
+	@Override
+	public void autoCloseMemberProhi() {
+		// TODO Auto-generated method stub
+		List<Map<String, String>> memebr_prohi_list;
+	}
 }

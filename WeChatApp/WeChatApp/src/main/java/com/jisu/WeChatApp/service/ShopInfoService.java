@@ -114,4 +114,6 @@ public interface ShopInfoService {
 	public Map<String, Object> getshopInfoByMemberNo(String member_no);
 	
 	public Map<String, String> getShopInfoByShopIdAndClassId(String shop_id, String server_class_id);
+	
+	public List<Map<String, String>> getFreeServerShopList(String server_class_id);
 }

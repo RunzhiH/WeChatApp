@@ -87,7 +87,7 @@ public class OrderInfoController {
 		}
 		BigDecimal server_price = shopServer.getServerPrice();
 		BigDecimal server_sale_price = shopServer.getServerSalePrice();
-		String server_name=shopServer.getServerName();
+		String server_name = shopServer.getServerName();
 		// 获取商家服务信息结束
 
 		// 服务地址
@@ -115,7 +115,7 @@ public class OrderInfoController {
 			}
 		}
 		// 服务地址结束
-
+		
 		// 创建订单
 		String order_desc = request.getParameter("order_desc");
 		OrderInfo orderInfo = new OrderInfo();
@@ -131,7 +131,11 @@ public class OrderInfoController {
 		orderInfo.setOrderStatus(0);
 		orderInfo.setOrderDesc(order_desc);
 		orderInfo.setServerAddress(server_address);
-		orderInfo.setAppointmentTime(appointment_time);
+		if(StringUtils.isNotBlank(appointment_time)) {
+			SimpleDateFormat sdf= new SimpleDateFormat("MM-DD HH");
+			Date date= sdf.parse(appointment_time);
+			orderInfo.setAppointmentTimeStart(date);
+		}
 		orderInfo.setOrderPhone(phone);
 		orderInfo.setOrderNickname(nickname);
 		orderInfo.setServerMemberName(request.getParameter("server_member_name"));
@@ -342,8 +346,14 @@ public class OrderInfoController {
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
 		if ("0".equals(check_type)) {
 			orderInfo.setShopIsCheck(Integer.valueOf(is_check));
+			if ("2".equals(is_check)) {
+				//自动禁单
+			}
 		} else if ("1".equals(check_type)) {
 			orderInfo.setServerMemebrIsChenck(Integer.valueOf(is_check));
+			if ("2".equals(is_check)) {
+
+			}
 		} else {
 			msg.setStatus(MsgModel.WORRING);
 			msg.setMessage("确认类型错误");
@@ -400,7 +410,12 @@ public class OrderInfoController {
 		String appointment_time = request.getParameter("appointment_time");// 预约时间
 		order_info.setShopId(shop_id);
 		order_info.setServerAddress(server_address);
-		order_info.setAppointmentTime(appointment_time);
+		
+		if(StringUtils.isNotBlank(appointment_time)) {
+			SimpleDateFormat sdf= new SimpleDateFormat("MM-DD HH");
+			Date date= sdf.parse(appointment_time);
+			order_info.setAppointmentTimeStart(date);
+		}
 		int update_num = orderInfoMapper.updateByPrimaryKeySelective(order_info);
 		if (update_num > 0) {
 			msg.setStatus(MsgModel.SUCCESS);
@@ -487,12 +502,12 @@ public class OrderInfoController {
 		}
 		return msg;
 	}
-	
+
 	@RequestMapping("getOrderDatilByOrderId")
 	public MsgModel getOrderDatilByOrderId(HttpServletRequest request) {
-		String order_id= request.getParameter("order_id");
-		Map<String, String> order_datil=orderInfoServiceImpl.getOrderDatil(order_id);
-		MsgModel msg= new MsgModel();
+		String order_id = request.getParameter("order_id");
+		Map<String, String> order_datil = orderInfoServiceImpl.getOrderDatil(order_id);
+		MsgModel msg = new MsgModel();
 		msg.setContext(order_datil);
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;

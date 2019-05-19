@@ -26,7 +26,8 @@
 			  c.shop_name,
 			  c.shop_address,
 			  c.shop_logo_url,
-			  @row := 0
+			  @row := 0,
+			  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %h:%i:%s') create_time_str
 			FROM
 			  order_info a 
 			  LEFT JOIN shop_info c 
@@ -130,7 +131,8 @@
 		SELECT 
 		  a.*,
 		  c.nickname,
-		  d.nickname server_member 
+		  d.nickname server_member,
+		  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %h:%i:%s') create_time_str
 		FROM
 		  order_info a 
 		  LEFT JOIN member_info d 

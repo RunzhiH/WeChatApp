@@ -1574,73 +1574,123 @@ public class OrderInfoExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeIsNull() {
-			addCriterion("appointment_time is null");
+		public Criteria andAppointmentTimeStartIsNull() {
+			addCriterion("appointment_time_start is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeIsNotNull() {
-			addCriterion("appointment_time is not null");
+		public Criteria andAppointmentTimeStartIsNotNull() {
+			addCriterion("appointment_time_start is not null");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeEqualTo(String value) {
-			addCriterion("appointment_time =", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartEqualTo(Date value) {
+			addCriterion("appointment_time_start =", value, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeNotEqualTo(String value) {
-			addCriterion("appointment_time <>", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartNotEqualTo(Date value) {
+			addCriterion("appointment_time_start <>", value, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeGreaterThan(String value) {
-			addCriterion("appointment_time >", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartGreaterThan(Date value) {
+			addCriterion("appointment_time_start >", value, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeGreaterThanOrEqualTo(String value) {
-			addCriterion("appointment_time >=", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartGreaterThanOrEqualTo(Date value) {
+			addCriterion("appointment_time_start >=", value, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeLessThan(String value) {
-			addCriterion("appointment_time <", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartLessThan(Date value) {
+			addCriterion("appointment_time_start <", value, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeLessThanOrEqualTo(String value) {
-			addCriterion("appointment_time <=", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartLessThanOrEqualTo(Date value) {
+			addCriterion("appointment_time_start <=", value, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeLike(String value) {
-			addCriterion("appointment_time like", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartIn(List<Date> values) {
+			addCriterion("appointment_time_start in", values, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeNotLike(String value) {
-			addCriterion("appointment_time not like", value, "appointmentTime");
+		public Criteria andAppointmentTimeStartNotIn(List<Date> values) {
+			addCriterion("appointment_time_start not in", values, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeIn(List<String> values) {
-			addCriterion("appointment_time in", values, "appointmentTime");
+		public Criteria andAppointmentTimeStartBetween(Date value1, Date value2) {
+			addCriterion("appointment_time_start between", value1, value2, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeNotIn(List<String> values) {
-			addCriterion("appointment_time not in", values, "appointmentTime");
+		public Criteria andAppointmentTimeStartNotBetween(Date value1, Date value2) {
+			addCriterion("appointment_time_start not between", value1, value2, "appointmentTimeStart");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeBetween(String value1, String value2) {
-			addCriterion("appointment_time between", value1, value2, "appointmentTime");
+		public Criteria andAppointmentTimeEndIsNull() {
+			addCriterion("appointment_time_end is null");
 			return (Criteria) this;
 		}
 
-		public Criteria andAppointmentTimeNotBetween(String value1, String value2) {
-			addCriterion("appointment_time not between", value1, value2, "appointmentTime");
+		public Criteria andAppointmentTimeEndIsNotNull() {
+			addCriterion("appointment_time_end is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndEqualTo(Date value) {
+			addCriterion("appointment_time_end =", value, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndNotEqualTo(Date value) {
+			addCriterion("appointment_time_end <>", value, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndGreaterThan(Date value) {
+			addCriterion("appointment_time_end >", value, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndGreaterThanOrEqualTo(Date value) {
+			addCriterion("appointment_time_end >=", value, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndLessThan(Date value) {
+			addCriterion("appointment_time_end <", value, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndLessThanOrEqualTo(Date value) {
+			addCriterion("appointment_time_end <=", value, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndIn(List<Date> values) {
+			addCriterion("appointment_time_end in", values, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndNotIn(List<Date> values) {
+			addCriterion("appointment_time_end not in", values, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndBetween(Date value1, Date value2) {
+			addCriterion("appointment_time_end between", value1, value2, "appointmentTimeEnd");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppointmentTimeEndNotBetween(Date value1, Date value2) {
+			addCriterion("appointment_time_end not between", value1, value2, "appointmentTimeEnd");
 			return (Criteria) this;
 		}
 

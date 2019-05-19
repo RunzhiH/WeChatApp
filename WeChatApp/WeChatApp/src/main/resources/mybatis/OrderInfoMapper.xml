@@ -28,7 +28,8 @@
     <result column="server_member_no" jdbcType="VARCHAR" property="serverMemberNo" />
     <result column="shop_is_check" jdbcType="INTEGER" property="shopIsCheck" />
     <result column="server_memebr_is_chenck" jdbcType="INTEGER" property="serverMemebrIsChenck" />
-    <result column="appointment_time" jdbcType="VARCHAR" property="appointmentTime" />
+    <result column="appointment_time_start" jdbcType="TIMESTAMP" property="appointmentTimeStart" />
+    <result column="appointment_time_end" jdbcType="TIMESTAMP" property="appointmentTimeEnd" />
     <result column="server_example_photo" jdbcType="VARCHAR" property="serverExamplePhoto" />
     <result column="order_phone" jdbcType="VARCHAR" property="orderPhone" />
     <result column="order_nickname" jdbcType="VARCHAR" property="orderNickname" />
@@ -108,8 +109,8 @@
     order_id, order_code, member_no, order_price, pay_price, create_time, pay_time, shop_server_id, 
     order_status, order_type, order_desc, pay_way, server_time, close_time, finish_time, 
     order_num, server_name, server_address, shop_id, server_member_no, shop_is_check, 
-    server_memebr_is_chenck, appointment_time, server_example_photo, order_phone, order_nickname, 
-    server_member_name
+    server_memebr_is_chenck, appointment_time_start, appointment_time_end, server_example_photo, 
+    order_phone, order_nickname, server_member_name
   </sql>
   <select id="selectByExample" parameterType="com.jisu.WeChatApp.pojo.OrderInfoExample" resultMap="BaseResultMap">
     <!--
@@ -169,9 +170,10 @@
       server_time, close_time, finish_time, 
       order_num, server_name, server_address, 
       shop_id, server_member_no, shop_is_check, 
-      server_memebr_is_chenck, appointment_time, 
-      server_example_photo, order_phone, order_nickname, 
-      server_member_name)
+      server_memebr_is_chenck, appointment_time_start, 
+      appointment_time_end, server_example_photo, 
+      order_phone, order_nickname, server_member_name
+      )
     values (#{orderId,jdbcType=VARCHAR}, #{orderCode,jdbcType=VARCHAR}, #{memberNo,jdbcType=VARCHAR}, 
       #{orderPrice,jdbcType=DECIMAL}, #{payPrice,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
       #{payTime,jdbcType=TIMESTAMP}, #{shopServerId,jdbcType=VARCHAR}, #{orderStatus,jdbcType=INTEGER}, 
@@ -179,9 +181,10 @@
       #{serverTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, 
       #{orderNum,jdbcType=INTEGER}, #{serverName,jdbcType=VARCHAR}, #{serverAddress,jdbcType=VARCHAR}, 
       #{shopId,jdbcType=VARCHAR}, #{serverMemberNo,jdbcType=VARCHAR}, #{shopIsCheck,jdbcType=INTEGER}, 
-      #{serverMemebrIsChenck,jdbcType=INTEGER}, #{appointmentTime,jdbcType=VARCHAR}, 
-      #{serverExamplePhoto,jdbcType=VARCHAR}, #{orderPhone,jdbcType=VARCHAR}, #{orderNickname,jdbcType=VARCHAR}, 
-      #{serverMemberName,jdbcType=VARCHAR})
+      #{serverMemebrIsChenck,jdbcType=INTEGER}, #{appointmentTimeStart,jdbcType=TIMESTAMP}, 
+      #{appointmentTimeEnd,jdbcType=TIMESTAMP}, #{serverExamplePhoto,jdbcType=VARCHAR}, 
+      #{orderPhone,jdbcType=VARCHAR}, #{orderNickname,jdbcType=VARCHAR}, #{serverMemberName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jisu.WeChatApp.pojo.OrderInfo">
     <!--
@@ -256,8 +259,11 @@
       <if test="serverMemebrIsChenck != null">
         server_memebr_is_chenck,
       </if>
-      <if test="appointmentTime != null">
-        appointment_time,
+      <if test="appointmentTimeStart != null">
+        appointment_time_start,
+      </if>
+      <if test="appointmentTimeEnd != null">
+        appointment_time_end,
       </if>
       <if test="serverExamplePhoto != null">
         server_example_photo,
@@ -339,8 +345,11 @@
       <if test="serverMemebrIsChenck != null">
         #{serverMemebrIsChenck,jdbcType=INTEGER},
       </if>
-      <if test="appointmentTime != null">
-        #{appointmentTime,jdbcType=VARCHAR},
+      <if test="appointmentTimeStart != null">
+        #{appointmentTimeStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmentTimeEnd != null">
+        #{appointmentTimeEnd,jdbcType=TIMESTAMP},
       </if>
       <if test="serverExamplePhoto != null">
         #{serverExamplePhoto,jdbcType=VARCHAR},
@@ -439,8 +448,11 @@
       <if test="record.serverMemebrIsChenck != null">
         server_memebr_is_chenck = #{record.serverMemebrIsChenck,jdbcType=INTEGER},
       </if>
-      <if test="record.appointmentTime != null">
-        appointment_time = #{record.appointmentTime,jdbcType=VARCHAR},
+      <if test="record.appointmentTimeStart != null">
+        appointment_time_start = #{record.appointmentTimeStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.appointmentTimeEnd != null">
+        appointment_time_end = #{record.appointmentTimeEnd,jdbcType=TIMESTAMP},
       </if>
       <if test="record.serverExamplePhoto != null">
         server_example_photo = #{record.serverExamplePhoto,jdbcType=VARCHAR},
@@ -487,7 +499,8 @@
       server_member_no = #{record.serverMemberNo,jdbcType=VARCHAR},
       shop_is_check = #{record.shopIsCheck,jdbcType=INTEGER},
       server_memebr_is_chenck = #{record.serverMemebrIsChenck,jdbcType=INTEGER},
-      appointment_time = #{record.appointmentTime,jdbcType=VARCHAR},
+      appointment_time_start = #{record.appointmentTimeStart,jdbcType=TIMESTAMP},
+      appointment_time_end = #{record.appointmentTimeEnd,jdbcType=TIMESTAMP},
       server_example_photo = #{record.serverExamplePhoto,jdbcType=VARCHAR},
       order_phone = #{record.orderPhone,jdbcType=VARCHAR},
       order_nickname = #{record.orderNickname,jdbcType=VARCHAR},
@@ -566,8 +579,11 @@
       <if test="serverMemebrIsChenck != null">
         server_memebr_is_chenck = #{serverMemebrIsChenck,jdbcType=INTEGER},
       </if>
-      <if test="appointmentTime != null">
-        appointment_time = #{appointmentTime,jdbcType=VARCHAR},
+      <if test="appointmentTimeStart != null">
+        appointment_time_start = #{appointmentTimeStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmentTimeEnd != null">
+        appointment_time_end = #{appointmentTimeEnd,jdbcType=TIMESTAMP},
       </if>
       <if test="serverExamplePhoto != null">
         server_example_photo = #{serverExamplePhoto,jdbcType=VARCHAR},
@@ -611,7 +627,8 @@
       server_member_no = #{serverMemberNo,jdbcType=VARCHAR},
       shop_is_check = #{shopIsCheck,jdbcType=INTEGER},
       server_memebr_is_chenck = #{serverMemebrIsChenck,jdbcType=INTEGER},
-      appointment_time = #{appointmentTime,jdbcType=VARCHAR},
+      appointment_time_start = #{appointmentTimeStart,jdbcType=TIMESTAMP},
+      appointment_time_end = #{appointmentTimeEnd,jdbcType=TIMESTAMP},
       server_example_photo = #{serverExamplePhoto,jdbcType=VARCHAR},
       order_phone = #{orderPhone,jdbcType=VARCHAR},
       order_nickname = #{orderNickname,jdbcType=VARCHAR},

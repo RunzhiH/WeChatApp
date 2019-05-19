@@ -32,5 +32,7 @@ public interface ServerService {
 	public ShopServer getServer(String id);
 	
 	public List<Map<String, String>> getServerListByClassId(String server_class_id);
+	
+	public List<Map<String, String>> getFreeServerMemberList(String	server_class_id);
 
 }

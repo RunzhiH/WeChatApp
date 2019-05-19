@@ -34,4 +34,23 @@
 	<select id="getServerListByClassId" parameterType="String" resultType="Map">
 		select * from shop_server where server_class_id= '${server_class_id}'
 	</select>
+	<select id="getFreeServerMemberList" parameterType="String" resultType="Map">
+		SELECT 
+		  b.*,
+		  c.nickname,
+		  c.photo,
+		  c.phone 
+		FROM
+		  shop_server a,
+		  server_member_info b,
+		  member_info c 
+		WHERE b.member_no = c.member_no 
+		  AND LOCATE(
+		    a.server_class_id,
+		    b.server_class_id_str
+		  ) > 0 
+		  AND b.order_takes_type != 0 
+		  AND b.in_prohi = 0 
+		  AND a.shop_server_id = '${shop_server_id}' 
+	</select>
 </mapper>

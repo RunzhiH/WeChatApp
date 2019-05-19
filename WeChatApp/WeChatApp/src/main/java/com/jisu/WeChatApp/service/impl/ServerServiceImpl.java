@@ -133,4 +133,12 @@ public class ServerServiceImpl implements ServerService {
 		return serverMapperSelf.getServerListByClassId(id_map);
 	}
 
+	@Override
+	public List<Map<String, String>> getFreeServerMemberList(String shop_server_id) {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("shop_server_id", shop_server_id);
+		return serverMapperSelf.getFreeServerMemberList(map);
+	}
+
 }

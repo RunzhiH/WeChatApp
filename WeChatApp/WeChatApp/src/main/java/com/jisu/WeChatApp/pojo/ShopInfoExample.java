@@ -1843,6 +1843,206 @@ public class ShopInfoExample {
 			addCriterion("desc_photo_url not between", value1, value2, "descPhotoUrl");
 			return (Criteria) this;
 		}
+
+		public Criteria andServerClassIdStrIsNull() {
+			addCriterion("server_class_id_str is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrIsNotNull() {
+			addCriterion("server_class_id_str is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrEqualTo(String value) {
+			addCriterion("server_class_id_str =", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrNotEqualTo(String value) {
+			addCriterion("server_class_id_str <>", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrGreaterThan(String value) {
+			addCriterion("server_class_id_str >", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrGreaterThanOrEqualTo(String value) {
+			addCriterion("server_class_id_str >=", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrLessThan(String value) {
+			addCriterion("server_class_id_str <", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrLessThanOrEqualTo(String value) {
+			addCriterion("server_class_id_str <=", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrLike(String value) {
+			addCriterion("server_class_id_str like", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrNotLike(String value) {
+			addCriterion("server_class_id_str not like", value, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrIn(List<String> values) {
+			addCriterion("server_class_id_str in", values, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrNotIn(List<String> values) {
+			addCriterion("server_class_id_str not in", values, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrBetween(String value1, String value2) {
+			addCriterion("server_class_id_str between", value1, value2, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerClassIdStrNotBetween(String value1, String value2) {
+			addCriterion("server_class_id_str not between", value1, value2, "serverClassIdStr");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeIsNull() {
+			addCriterion("open_time is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeIsNotNull() {
+			addCriterion("open_time is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeEqualTo(String value) {
+			addCriterion("open_time =", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeNotEqualTo(String value) {
+			addCriterion("open_time <>", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeGreaterThan(String value) {
+			addCriterion("open_time >", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeGreaterThanOrEqualTo(String value) {
+			addCriterion("open_time >=", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeLessThan(String value) {
+			addCriterion("open_time <", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeLessThanOrEqualTo(String value) {
+			addCriterion("open_time <=", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeLike(String value) {
+			addCriterion("open_time like", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeNotLike(String value) {
+			addCriterion("open_time not like", value, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeIn(List<String> values) {
+			addCriterion("open_time in", values, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeNotIn(List<String> values) {
+			addCriterion("open_time not in", values, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeBetween(String value1, String value2) {
+			addCriterion("open_time between", value1, value2, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOpenTimeNotBetween(String value1, String value2) {
+			addCriterion("open_time not between", value1, value2, "openTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiIsNull() {
+			addCriterion("in_prohi is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiIsNotNull() {
+			addCriterion("in_prohi is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiEqualTo(Integer value) {
+			addCriterion("in_prohi =", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiNotEqualTo(Integer value) {
+			addCriterion("in_prohi <>", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiGreaterThan(Integer value) {
+			addCriterion("in_prohi >", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiGreaterThanOrEqualTo(Integer value) {
+			addCriterion("in_prohi >=", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiLessThan(Integer value) {
+			addCriterion("in_prohi <", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiLessThanOrEqualTo(Integer value) {
+			addCriterion("in_prohi <=", value, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiIn(List<Integer> values) {
+			addCriterion("in_prohi in", values, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiNotIn(List<Integer> values) {
+			addCriterion("in_prohi not in", values, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiBetween(Integer value1, Integer value2) {
+			addCriterion("in_prohi between", value1, value2, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andInProhiNotBetween(Integer value1, Integer value2) {
+			addCriterion("in_prohi not between", value1, value2, "inProhi");
+			return (Criteria) this;
+		}
 	}
 
 	/**

@@ -238,4 +238,18 @@
 		      AND a.member_no ='${member_no}')b 
 		      ON a.server_class_id = b.server_class_id;
 	</select>
+	<select id="getFreeServerShopList" parameterType="String" resultType="Map">
+		SELECT 
+		  b.* 
+		FROM
+		  shop_server a,
+		  shop_info b 
+		WHERE LOCATE(
+		    a.server_class_id,
+		    b.server_class_id_str
+		  ) > 0 
+		  AND b.order_takes_type != 0 
+		  AND b.in_prohi = 0 
+		  AND a.shop_server_id = '${server_shop_id}' 
+	</select>
 </mapper>
