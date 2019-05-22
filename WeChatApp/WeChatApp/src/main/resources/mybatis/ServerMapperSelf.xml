@@ -53,4 +53,30 @@
 		  AND b.in_prohi = 0 
 		  AND a.shop_server_id = '${shop_server_id}' 
 	</select>
+	<select id="getProhiMemberList" resultType="Map">
+		SELECT 
+		  * 
+		FROM
+		  member_prohi 
+		WHERE prohi_status = 0 
+		  AND DATE_ADD(
+		    create_time,
+		    INTERVAL prohi_time HOUR
+		  ) > NOW()
+	</select>
+	<select id="getAppointmentServerTimeList" parameterType="String" resultType="Map">
+		SELECT 
+		  DATE_FORMAT(b.appointment_time_start, '%d') appointment_time_start,
+		  DATE_FORMAT(b.appointment_time_end, '%d') appointment_time_end,
+		  DATE_FORMAT(
+		    b.appointment_time_start,
+		    '%Y-%m-%d'
+		  ) the_day 
+		FROM
+		  member_info a,
+		  order_info b 
+		WHERE a.member_no = b.server_member_no 
+		  AND a.member_no = '${member_no}' 
+		  AND b.order_status IN (1, 8)
+	</select>
 </mapper>

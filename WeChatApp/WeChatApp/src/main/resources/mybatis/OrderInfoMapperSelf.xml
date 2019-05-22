@@ -143,4 +143,58 @@
 		  AND a.shop_server_id = b.shop_server_id 
 		  AND a.order_id ='${order_id}'
 	</select>
+	<select id="getRefundOrderList" resultType="Map">
+		SELECT * FROM
+			(SELECT 
+			  a.*,
+			  b.order_code,
+			  b.pay_price,
+			  b.member_no,
+			  b.server_name,
+			  b.server_address,
+			  b.order_phone,
+			  b.order_nickname,
+			  c.nickname server_member,
+			  DATE_FORMAT(
+			    a.create_time,
+			    '%y-%m-%d %h:%i:%s'
+			  ) create_time_str,
+			  CASE
+			    a.refund_order_status 
+			    WHEN 0 
+			    THEN '已申请' 
+			    WHEN 1 
+			    THEN '同意' 
+			    WHEN 3 
+			    THEN '拒绝' 
+			    WHEN 5 
+			    THEN '退款完成' 
+			    WHEN 6
+			    THEN '售后关闭'
+			    ELSE '未知状态' 
+			  END refund_order_status_tr 
+			FROM
+			  refund_order_info a,
+			  order_info b 
+			  LEFT JOIN member_info c 
+			    ON b.server_member_no = c.member_no 
+			WHERE a.order_id = b.order_id ) a
+		  where 1=1
+		  <if test="orderSearch.orderCode != null and orderSearch.orderCode != ''">
+	    	and b.order_code = '${orderSearch.orderCode}'
+	   	  </if>
+	      <if test="orderSearch.serverName != null and orderSearch.serverName !=''">
+	    	and b.server_name = '${orderSearch.serverName}'	
+	      </if>
+	      <if test="orderSearch.startTime != null and orderSearch.startTime !=''">
+				AND a.create_time &gt;= #{orderSearch.startTime}
+			</if>
+			<if test="orderSearch.endTime !=null and orderSearch.endTime !=''">
+				AND a.create_time &lt;= #{orderSearch.endTime}
+			</if>
+			<if test="orderSearch.refundOrderStatus != null and orderSearch.refundOrderStatus != ''">
+				AND a.refund_order_status = #{orderSearch.refundOrderStatus}
+			</if>
+			ORDER BY a.create_time DESC
+	</select>
 </mapper>

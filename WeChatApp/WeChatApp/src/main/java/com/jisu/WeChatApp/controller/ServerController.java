@@ -64,4 +64,14 @@ public class ServerController {
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}
+
+	@RequestMapping("getSetupTimeList")
+	public MsgModel getSetupTimeList(HttpServletRequest request) {
+		String member_no = request.getParameter("member_no");
+		List<Map<String, Object>> time_list = serverServiceImpl.getAppointmentServerTimeList(member_no);
+		MsgModel msg = new MsgModel();
+		msg.setContext(time_list);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
 }

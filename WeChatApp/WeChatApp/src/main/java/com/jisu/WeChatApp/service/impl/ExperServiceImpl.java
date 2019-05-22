@@ -35,10 +35,10 @@ public class ExperServiceImpl implements ExperService {
 	@Override
 	public List<ExperPraiseHistroy> getExperPraiseHistroy(String exper_id, String member_no) {
 		// TODO Auto-generated method stub
-		ExperPraiseHistroyExample example = new ExperPraiseHistroyExample();
-		example.createCriteria().andMemberNoEqualTo(member_no);
-		example.createCriteria().andExperienceIdEqualTo(exper_id);
-		return experPraiseHistroyMapper.selectByExample(example);
+		Map<String, String> condition=new HashMap<String, String>();
+		condition.put("exper_id", exper_id);
+		condition.put("member", member_no);
+		return experPraiseHistroyMapper.getExperPraiseHistroyList(condition);
 	}
 
 	@Override
@@ -64,10 +64,10 @@ public class ExperServiceImpl implements ExperService {
 	@Override
 	public int deleteExperLikeHistroy(String exper_id, String member_no) {
 		// TODO Auto-generated method stub
-		ExperPraiseHistroyExample example = new ExperPraiseHistroyExample();
-		example.createCriteria().andMemberNoEqualTo(member_no);
-		example.createCriteria().andExperienceIdEqualTo(exper_id);
-		return experPraiseHistroyMapper.deleteByExample(example);
+		Map<String, String> map=new HashMap<String, String>();
+		map.put("member_no", member_no);
+		map.put("exper_id", exper_id);
+		return experMapperSelf.deleteExperLikeHistroy(map);
 	}
 
 	@Override

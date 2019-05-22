@@ -33,6 +33,7 @@ import com.jisu.WeChatApp.pojo.ShopServer;
 import com.jisu.WeChatApp.service.impl.MemberInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.SendMessageServiceImpl;
+import com.jisu.WeChatApp.service.impl.ShopInfoServiceImpl;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
 import com.jisu.WeChatApp.tool.util.MsgModel;
 import com.jisu.WeChatApp.tool.util.PayUtils;
@@ -55,6 +56,8 @@ public class OrderInfoController {
 	private SendMessageServiceImpl sendMessageServiceImpl;
 	@Autowired
 	private MemberInfoMapper memberInfoMapper;
+	@Autowired
+	private ShopInfoServiceImpl shopInfoServiceImpl;
 
 	/**
 	 * 下单
@@ -70,13 +73,13 @@ public class OrderInfoController {
 
 		String member_no = request.getParameter("member_no");
 		String shop_server_id = request.getParameter("shop_server_id");
-		String order_num = request.getParameter("order_num");
 		String shop_id = request.getParameter("shop_id");
 		String server_example_photo = request.getParameter("server_example_photo");
 		String phone = request.getParameter("phone");
 		String nickname = request.getParameter("nickname");
 		String appointment_time = request.getParameter("appointment_time");// 预约时间
-		String server_address = "";
+		String server_address = request.getParameter("server_address");
+		String server_member_no=request.getParameter("server_memner_no");
 
 		// 获取商家服务信息
 		ShopServer shopServer = shopServerMapper.selectByPrimaryKey(shop_server_id);
@@ -116,13 +119,18 @@ public class OrderInfoController {
 		}
 		// 服务地址结束
 		
+		//获取服务人员信息
+		MemberInfo server_member=memberInfoServiceImpl.getMemberInfoByMemberNo(member_no);
+		String server_member_name=server_member.getNickname();
+		//获取服务人员信息结束
+		
 		// 创建订单
 		String order_desc = request.getParameter("order_desc");
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setCreateTime(new Date());
 		orderInfo.setMemberNo(member_no);
 		orderInfo.setOrderId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
-		orderInfo.setOrderNum(Integer.valueOf(order_num));
+		orderInfo.setOrderNum(1);
 		orderInfo.setShopServerId(shop_server_id);
 		orderInfo.setOrderCode(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_ONLY, 16, null));
 		orderInfo.setOrderPrice(server_price);
@@ -132,13 +140,15 @@ public class OrderInfoController {
 		orderInfo.setOrderDesc(order_desc);
 		orderInfo.setServerAddress(server_address);
 		if(StringUtils.isNotBlank(appointment_time)) {
-			SimpleDateFormat sdf= new SimpleDateFormat("MM-DD HH");
+			SimpleDateFormat sdf= new SimpleDateFormat("YYYY-MM-dd HH");
 			Date date= sdf.parse(appointment_time);
 			orderInfo.setAppointmentTimeStart(date);
+			date.setHours(date.getHours()+2);
+			orderInfo.setAppointmentTimeEnd(date);
 		}
 		orderInfo.setOrderPhone(phone);
 		orderInfo.setOrderNickname(nickname);
-		orderInfo.setServerMemberName(request.getParameter("server_member_name"));
+		orderInfo.setServerMemberName(server_member_name);
 		if (StringUtils.isNotBlank(server_example_photo)) {
 			orderInfo.setServerExamplePhoto(server_example_photo);
 		}
@@ -152,7 +162,7 @@ public class OrderInfoController {
 		}
 		return msg;
 	}
-
+	
 	/**
 	 * 支付订单
 	 * 
@@ -167,7 +177,7 @@ public class OrderInfoController {
 		String pay_way = request.getParameter("pay_way");
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
 		String order_desc = orderInfo.getOrderDesc();
-		BigDecimal pay_price = orderInfo.getPayPrice();
+		BigDecimal pay_price = orderInfo.getPayPrice().multiply(new BigDecimal(100));
 		String member_no = orderInfo.getMemberNo();
 		int order_status = orderInfo.getOrderStatus();
 		if (0 != order_status) { // 订单已支付
@@ -188,7 +198,7 @@ public class OrderInfoController {
 		orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
 
 		String nonceStr = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-		String result = PayUtils.wxPay(request, order_id, order_desc, order_id, String.valueOf(pay_price), notify_url, open_id);
+		String result = PayUtils.wxPay(request, nonceStr, order_desc, order_id, String.valueOf(pay_price), notify_url, open_id);
 		try {
 			// 将解析结果存储在HashMap中
 			Map map = PayUtils.doXMLParse(result);
@@ -336,23 +346,37 @@ public class OrderInfoController {
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws ParseException 
 	 */
 	@RequestMapping("checkOrder")
-	public MsgModel checkOrder(HttpServletRequest request, HttpServletResponse response) {
+	public MsgModel checkOrder(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 		MsgModel msg = new MsgModel();
 		String check_type = request.getParameter("check_type");
 		String order_id = request.getParameter("order_id");
 		String is_check = request.getParameter("is_check");
+		
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
 		if ("0".equals(check_type)) {
 			orderInfo.setShopIsCheck(Integer.valueOf(is_check));
 			if ("2".equals(is_check)) {
-				//自动禁单
+				//商家自动禁单
+				String shop_id=orderInfo.getShopId();
+				shopInfoServiceImpl.shopProhibitOrder(shop_id);
+				//商家自动禁单结束
 			}
 		} else if ("1".equals(check_type)) {
+			String end_time=request.getParameter("end_time");
+			if(StringUtils.isNotBlank(end_time)) {
+				SimpleDateFormat sdf= new SimpleDateFormat("YYYY-MM-dd HH");
+				Date date= sdf.parse(end_time);
+				orderInfo.setAppointmentTimeEnd(date);
+			}
 			orderInfo.setServerMemebrIsChenck(Integer.valueOf(is_check));
 			if ("2".equals(is_check)) {
-
+				//技术人员自动禁单
+				String member_no=orderInfo.getServerMemberNo();
+				memberInfoServiceImpl.memberProhibitOrder(member_no);
+				//技术人员自动禁单结束
 			}
 		} else {
 			msg.setStatus(MsgModel.WORRING);
@@ -412,9 +436,11 @@ public class OrderInfoController {
 		order_info.setServerAddress(server_address);
 		
 		if(StringUtils.isNotBlank(appointment_time)) {
-			SimpleDateFormat sdf= new SimpleDateFormat("MM-DD HH");
+			SimpleDateFormat sdf= new SimpleDateFormat("YYYY-MM-dd HH");
 			Date date= sdf.parse(appointment_time);
 			order_info.setAppointmentTimeStart(date);
+			date.setHours(date.getHours()+2);
+			order_info.setAppointmentTimeEnd(date);
 		}
 		int update_num = orderInfoMapper.updateByPrimaryKeySelective(order_info);
 		if (update_num > 0) {
@@ -512,4 +538,9 @@ public class OrderInfoController {
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}
+//	@RequestMapping("applyAfterOrder")
+//	public MsgModel applyAfterOrder(HttpServletRequest request) {
+//		String order_id
+//		return null;
+//	}
 }

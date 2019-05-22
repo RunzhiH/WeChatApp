@@ -24,4 +24,6 @@ public interface ExperMapperSelf {
 	public int updateExperPraiseNum(Map<String, String> do_like_map);
 	
 	public List<Map<String, String>> getAllExperList();
+
+	public int deleteExperLikeHistroy(Map<String, String> map);
 }

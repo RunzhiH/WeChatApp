@@ -60,4 +60,9 @@
 		  member_info b 
 		WHERE a.member_no = b.member_no 
 	</select>
+	<delete id="deleteExperLikeHistroy">
+		DELETE FROM exper_praise_histroy  
+		where experience_id = '${exper_id}'
+  	  	  and member_no ='${member_no}'
+	</delete>
 </mapper>

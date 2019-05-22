@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="checkRefundOrder">
+		<form id="refundOrderCheckSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+			<div class="layui-form-item">
+				<label class="layui-form-label">订单编号</label>
+				<div class="layui-input-inline">
+					<input id="CorderCode" name="orderCode" autocomplete="off" class="layui-input" type="text" />
+				</div>
+				<label class="layui-form-label">服务项目</label>
+				<div class="layui-input-inline">
+					<input id="CserverName" name="serverName" autocomplete="off" class="layui-input" type="text" />
+				</div>
+				<input  name="orderStatus" value="0" autocomplete="off" class="layui-input" type="hidden" />
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">下单时间</label>
+					<div class="layui-input-inline" style="width: 175px;">
+						<input name="startTime" id="SstartTime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" type="text" />
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline" style="width: 175px;">
+						<input name="endTime" id="SendTime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" type="text" />
+					</div>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					<button class="layui-btn" lay-submit="" lay-filter="searchCheckSubmit">提交</button>
+				</div>
+			</div>
+		</form>
+
+		<!--<hr class="layui-bg-blue"/>-->
+		<hr class="layui-bg-black" />
+		<table id="checkRefundOrderList" lay-filter="refundOrderCheckTable"></table>
+		<script type="text/html" id="CoptBar">
+            <a class="layui-btn layui-btn-xs" lay-event="update">编辑</a>
+ 			<a class="layui-btn layui-btn-xs" lay-event="close">关闭订单</a>
+        	</script>
+
+
+		
+		<script src="/js/order/checkRefundOrder.js"></script>
+	</div>
+	
+</body>
+</html>

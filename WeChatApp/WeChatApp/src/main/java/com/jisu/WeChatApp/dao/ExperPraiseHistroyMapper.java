@@ -3,6 +3,7 @@ package com.jisu.WeChatApp.dao;
 import com.jisu.WeChatApp.pojo.ExperPraiseHistroy;
 import com.jisu.WeChatApp.pojo.ExperPraiseHistroyExample;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -97,4 +98,6 @@ public interface ExperPraiseHistroyMapper {
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(ExperPraiseHistroy record);
+
+	List<ExperPraiseHistroy> getExperPraiseHistroyList(Map<String, String> condition);
 }

@@ -9,11 +9,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jisu.WeChatApp.dao.MemberProhiMapper;
 import com.jisu.WeChatApp.dao.ShopInfoMapper;
 import com.jisu.WeChatApp.dao.ShopLableMapper;
 import com.jisu.WeChatApp.dao.ShopPraiseHistoryMapper;
 import com.jisu.WeChatApp.dao.ShopServerMapper;
 import com.jisu.WeChatApp.daoSelf.ShopInfoMapperSelf;
+import com.jisu.WeChatApp.pojo.MemberProhi;
 import com.jisu.WeChatApp.pojo.ShopInfo;
 import com.jisu.WeChatApp.pojo.ShopLableExample;
 import com.jisu.WeChatApp.pojo.ShopPraiseHistory;
@@ -36,6 +38,8 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 	private ShopPraiseHistoryMapper shopPraiseHistoryMapper;
 	@Autowired
 	private ShopInfoMapper shopInfoMapper;
+	@Autowired
+	private MemberProhiMapper memberProhiMapper;
 
 	@Override
 	public List<Map<String, String>> getShopListByCondition(Map<String, String> condition) {
@@ -173,7 +177,7 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 	@Override
 	public Map<String, Object> getshopInfoByMemberNo(String member_no) {
 		// TODO Auto-generated method stub
-		Map<String, Object> result_map= new HashMap<String, Object>();
+		Map<String, Object> result_map = new HashMap<String, Object>();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("member_no", member_no);
 		result_map.putAll(shopInfoMapperSelf.getshopInfoByMemberNo(map));
@@ -193,9 +197,30 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 	@Override
 	public List<Map<String, String>> getFreeServerShopList(String shop_server_id) {
 		// TODO Auto-generated method stub
-		Map<String, String> map= new HashMap<String, String>();
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("shop_server_id", shop_server_id);
 		return shopInfoMapperSelf.getFreeServerShopList(map);
+	}
+
+	@Override
+	public void shopProhibitOrder(String shop_id) {
+		// TODO Auto-generated method stub
+		ShopInfo shopInfo = new ShopInfo();
+		shopInfo.setShopId(shop_id);
+		shopInfo.setInProhi(1);
+		shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
+		String member_no= shopInfo.getMemberNo();
+		//插入封禁记录
+		MemberProhi memberProhi= new MemberProhi();
+		memberProhi.setMemberProhiId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
+		memberProhi.setMemberType(1);
+		memberProhi.setMemberNo(member_no);
+		memberProhi.setProhiTime(5);
+		memberProhi.setProhiStatus(0);
+		memberProhi.setCreateTime(new Date());
+		memberProhi.setProhiType(1);
+		memberProhiMapper.insertSelective(memberProhi);
+		//插入封禁记录结束
 	}
 
 }

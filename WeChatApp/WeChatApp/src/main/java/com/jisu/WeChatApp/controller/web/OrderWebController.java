@@ -4,9 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +20,6 @@ import com.jisu.WeChatApp.entity.OrderSearchDTO;
 import com.jisu.WeChatApp.pojo.OrderInfo;
 import com.jisu.WeChatApp.pojo.PageDataResult;
 import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
-import com.jisu.WeChatApp.tool.util.MsgModel;
 
 @RequestMapping("/web/order")
 @Controller
@@ -156,4 +153,51 @@ public class OrderWebController {
 			return "出错了,请稍后重试";
 		}
 	}
+	@RequestMapping("refundOrderManage")
+	public ModelAndView refundOrderPage() {
+		
+		return new ModelAndView("order/refundOrderManage");
+	}
+	@RequestMapping("getRefundOrderList")
+	@ResponseBody
+	public PageDataResult getRefundOrderList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, OrderSearchDTO orderSearchDTO) {
+		
+		PageDataResult pdr = new PageDataResult();
+		try {
+			if (null == page) {
+				page = 1;
+			}
+			if (null == limit) {
+				limit = 10;
+			}
+			// 获取用户和角色列表
+			pdr = orderInfoServiceImpl.getRefundOrderList(page, limit, orderSearchDTO);
+			pdr.setCode(200);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pdr;
+	}
+	
+	@RequestMapping("getCheckRefundOrderList")
+	@ResponseBody
+	public PageDataResult getCheckRefundOrderList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, OrderSearchDTO orderSearchDTO) {
+		
+		PageDataResult pdr = new PageDataResult();
+		try {
+			if (null == page) {
+				page = 1;
+			}
+			if (null == limit) {
+				limit = 10;
+			}
+			orderSearchDTO.setRefundOrderStatus("0");
+			pdr = orderInfoServiceImpl.getRefundOrderList(page, limit, orderSearchDTO);
+			pdr.setCode(200);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pdr;
+	}
+	
 }

@@ -14,4 +14,8 @@ public interface ServerMapperSelf {
 	public List<Map<String, String>> getServerListByClassId(Map<String, String> id_map);
 	
 	public List<Map<String, String>> getFreeServerMemberList(Map<String, String> map);
+	
+	public List<Map<String, String>> getProhiMemberList();
+	
+	public List<Map<String, String>> getAppointmentServerTimeList(Map<String, String> map);
 }

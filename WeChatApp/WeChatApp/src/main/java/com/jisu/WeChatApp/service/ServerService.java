@@ -34,5 +34,6 @@ public interface ServerService {
 	public List<Map<String, String>> getServerListByClassId(String server_class_id);
 	
 	public List<Map<String, String>> getFreeServerMemberList(String	server_class_id);
-
+	
+	public List<Map<String, Object>> getAppointmentServerTimeList(String member_no);
 }

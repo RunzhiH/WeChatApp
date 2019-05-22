@@ -1,7 +1,5 @@
 package com.jisu.WeChatApp.entity;
 
-import java.util.Date;
-
 public class OrderSearchDTO {
 	private String orderCode;
 
@@ -13,6 +11,16 @@ public class OrderSearchDTO {
 
 	private String orderStatus;
 	
+	private String refundOrderStatus;
+	
+	public String getRefundOrderStatus() {
+		return refundOrderStatus;
+	}
+
+	public void setRefundOrderStatus(String refundOrderStatus) {
+		this.refundOrderStatus = refundOrderStatus;
+	}
+
 	public String getOrderStatus() {
 		return orderStatus;
 	}

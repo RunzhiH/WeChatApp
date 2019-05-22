@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" href="/js/ztree/css/zTreeStyle/zTreeStyle.css"></link>
-<head th:include="layout :: htmlhead" th:with="title='角色管理'"></head>
+<head th:include="layout :: htmlhead" th:with="title='售后管理'"></head>
 <script type="text/javascript" src="/js/dateUtils.js"></script>
 <body class="layui-layout-body">
 	<div class="layui-layout layui-layout-admin">
@@ -10,19 +10,19 @@
 		<div class="layui-body">
 			<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 				<ul class="layui-tab-title">
-					<li id="orderListLi" class="layui-this">全部订单</li>
-					<!-- <li id="checkOrderLi">待确认订单</li> -->
-					<li id="orderDatilLi" style="display: none;">订单详情</li>
+					<li id="refundOrderListLi" class="layui-this">全部订单</li>
+					<li id="checkRefundOrderLi">售后待处理</li>
+					<li id="refundOrderDatilLi" style="display: none;">订单详情</li>
 				</ul>
 				<div class="layui-tab-content" style="height: 100px;">
-					<div id="orderListDiv" class="layui-tab-item layui-show">
-						<div th:include="order/orderList :: orderList"></div>
+					<div id="refundOrderListDiv" class="layui-tab-item layui-show">
+						<div th:include="order/refundOrderList :: refundOrderList"></div>
 					</div>
-					<!-- <div id="checkOrderDiv" class="layui-tab-item">
-						<div th:include="order/checkOrder :: checkOrder"></div>
-					</div> -->
-					<div id="orderDatilDiv" class="layui-tab-item" style="display: none;">
-						<div th:include="order/orderDatil :: orderDatil"></div>
+					<div id="checkRefundOrderDiv" class="layui-tab-item">
+						<div th:include="order/checkRefundOrder :: checkRefundOrder"></div>
+					</div>
+					<div id="refundOrderDatilDiv" class="layui-tab-item" style="display: none;">
+						<div th:include="order/refundOrderDatil :: refundOrderDatil"></div>
 					</div>
 				</div>
 			</div>

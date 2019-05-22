@@ -39,7 +39,9 @@ public interface OrderInfoMapperSelf {
 	 */
 	public int finishOrder();
 
-	public List<Map<String, String>> getOrderList(@Param(value = "orderSearch")OrderSearchDTO orderSearch);
+	public List<Map<String, String>> getOrderList(@Param(value = "orderSearch") OrderSearchDTO orderSearch);
 
 	public Map<String, String> getOrderDatil(Map<String, String> map);
+
+	public List<Map<String, String>> getRefundOrderList(@Param(value = "orderSearch") OrderSearchDTO orderSearchDTO);
 }

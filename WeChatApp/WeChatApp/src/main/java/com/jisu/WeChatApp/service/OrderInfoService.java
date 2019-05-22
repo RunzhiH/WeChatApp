@@ -83,4 +83,6 @@ public interface OrderInfoService {
 	public void updateServerMember(OrderInfo orderInfo);
 	
 	public Map<String, String> getOrderDatil(String order_id);
+	
+	public PageDataResult getRefundOrderList(Integer page, Integer limit, OrderSearchDTO orderSearchDTO);
 }

@@ -6,12 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.jisu.WeChatApp.dao.FormInfoMapper;
 import com.jisu.WeChatApp.daoSelf.MessageMapperSelf;
 import com.jisu.WeChatApp.pojo.FormInfo;
 import com.jisu.WeChatApp.pojo.FormInfoExample;
 import com.jisu.WeChatApp.service.SendMessageService;
 import com.jisu.WeChatApp.tool.util.MSGUtils;
+import com.jisu.WeChatApp.tool.util.SmsUtil;
 
 @Service("SendMessageServiceImpl")
 public class SendMessageServiceImpl implements SendMessageService {
@@ -104,14 +106,19 @@ public class SendMessageServiceImpl implements SendMessageService {
 		map.put("message_type", "2");
 		map.put("order_id", msg.get("order_id"));
 		Map<String, String> message_context = (Map<String, String>) getSendMessageContext(map);
-		String formid = message_context.get("formid");
-		MSGUtils.pushOneUser(formid, message_context);
+//		String formid = message_context.get("formid");
+		try {
+			SmsUtil.sendSmsRemind(message_context);
+		} catch (ClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// formid标记为已使用
-		FormInfoExample example = new FormInfoExample();
-		example.createCriteria().andFormIdEqualTo(formid);
-		FormInfo formInfo = new FormInfo();
-		formInfo.setIsUse(1);
-		formInfoMapper.updateByExampleSelective(formInfo, example);
+//		FormInfoExample example = new FormInfoExample();
+//		example.createCriteria().andFormIdEqualTo(formid);
+//		FormInfo formInfo = new FormInfo();
+//		formInfo.setIsUse(1);
+//		formInfoMapper.updateByExampleSelective(formInfo, example);
 		// formid标记为已使用结束
 	}
 
@@ -122,14 +129,19 @@ public class SendMessageServiceImpl implements SendMessageService {
 		map.put("message_type", "3");
 		map.put("order_id", msg.get("order_id"));
 		Map<String, String> message_context = (Map<String, String>) getSendMessageContext(map);
-		String formid = message_context.get("formid");
-		MSGUtils.pushOneUser(formid, message_context);
+//		String formid = message_context.get("formid");
+		try {
+			SmsUtil.sendSmsRemind(message_context);
+		} catch (ClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// formid标记为已使用
-		FormInfoExample example = new FormInfoExample();
-		example.createCriteria().andFormIdEqualTo(formid);
-		FormInfo formInfo = new FormInfo();
-		formInfo.setIsUse(1);
-		formInfoMapper.updateByExampleSelective(formInfo, example);
+//		FormInfoExample example = new FormInfoExample();
+//		example.createCriteria().andFormIdEqualTo(formid);
+//		FormInfo formInfo = new FormInfo();
+//		formInfo.setIsUse(1);
+//		formInfoMapper.updateByExampleSelective(formInfo, example);
 		// formid标记为已使用结束
 	}
 

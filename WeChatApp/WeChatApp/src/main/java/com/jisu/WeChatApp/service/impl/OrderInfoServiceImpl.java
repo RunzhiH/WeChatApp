@@ -225,4 +225,17 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		map.put("order_id", order_id);
 		return orderInfoMapperSelf.getOrderDatil(map);
 	}
+
+	@Override
+	public PageDataResult getRefundOrderList(Integer page, Integer limit, OrderSearchDTO orderSearchDTO) {
+		// TODO Auto-generated method stub
+		PageDataResult pdr = new PageDataResult();
+		PageHelper.startPage(page, limit);
+		List<Map<String, String>> refund_order_list=orderInfoMapperSelf.getRefundOrderList(orderSearchDTO);
+		PageInfo<Map<String, String>> pageInfo = new PageInfo<Map<String, String>>(refund_order_list);
+		// 设置获取到的总记录数total：
+		pdr.setTotals(Long.valueOf(pageInfo.getTotal()).intValue());
+		pdr.setList(pageInfo.getList());
+		return pdr;
+	}
 }

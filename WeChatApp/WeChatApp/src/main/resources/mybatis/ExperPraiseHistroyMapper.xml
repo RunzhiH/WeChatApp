@@ -253,4 +253,11 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where exper_praise_histroy_id = #{experPraiseHistroyId,jdbcType=VARCHAR}
   </update>
+  <select id="getExperPraiseHistroyList" parameterType="java.lang.String" resultMap="BaseResultMap">
+ 	select 
+ 	 <include refid="Base_Column_List" />
+    from exper_praise_histroy
+    where experience_id = '${exper_id}'
+  	  and member_no ='${member_no}'
+  </select>
 </mapper>

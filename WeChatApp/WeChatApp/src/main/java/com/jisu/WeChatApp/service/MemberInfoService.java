@@ -43,4 +43,6 @@ public interface MemberInfoService {
 	
 	public void autoCloseMemberProhi();
 	
+	public void memberProhibitOrder(String member_no);
+	
 }
