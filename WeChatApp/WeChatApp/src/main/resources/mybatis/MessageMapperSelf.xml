@@ -30,15 +30,18 @@
 		  member_info c,
 		  message_temp_info d,
 		  send_message_info e,
-		  (SELECT 
-			  * 
-			FROM
-			  form_info h 
-			WHERE 
-			  AND c.openid = h.open_id 
-			  AND h.is_use = 0 
-			ORDER BY create_time 
-			LIMIT 1 ) f
+		   (SELECT 
+		    h.* 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    form_info h 
+		  WHERE a.order_id = '${order_id}'
+		    AND a.member_no = b.member_no 
+		    AND b.openid = h.open_id 
+		    AND h.is_use = 0 
+		  ORDER BY h.create_time 
+		  LIMIT 1) f 
 		WHERE a.order_id = '${order_id}' 
 		  AND b.is_default = 1 
 		  AND c.member_no = b.server_member_no 
@@ -78,14 +81,17 @@
 		  message_temp_info d,
 		  send_message_info e,
 		  (SELECT 
-			  * 
-			FROM
-			  form_info h 
-			WHERE 
-			  AND c.openid = h.open_id 
-			  AND h.is_use = 0 
-			ORDER BY create_time 
-			LIMIT 1 ) f 
+		    h.* 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    form_info h 
+		  WHERE a.order_id = '${order_id}'
+		    AND a.member_no = b.member_no 
+		    AND b.openid = h.open_id 
+		    AND h.is_use = 0 
+		  ORDER BY h.create_time 
+		  LIMIT 1) f 
 		WHERE a.order_id = '${order_id}' 
 		  AND a.shop_id = b.shop_id 
 		  AND c.member_no = b.member_no 
@@ -120,15 +126,18 @@
 		  member_info b,
 		  message_temp_info c,
 		  send_message_info d,
-		  (SELECT 
-			  * 
-			FROM
-			  form_info h 
-			WHERE 
-			  AND b.openid = h.open_id 
-			  AND h.is_use = 0 
-			ORDER BY create_time 
-			LIMIT 1 ) f
+		   (SELECT 
+		    h.* 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    form_info h 
+		  WHERE a.order_id = '${order_id}'
+		    AND a.member_no = b.member_no 
+		    AND b.openid = h.open_id 
+		    AND h.is_use = 0 
+		  ORDER BY h.create_time 
+		  LIMIT 1) f 
 		WHERE a.order_id = '${order_id}' 
 		  AND a.server_member_no = b.member_no 
 		  AND d.send_message_type = '${message_type}' 
@@ -167,15 +176,18 @@
 		  send_message_info d ,
 		  memebr_info e,
 		  (SELECT 
-			  * 
-			FROM
-			  form_info h 
-			WHERE 
-			  AND b.openid = h.open_id 
-			  AND h.is_use = 0 
-			ORDER BY create_time 
-			LIMIT 1 ) f
-		WHERE a.order_id = '${order_id}' 
+		    h.* 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    form_info h 
+		  WHERE a.order_id = '${order_id}'
+		    AND a.member_no = b.member_no 
+		    AND b.openid = h.open_id 
+		    AND h.is_use = 0 
+		  ORDER BY h.create_time 
+		  LIMIT 1) f 
+		WHERE a.order_id = '${order_id}'
 		  AND a.member_no = b.member_no 
 		  AND d.send_message_type = '${message_type}' 
 		  AND c.message_temp_id = d.message_temp_id 
@@ -211,15 +223,18 @@
 		  member_info c,
 		  message_temp_info d,
 		  send_message_info e,
-		  (SELECT 
-			  * 
-			FROM
-			  form_info h 
-			WHERE 
-			  AND c.openid = h.open_id 
-			  AND h.is_use = 0 
-			ORDER BY create_time 
-			LIMIT 1 ) f
+		   (SELECT 
+		    h.* 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    form_info h 
+		  WHERE a.order_id = '${order_id}'
+		    AND a.member_no = b.member_no 
+		    AND b.openid = h.open_id 
+		    AND h.is_use = 0 
+		  ORDER BY h.create_time 
+		  LIMIT 1) f 
 		WHERE a.order_id = b.order_id 
 		  AND b.member_no = c.member_no 
 		  AND a.refund_order_id = '${refund_order_id}' 

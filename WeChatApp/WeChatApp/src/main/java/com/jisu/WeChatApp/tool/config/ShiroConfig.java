@@ -77,6 +77,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/treegrid/*/*", "anon");
 		filterChainDefinitionMap.put("/fragments/*", "anon");
 		filterChainDefinitionMap.put("/layout", "anon");
+		filterChainDefinitionMap.put("/index/*", "anon");
+		filterChainDefinitionMap.put("/index/**", "anon");
 
 		filterChainDefinitionMap.put("/user/sendMsg", "anon");
 		filterChainDefinitionMap.put("/login/login", "anon");

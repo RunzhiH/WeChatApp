@@ -22,12 +22,12 @@
 		      member_info c
 		    WHERE a.member_no=c.member_no
 		    <if test="server_class_id != null and server_class_id != ''">
-		    AND (a.server_class_id1='${server_class_id}' 
-		    OR a.server_class_id2='${server_class_id}'
-		    OR a.server_class_id3='${server_class_id}'
-		    OR a.server_class_id4='${server_class_id}'
-		    OR a.server_class_id5='${server_class_id}')</if>
-		    ) a) a 
+		    AND (a.server_class_id_1='${server_class_id}' 
+		    OR a.server_class_id_2='${server_class_id}'
+		    OR a.server_class_id_3='${server_class_id}'
+		    OR a.server_class_id_4='${server_class_id}'
+		    OR a.server_class_id_5='${server_class_id}')</if>
+		    ORDER BY a.praise_points DESC ) a) a 
 		 <if test="begin != null and end != null">
 		WHERE row_num >= ${begin} 
 		 <![CDATA[  
@@ -65,4 +65,18 @@
 		where experience_id = '${exper_id}'
   	  	  and member_no ='${member_no}'
 	</delete>
+	<select id="getExperInfo"  parameterType="String" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.phone,
+		  b.nickname,
+		  b.photo 
+		FROM
+		  experience_info a,
+		  member_info b,
+		  shop_server c
+		WHERE a.member_no = b.member_no 
+		  AND a.shop_server_id = c.shop_server_id
+		  AND a.experience_id= #{exper_id}
+	</select>
 </mapper>

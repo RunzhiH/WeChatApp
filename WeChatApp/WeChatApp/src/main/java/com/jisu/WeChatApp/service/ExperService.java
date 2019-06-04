@@ -60,4 +60,6 @@ public interface ExperService {
 	public int updateExper(ExperienceInfo experienceInfo);
 	
 	public ExperienceInfo getExper(String exper_id);
+	
+	public Map<String, Object> getExperInfo(String exper_id);
 }

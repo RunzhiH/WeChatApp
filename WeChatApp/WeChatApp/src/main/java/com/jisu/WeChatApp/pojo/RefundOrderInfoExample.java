@@ -933,6 +933,66 @@ public class RefundOrderInfoExample {
 			addCriterion("refund_price not between", value1, value2, "refundPrice");
 			return (Criteria) this;
 		}
+
+		public Criteria andOrderPriceIsNull() {
+			addCriterion("order_price is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceIsNotNull() {
+			addCriterion("order_price is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceEqualTo(BigDecimal value) {
+			addCriterion("order_price =", value, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceNotEqualTo(BigDecimal value) {
+			addCriterion("order_price <>", value, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceGreaterThan(BigDecimal value) {
+			addCriterion("order_price >", value, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceGreaterThanOrEqualTo(BigDecimal value) {
+			addCriterion("order_price >=", value, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceLessThan(BigDecimal value) {
+			addCriterion("order_price <", value, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceLessThanOrEqualTo(BigDecimal value) {
+			addCriterion("order_price <=", value, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceIn(List<BigDecimal> values) {
+			addCriterion("order_price in", values, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceNotIn(List<BigDecimal> values) {
+			addCriterion("order_price not in", values, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("order_price between", value1, value2, "orderPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("order_price not between", value1, value2, "orderPrice");
+			return (Criteria) this;
+		}
 	}
 
 	/**

@@ -240,7 +240,6 @@ public class MemberController {
 		String desc = request.getParameter("desc");
 		String server_class_id_str = request.getParameter("server_class_id_str");
 
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm:SS");
 
 		ServerMemberInfo serverMemberInfo = new ServerMemberInfo();
 		serverMemberInfo.setServerMemberDesc(desc);
@@ -257,10 +256,6 @@ public class MemberController {
 		int num = 0;
 		if (serverMemberInfoList.size() > 0) {
 			serverMemberInfo.setServerMemberId(serverMemberInfoList.get(0).getServerMemberId());
-			if(5==serverMemberInfoList.get(0).getOrderTakesType()) {
-				serverMemberInfo.setOrderTakesType(5);
-				msg.setMessage("禁单中咱不能修改接单方式");
-			}
 			num = serverMemberInfoMapper.updateByPrimaryKeySelective(serverMemberInfo);
 		} else {
 			serverMemberInfo.setServerMemberId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));

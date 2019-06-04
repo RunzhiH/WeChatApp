@@ -2,6 +2,8 @@ package com.jisu.WeChatApp.tool.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,6 +11,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,17 +19,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.tagext.PageData;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.core.util.UuidUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.w3c.dom.Node;
@@ -108,8 +124,7 @@ public class PayUtils {
 		}
 		for (String key : sArray.keySet()) {
 			String value = sArray.get(key);
-			if (value == null || value.equals("") || key.equalsIgnoreCase("sign")
-					|| key.equalsIgnoreCase("sign_type")) {
+			if (value == null || value.equals("") || key.equalsIgnoreCase("sign") || key.equalsIgnoreCase("sign_type")) {
 				continue;
 			}
 			result.put(key, value);
@@ -291,8 +306,7 @@ public class PayUtils {
 	 * @param open_id      用户open_id
 	 * @return
 	 */
-	public static String wxPay(HttpServletRequest request, String nonce_str, String body, String out_trade_no,
-			String total_fee, String notify_url, String open_id) {
+	public static String wxPay(HttpServletRequest request, String nonce_str, String body, String out_trade_no, String total_fee, String notify_url, String open_id) {
 		String appid = PropertyUtil.getProperty("wx.appid");
 		String mch_key = PropertyUtil.getProperty("wx.mch_key");
 		String mch_id = PropertyUtil.getProperty("wx.mch_id");
@@ -318,12 +332,19 @@ public class PayUtils {
 			// MD5运算生成签名，这里是第一次签名，用于调用统一下单接口
 			String mysign = PayUtils.sign(prestr, mch_key, "utf-8").toUpperCase();
 			// 拼接统一下单接口使用的xml数据，要将上一步生成的签名一起拼接进去
-			String xml = "<xml>" + "<appid>" + appid + "</appid>" + "<body><![CDATA[" + body + "]]></body>" + "<mch_id>"
-					+ mch_id + "</mch_id>" + "<nonce_str>" + nonce_str + "</nonce_str>" + "<notify_url>" + notify_url
-					+ "</notify_url>" + "<openid>" + open_id + "</openid>" + "<out_trade_no>" + "123456789"
-					+ "</out_trade_no>" + "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
-					+ "<total_fee>" + "1" + "</total_fee>" + "<trade_type>" + TRADETYPE + "</trade_type>" + "<sign>"
-					+ mysign + "</sign>" + "</xml>";
+			String xml = "<xml>" 
+					+ "<appid>" + appid + "</appid>" 
+					+ "<body><![CDATA[" + body + "]]></body>" 
+					+ "<mch_id>" + mch_id + "</mch_id>" 
+					+ "<nonce_str>" + nonce_str + "</nonce_str>" 
+					+ "<notify_url>" + notify_url + "</notify_url>"
+					+ "<openid>" + open_id + "</openid>" 
+					+ "<out_trade_no>" + out_trade_no + "</out_trade_no>" 
+					+ "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>" 
+					+ "<total_fee>" + total_fee + "</total_fee>" 
+					+ "<trade_type>" + TRADETYPE + "</trade_type>" 
+					+ "<sign>" + mysign + "</sign>" 
+					+ "</xml>";
 			System.out.println("调试模式_统一下单接口 请求XML数据：" + xml);
 			// 调用统一下单接口，并接受返回的结果
 			String result = PayUtils.httpRequest(pay_url, "POST", xml);
@@ -348,12 +369,11 @@ public class PayUtils {
 	 * 
 	 */
 	public String weixinWithdraw(String openId, String ip, String money, String doctorId, String desc) {
-		if (StringUtils.isNotBlank(money) && StringUtils.isNotBlank(ip) && StringUtils.isNotBlank(openId)
-				&& StringUtils.isNotBlank(doctorId)) {
+		if (StringUtils.isNotBlank(money) && StringUtils.isNotBlank(ip) && StringUtils.isNotBlank(openId) && StringUtils.isNotBlank(doctorId)) {
 			// 参数组
 			String url = "";
-			String appid = config.appid;
-			String mch_id = config.mch_id;
+			String appid = PropertyUtil.getProperty("wx.appid");
+			String mch_id = PropertyUtil.getProperty("wx.mch_id");
 			String nonce_str = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
 			// 是否校验用户姓名 NO_CHECK：不校验真实姓名 FORCE_CHECK：强校验真实姓名
 			String checkName = "NO_CHECK";
@@ -390,10 +410,9 @@ public class PayUtils {
 				String transfersXml = EntityUtils.toString(response.getEntity(), "utf-8");
 				Map<String, String> transferMap = HttpXmlUtils.parseRefundXml(transfersXml);
 				if (transferMap.size() > 0) {
-					if (transferMap.get("result_code").equals("SUCCESS")
-							&& transferMap.get("return_code").equals("SUCCESS")) {
+					if (transferMap.get("result_code").equals("SUCCESS") && transferMap.get("return_code").equals("SUCCESS")) {
 						// 成功需要进行的逻辑操作，
-						
+
 					}
 				}
 				System.out.println("成功");
@@ -405,6 +424,82 @@ public class PayUtils {
 			System.out.println("失败");
 		}
 		return null;
+	}
+
+	public static Map<String, String> wxRefund(String refundid,String orderId, String total_fee, String refund_fee, String refund_desc) {
+		String appid = PropertyUtil.getProperty("wx.appid");
+		String mch_key = PropertyUtil.getProperty("wx.mch_key");
+		String mch_id = PropertyUtil.getProperty("wx.mch_id");
+		String ssl_path=PropertyUtil.getProperty("weixin.ssl.path");
+		Map<String, String> result = new HashMap<String, String>();
+		if(StringUtils.isBlank(refundid)) {
+			refundid = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
+		}
+		String nonce_str = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
+		/*-----  1.生成预支付订单需要的的package数据-----*/
+		SortedMap<String, String> packageParams = new TreeMap<String, String>();
+		packageParams.put("appid", appid);
+		packageParams.put("mch_id", mch_id);
+		packageParams.put("nonce_str", nonce_str);
+		packageParams.put("op_user_id", mch_id);
+		packageParams.put("out_trade_no", orderId);
+		packageParams.put("out_refund_no", refundid);
+		packageParams.put("total_fee", total_fee);
+		packageParams.put("refund_fee", refund_fee);
+		packageParams.put("refund_desc", refund_desc);
+		/*----2.根据package生成签名sign---- */
+		String prestr = PayUtils.createLinkString(packageParams); // 把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
+		// MD5运算生成签名，这里是第一次签名，用于调用统一下单接口
+		String sign = PayUtils.sign(prestr, mch_key, "utf-8").toUpperCase();
+		/*----3.拼装需要提交到微信的数据xml---- */
+		String xml = "<xml>" 
+					+ "<appid>" + appid + "</appid>" 
+					+ "<mch_id>" + mch_id + "</mch_id>" 
+					+ "<nonce_str>" + nonce_str + "</nonce_str>" 
+					+ "<op_user_id>" + mch_id + "</op_user_id>" 
+					+ "<out_trade_no>" + orderId + "</out_trade_no>" 
+					+ "<out_refund_no>" + refundid + "</out_refund_no>" 
+					+ "<refund_fee>" + refund_fee + "</refund_fee>" 
+					+ "<total_fee>" + total_fee + "</total_fee>"
+					+ "<refund_desc>" + refund_desc + "</refund_desc>"
+					+ "<sign>" + sign + "</sign>"
+					+ "</xml>";
+		try {
+			/*----4.读取证书文件,这一段是直接从微信支付平台提供的demo中copy的，所以一般不需要修改---- */
+			KeyStore keyStore = KeyStore.getInstance("PKCS12");
+			FileInputStream instream = new FileInputStream(new File(ssl_path));
+			try {
+				keyStore.load(instream, mch_id.toCharArray());
+			} finally {
+				instream.close();
+			}
+			// Trust own CA and all self-signed certs
+			SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, mch_id.toCharArray()).build();
+			// Allow TLSv1 protocol only
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null, SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+			/*----5.发送数据到微信的退款接口---- */
+			String refund_url = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+			String jsonStr = PayUtils.httpRequest(refund_url, "POST", xml);
+			// logger.info(jsonStr);
+
+			Map map = doXMLParse(jsonStr);
+			if ("success".equalsIgnoreCase((String) map.get("return_code"))) {
+				// logger.info("退款成功");
+				result.put("returncode", "ok");
+				result.put("returninfo", "退款成功");
+			} else {
+				// logger.info("退款失败");
+				result.put("returncode", "error");
+				result.put("returninfo", "退款失败");
+			}
+		} catch (Exception e) {
+			// logger.info("退款失败");
+			result.put("returncode", "error");
+			result.put("returninfo", "退款失败");
+		}
+		return result;
+
 	}
 
 }

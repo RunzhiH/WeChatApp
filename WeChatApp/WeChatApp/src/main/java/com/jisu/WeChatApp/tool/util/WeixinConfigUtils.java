@@ -19,6 +19,8 @@ public class WeixinConfigUtils {
 	public static String order_notify_url;
 
 	public static String doctor_notify_url;
+	
+	public static String ssl_path;
 
 	static {
 		try {
@@ -30,6 +32,7 @@ public class WeixinConfigUtils {
 			notify_url = PropertyUtil.getProperty("weixin.notify_url");
 			order_notify_url = PropertyUtil.getProperty("weixin.order_notify_url");
 			doctor_notify_url = PropertyUtil.getProperty("weixin.doctor_notify_url");
+			ssl_path=PropertyUtil.getProperty("weixin.ssl.path");
 		} catch (Exception ex) {
 			log.debug("加载配置文件：" + ex.getMessage());
 		}

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.HomeDateMapperSelf">
+	<select id="getMemberChangeDateDay" parameterType="String" resultType="Map">
+		SELECT 
+		  a.member_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} DAY),
+				    '%Y-%m-%d'
+				  ) member_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      COUNT(a.member_no) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y-%m-%d') create_date 
+		      FROM
+		        member_info) a 
+		    GROUP BY a.create_date) b 
+		    ON a.member_date = b.create_date 
+		ORDER BY a.member_date 
+	</select>
+	<select id="getMemberChangeDateMonth" parameterType="String" resultType="Map">
+		SELECT 
+		  a.member_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} MONTH),
+				    '%Y-%m'
+				  ) member_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      COUNT(a.member_no) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y-%m') create_date 
+		      FROM
+		        member_info) a 
+		    GROUP BY a.create_date) b 
+		    ON a.member_date = b.create_date 
+		ORDER BY a.member_date 
+	</select>
+	<select id="getMemberChangeDateYear" parameterType="String" resultType="Map">
+		SELECT 
+		  a.member_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} YEAR),
+				    '%Y'
+				  ) member_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      COUNT(a.member_no) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y') create_date 
+		      FROM
+		        member_info) a 
+		    GROUP BY a.create_date) b 
+		    ON a.member_date = b.create_date 
+		ORDER BY a.member_date 
+	</select>
+	<select id="getOrderChangeDateDay" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} DAY),
+				    '%Y-%m-%d'
+				  ) order_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      COUNT(a.order_id) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y-%m-%d') create_date 
+		      FROM
+		        order_info 
+		      WHERE order_status IN (1,7,3,6)  ) a 
+		    GROUP BY a.create_date) b 
+		    ON a.order_date = b.create_date 
+		ORDER BY a.order_date 
+	</select>
+	<select id="getOrderChangeDateMonth" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} MONTH),
+				    '%Y-%m'
+				  ) order_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      COUNT(a.order_id) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y-%m') create_date 
+		      FROM
+		        order_info 
+		      WHERE order_status IN (1,7,3,6)  ) a 
+		    GROUP BY a.create_date) b 
+		    ON a.order_date = b.create_date 
+		ORDER BY a.order_date 
+	</select>
+	<select id="getOrderChangeDateYear" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} YEAR),
+				    '%Y'
+				  ) order_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      COUNT(a.order_id) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y') create_date 
+		      FROM
+		        order_info 
+		      WHERE order_status IN (1,7,3,6)  ) a 
+		    GROUP BY a.create_date) b 
+		    ON a.order_date = b.create_date 
+		ORDER BY a.order_date 
+	</select>
+	<select id="getIncomeChangeDateMonth" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} MONTH),
+				    '%Y-%m'
+				  ) order_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      SUM(pay_price) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y-%m') create_date 
+		      FROM
+		        order_info 
+		      WHERE order_status IN (1,7,3,6)  ) a 
+		    GROUP BY a.create_date) b 
+		    ON a.order_date = b.create_date 
+		ORDER BY a.order_date 
+	</select>
+	<select id="getIncomeChangeDateYear" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} YEAR),
+				    '%Y'
+				  ) order_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      SUM(pay_price) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y') create_date 
+		      FROM
+		        order_info 
+		      WHERE order_status IN (1,7,3,6)  ) a 
+		    GROUP BY a.create_date) b 
+		    ON a.order_date = b.create_date 
+		ORDER BY a.order_date 
+	</select>
+	<select id="getIncomeChangeDateDay" parameterType="String" resultType="Map">
+		SELECT 
+		  a.order_date,
+		  IFNULL(b.count_num, 0) count_num
+		FROM 
+			(<foreach collection="date_list" item="item" separator="UNION">
+				SELECT 
+				  DATE_FORMAT(
+				    DATE_SUB(NOW(), INTERVAL #{item} DAY),
+				    '%Y-%m-%d'
+				  ) order_date 
+			</foreach>) a
+			LEFT JOIN 
+		    (SELECT 
+		      SUM(pay_price) count_num,
+		      create_date 
+		    FROM
+		      (SELECT 
+		        *,
+		        DATE_FORMAT(create_time, '%Y-%m-%d') create_date 
+		      FROM
+		        order_info 
+		      WHERE order_status IN (1,7,3,6)  ) a 
+		    GROUP BY a.create_date) b 
+		    ON a.order_date = b.create_date 
+		ORDER BY a.order_date 
+	</select>
+</mapper>

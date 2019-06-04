@@ -144,5 +144,41 @@
 		  wallet_info b 
 		WHERE a.member_no = b.member_no 
 	</insert>
-	
+	<insert id="insertWalletChangeRecordForBusinessMemebr">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  '${record_id}' record_id,
+		  a.member_no,
+		  a.record_price,
+		  '1' record_status,
+		  '商家业务收益' note,
+		  a.record_price + b.rmb left_rmb,
+		  NOW() create_time,
+		  '3' record_type,
+		  relation 
+		FROM
+		  (SELECT 
+		    c.operator_member_id member_no,
+		    TRUNCATE(a.pay_price * 0.05, 2) record_price,
+		    a.order_id relation 
+		  FROM
+		    order_info a,
+		    member_info b,
+		    shop_info c 
+		  WHERE a.member_no = b.member_no 
+		    AND b.share_shop_id = c.shop_id 
+		    AND a.order_id = '${order_id}') a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+	</insert>
 </mapper>

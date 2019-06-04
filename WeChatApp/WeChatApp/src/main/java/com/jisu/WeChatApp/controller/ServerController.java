@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jisu.WeChatApp.dao.ShopServerMapper;
 import com.jisu.WeChatApp.pojo.ServerClass;
+import com.jisu.WeChatApp.pojo.ShopServer;
 import com.jisu.WeChatApp.service.impl.ServerServiceImpl;
 import com.jisu.WeChatApp.tool.util.MsgModel;
 
@@ -19,6 +21,8 @@ import com.jisu.WeChatApp.tool.util.MsgModel;
 public class ServerController {
 	@Autowired
 	private ServerServiceImpl serverServiceImpl;
+	@Autowired
+	private ShopServerMapper shopServerMapper;
 
 	@RequestMapping("getLeveL1ServerClass")
 	public MsgModel getLeveL1ServerClass() {
@@ -58,7 +62,9 @@ public class ServerController {
 	@RequestMapping("getFreeServerMemberList")
 	public MsgModel getFreeServerMemberList(HttpServletRequest request) {
 		String shop_server_id = request.getParameter("shop_server_id");
-		List<Map<String, String>> server_member_list = serverServiceImpl.getFreeServerMemberList(shop_server_id);
+		String address_x = request.getParameter("address_x");
+		String address_y = request.getParameter("address_y");
+		List<Map<String, String>> server_member_list = serverServiceImpl.getFreeServerMemberList(shop_server_id, address_x, address_y);
 		MsgModel msg = new MsgModel();
 		msg.setContext(server_member_list);
 		msg.setStatus(MsgModel.SUCCESS);
@@ -74,4 +80,15 @@ public class ServerController {
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}
+
+	@RequestMapping("getShopServerInfoById")
+	public MsgModel getShopServerInfoById(HttpServletRequest request) {
+		String shop_server_id = request.getParameter("shop_server_id");
+		ShopServer shopServer = shopServerMapper.selectByPrimaryKey(shop_server_id);
+		MsgModel msg = new MsgModel();
+		msg.setContext(shopServer);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
 }

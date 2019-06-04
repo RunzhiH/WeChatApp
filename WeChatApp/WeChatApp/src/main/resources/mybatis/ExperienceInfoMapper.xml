@@ -20,6 +20,11 @@
     <result column="server_class_id_3" jdbcType="VARCHAR" property="serverClassId3" />
     <result column="server_class_id_4" jdbcType="VARCHAR" property="serverClassId4" />
     <result column="server_class_id_5" jdbcType="VARCHAR" property="serverClassId5" />
+    <result column="server_before_photo" jdbcType="VARCHAR" property="serverBeforePhoto" />
+    <result column="server_after_photo" jdbcType="VARCHAR" property="serverAfterPhoto" />
+    <result column="server_condition" jdbcType="VARCHAR" property="serverCondition" />
+    <result column="shop_server_id" jdbcType="VARCHAR" property="shopServerId" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -94,7 +99,8 @@
     -->
     experience_id, title, create_time, member_no, text_url, experience_photo, praise_points, 
     experience_desc, order_id, server_class_id_1, server_class_id_2, server_class_id_3, 
-    server_class_id_4, server_class_id_5
+    server_class_id_4, server_class_id_5, server_before_photo, server_after_photo, server_condition, 
+    shop_server_id, server_name
   </sql>
   <select id="selectByExample" parameterType="com.jisu.WeChatApp.pojo.ExperienceInfoExample" resultMap="BaseResultMap">
     <!--
@@ -151,12 +157,16 @@
       member_no, text_url, experience_photo, 
       praise_points, experience_desc, order_id, 
       server_class_id_1, server_class_id_2, server_class_id_3, 
-      server_class_id_4, server_class_id_5)
+      server_class_id_4, server_class_id_5, server_before_photo, 
+      server_after_photo, server_condition, shop_server_id, 
+      server_name)
     values (#{experienceId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{memberNo,jdbcType=VARCHAR}, #{textUrl,jdbcType=VARCHAR}, #{experiencePhoto,jdbcType=VARCHAR}, 
       #{praisePoints,jdbcType=INTEGER}, #{experienceDesc,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
       #{serverClassId1,jdbcType=VARCHAR}, #{serverClassId2,jdbcType=VARCHAR}, #{serverClassId3,jdbcType=VARCHAR}, 
-      #{serverClassId4,jdbcType=VARCHAR}, #{serverClassId5,jdbcType=VARCHAR})
+      #{serverClassId4,jdbcType=VARCHAR}, #{serverClassId5,jdbcType=VARCHAR}, #{serverBeforePhoto,jdbcType=VARCHAR}, 
+      #{serverAfterPhoto,jdbcType=VARCHAR}, #{serverCondition,jdbcType=VARCHAR}, #{shopServerId,jdbcType=VARCHAR}, 
+      #{serverName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jisu.WeChatApp.pojo.ExperienceInfo">
     <!--
@@ -207,6 +217,21 @@
       <if test="serverClassId5 != null">
         server_class_id_5,
       </if>
+      <if test="serverBeforePhoto != null">
+        server_before_photo,
+      </if>
+      <if test="serverAfterPhoto != null">
+        server_after_photo,
+      </if>
+      <if test="serverCondition != null">
+        server_condition,
+      </if>
+      <if test="shopServerId != null">
+        shop_server_id,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="experienceId != null">
@@ -250,6 +275,21 @@
       </if>
       <if test="serverClassId5 != null">
         #{serverClassId5,jdbcType=VARCHAR},
+      </if>
+      <if test="serverBeforePhoto != null">
+        #{serverBeforePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="serverAfterPhoto != null">
+        #{serverAfterPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="serverCondition != null">
+        #{serverCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="shopServerId != null">
+        #{shopServerId,jdbcType=VARCHAR},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -312,6 +352,21 @@
       <if test="record.serverClassId5 != null">
         server_class_id_5 = #{record.serverClassId5,jdbcType=VARCHAR},
       </if>
+      <if test="record.serverBeforePhoto != null">
+        server_before_photo = #{record.serverBeforePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverAfterPhoto != null">
+        server_after_photo = #{record.serverAfterPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverCondition != null">
+        server_condition = #{record.serverCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopServerId != null">
+        shop_server_id = #{record.shopServerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverName != null">
+        server_name = #{record.serverName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -336,7 +391,12 @@
       server_class_id_2 = #{record.serverClassId2,jdbcType=VARCHAR},
       server_class_id_3 = #{record.serverClassId3,jdbcType=VARCHAR},
       server_class_id_4 = #{record.serverClassId4,jdbcType=VARCHAR},
-      server_class_id_5 = #{record.serverClassId5,jdbcType=VARCHAR}
+      server_class_id_5 = #{record.serverClassId5,jdbcType=VARCHAR},
+      server_before_photo = #{record.serverBeforePhoto,jdbcType=VARCHAR},
+      server_after_photo = #{record.serverAfterPhoto,jdbcType=VARCHAR},
+      server_condition = #{record.serverCondition,jdbcType=VARCHAR},
+      shop_server_id = #{record.shopServerId,jdbcType=VARCHAR},
+      server_name = #{record.serverName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -387,6 +447,21 @@
       <if test="serverClassId5 != null">
         server_class_id_5 = #{serverClassId5,jdbcType=VARCHAR},
       </if>
+      <if test="serverBeforePhoto != null">
+        server_before_photo = #{serverBeforePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="serverAfterPhoto != null">
+        server_after_photo = #{serverAfterPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="serverCondition != null">
+        server_condition = #{serverCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="shopServerId != null">
+        shop_server_id = #{shopServerId,jdbcType=VARCHAR},
+      </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
     </set>
     where experience_id = #{experienceId,jdbcType=VARCHAR}
   </update>
@@ -408,7 +483,12 @@
       server_class_id_2 = #{serverClassId2,jdbcType=VARCHAR},
       server_class_id_3 = #{serverClassId3,jdbcType=VARCHAR},
       server_class_id_4 = #{serverClassId4,jdbcType=VARCHAR},
-      server_class_id_5 = #{serverClassId5,jdbcType=VARCHAR}
+      server_class_id_5 = #{serverClassId5,jdbcType=VARCHAR},
+      server_before_photo = #{serverBeforePhoto,jdbcType=VARCHAR},
+      server_after_photo = #{serverAfterPhoto,jdbcType=VARCHAR},
+      server_condition = #{serverCondition,jdbcType=VARCHAR},
+      shop_server_id = #{shopServerId,jdbcType=VARCHAR},
+      server_name = #{serverName,jdbcType=VARCHAR}
     where experience_id = #{experienceId,jdbcType=VARCHAR}
   </update>
 </mapper>

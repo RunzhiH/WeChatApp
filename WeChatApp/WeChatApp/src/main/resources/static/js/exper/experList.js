@@ -67,7 +67,9 @@ $(function() {
 		});
 		form.on('select(serverClassId1)', function(data) {
 			var id = (data.value);
-			getNextLeveLList(id, 1)
+			getNextLeveLList(id, 1);
+
+			getShopServerList(id);
 		});
 		form.on('select(serverClassId2)', function(data) {
 			var id = (data.value);
@@ -94,15 +96,48 @@ $(function() {
 
 		// 执行实例
 		var uploadInst = upload.render({
-			elem : '#test-upload-normal' // 绑定元素
-			,
-			url : '/api/upload/uploadImages' // 上传接口
-			,
+			elem : '#test-upload-normal', // 绑定元素
+			url : '/api/upload/uploadImages',// 上传接口
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);
 				$("#experiencePhoto").attr("src", res.context[0]);
 				$("input[name='experiencePhoto']").val(res.context[0]);
+			},
+			error : function() {
+				// 请求异常回调
+			}
+		});
+
+		// 执行实例
+		var uploadInst2 = upload.render({
+			elem : '#server_before_photo', // 绑定元素
+			url : '/api/upload/uploadImages',// 上传接口
+			done : function(res) {
+				// 上传完毕回调
+				console.log(res);
+				$("#serverBeforePhoto").attr("src", res.context[0]);
+				$("input[name='serverBeforePhoto']").val(res.context[0]);
+			},
+			error : function() {
+				// 请求异常回调
+			}
+		});
+
+		// 执行实例
+		var uploadInst3 = upload.render({
+			elem : '#server_after_photo', // 绑定元素
+			url : '/api/upload/uploadImages',// 上传接口
+			multiple : true,
+			number : 3,
+			done : function(res) {
+				// 上传完毕回调
+				console.log(res);
+				var imageList = res.context;
+				var imageList_str = $("input[name='serverAfterPhoto']").val();
+				$("input[name='serverAfterPhoto']").parent().append("<img src='" + res.context[0] + "' style='width: 140px'>");
+				imageList_str += res.context[0] + ",";
+				$("input[name='serverAfterPhoto']").val(imageList_str);
 			},
 			error : function() {
 				// 请求异常回调
@@ -124,6 +159,19 @@ function update(id, type) {
 				$("input[name='title']").val(data.title);
 				$("input[name='experiencePhoto']").val(data.experiencePhoto);
 				$("#experiencePhoto").attr("src", data.experiencePhoto);
+				$("input[name='serverBeforePhoto']").val(data.serverBeforePhoto);
+				$("#serverBeforePhoto").attr("src", data.serverBeforePhoto);
+				$("input[name='serverAfterPhoto']").val(data.serverAfterPhoto);
+				if (data.serverAfterPhoto) {
+					var image_list = data.serverAfterPhoto.split(",");
+					for (var i = 0; i < image_list.length; i++) {
+						if (image_list[i] != "") {
+							$("input[name='serverAfterPhoto']").parent().append("<img src='" + image_list[i] + "' style='width: 140px'>");
+
+						}
+					}
+				}
+
 				$("textarea[name='experienceDesc']").val(data.experienceDesc);
 				layer.open({
 					type : 1,
@@ -144,6 +192,12 @@ function update(id, type) {
 
 	}
 }
+function deleteImages() {
+	var img_list = $("input[name='serverAfterPhoto']").parent().children("img");
+	img_list.remove();
+	$("input[name='serverAfterPhoto']").val("");
+}
+
 // 开通权限
 function addExper() {
 	$("#type").val(1);
@@ -168,7 +222,7 @@ function del(id) {
 			btn : [ '确认', '返回' ]
 		// 按钮
 		}, function() {
-			$.post("/web/server/delExper", {
+			$.post("/web/exper/delExper", {
 				"exper_id" : id
 			}, function(data) {
 				if (data == "ok") {
@@ -206,12 +260,6 @@ function getNextLeveLList(id, lev) {
 				},
 				success : function(data) {
 					if ("200" == data.status) {
-//						for (i=lev+1;i<= 5;i++){
-//							$("select[name=serverClassId"+i+"]").remove();
-//						}
-//						form.render('select');
-//						html="<select name=\"serverClassId" + (lev + 1) + "\" lay-filter=\"serverClassId2\"><option value=\"\" ></option></select>";
-//						$("select[name=serverClassId"+lev+"]").parent().append(html);
 						var select = $("select[name=serverClassId" + (lev + 1) + "]");
 						select.empty();
 						select.append("<option value=\"\" ></option>");
@@ -228,6 +276,33 @@ function getNextLeveLList(id, lev) {
 			select.empty();
 			select.append("<option value=\"\" ></option>");
 			form.render('select');
+		}
+	});
+}
+function getShopServerList(id) {
+	layui.use('form', function() {
+		var form = layui.form;
+		if (id) {
+			// 请求
+			$.ajax({
+				type : 'GET',
+				url : "/api/server/getServerListByClassId",
+				data : {
+					server_class_id : id
+				},
+				success : function(data) {
+					if ("200" == data.status) {
+						var select = $("select[name='shopServerId']");
+						select.empty();
+						select.append("<option value=\"\" ></option>");
+						$.each(data.context, function(index, item) {
+							var option = $("<option value='" + item.shop_server_id + "' >" + item.server_name + "</option>");
+							select.append(option);
+						});
+						form.render('select');
+					}
+				}
+			});
 		}
 	});
 }

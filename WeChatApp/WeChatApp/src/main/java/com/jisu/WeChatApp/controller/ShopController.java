@@ -122,13 +122,14 @@ public class ShopController {
 		String wechat = request.getParameter("wechat");
 		String operator_member_id = request.getParameter("operator_memebr_id");
 		String desc_photo_url = request.getParameter("desc_photo_url");
+		String server_class_id_str = request.getParameter("server_class_id_str");
 		ShopInfo shopInfo = new ShopInfo();
 		if (StringUtils.isNotBlank(authorization_book_url)) {
 			shopInfo.setAuthorizationBookUrl(authorization_book_url);
-		} else {
-			msg.setStatus(MsgModel.ERROR);
-			msg.setMessage("授权书不能为空");
-			return msg;
+//		} else {
+//			msg.setStatus(MsgModel.ERROR);
+//			msg.setMessage("授权书不能为空");
+//			return msg;
 		}
 		if (StringUtils.isNotBlank(shop_address)) {
 			shopInfo.setShopAddress(shop_address);
@@ -177,6 +178,7 @@ public class ShopController {
 		if (StringUtils.isNotBlank(desc_photo_url)) {
 			shopInfo.setDescPhotoUrl(desc_photo_url);
 		}
+		shopInfo.setServerClassIdStr(server_class_id_str);
 		int save_num = 0;
 		if (StringUtils.isNotBlank(shop_id)) {
 
@@ -189,6 +191,7 @@ public class ShopController {
 			shopInfo.setPraisePoints(0);
 			shopInfo.setShopStatus(1);
 			shopInfo.setOperatorMemberId(operator_member_id);
+			shopInfo.setIsOpen(2);  //是否接单
 //			try {
 //				// 加密密码
 //				shopInfo.setPassword(MD5Util.getEncryptedPwd(password));
@@ -540,6 +543,24 @@ public class ShopController {
 		MsgModel msg = new MsgModel();
 		msg.setContext(shop_list);
 		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
+	@RequestMapping(value = "/updateShopOpen", method = RequestMethod.POST)
+	public MsgModel updateShopOpen(HttpServletRequest request) {
+		String shop_id = request.getParameter("shop_id");
+		String is_open = request.getParameter("is_open");
+		ShopInfo shopInfo = new ShopInfo();
+
+		shopInfo.setShopId(shop_id);
+		shopInfo.setIsOpen(Integer.valueOf(is_open));
+		int num = shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
+		MsgModel msg = new MsgModel();
+		if (num > 0) {
+			msg.setStatus(MsgModel.SUCCESS);
+		} else {
+			msg.setStatus(MsgModel.ERROR);
+		}
 		return msg;
 	}
 }

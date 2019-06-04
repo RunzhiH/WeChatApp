@@ -1,5 +1,6 @@
 package com.jisu.WeChatApp.tool.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.aliyuncs.CommonRequest;
@@ -86,7 +87,7 @@ public class SmsUtil {
 		request.setAction("SendSms");
 		request.putQueryParameter("PhoneNumbers", mobile);
 		request.putQueryParameter("SignName", "大手艺");
-		request.putQueryParameter("TemplateCode", "SMS_165690765");
+		request.putQueryParameter("TemplateCode", "SMS_165675844");
 		request.putQueryParameter("TemplateParam", "{\"order_code\":'" + order_code + "'}");
 		CommonResponse response = null;
 		try {
@@ -103,7 +104,10 @@ public class SmsUtil {
 //	public static void main(String[] args) throws ClientException, InterruptedException {
 //
 //		// 发短信
-//		CommonResponse response = sendSmsCode("15958243735", "698767");
+//		Map<String, String> sendMsgContext=new HashMap<String, String>();
+//		sendMsgContext.put("phone", "15958243735");
+//		sendMsgContext.put("order_code", "124323252454");
+//		CommonResponse response = sendSmsRemind(sendMsgContext);
 //		System.out.println("短信接口返回的数据----------------");
 //		System.out.println("DATA=" + response.getData());
 ////		System.out.println("Message=" + response.getMessage());

@@ -39,11 +39,19 @@
 		  b.*,
 		  c.nickname,
 		  c.photo,
-		  c.phone 
+		  c.phone,
+		  IFNULL(d.order_count,0) order_count 
 		FROM
 		  shop_server a,
 		  server_member_info b,
 		  member_info c 
+		  LEFT JOIN (SELECT 
+		  COUNT(order_id) order_count,
+		  server_member_no 
+		  FROM order_info 
+		  WHERE order_status IN (1,3,7)
+		  GROUP BY server_member_no ) d
+		  ON c.member_no = d.server_member_no
 		WHERE b.member_no = c.member_no 
 		  AND LOCATE(
 		    a.server_class_id,
@@ -52,6 +60,58 @@
 		  AND b.order_takes_type != 0 
 		  AND b.in_prohi = 0 
 		  AND a.shop_server_id = '${shop_server_id}' 
+		  ORDER BY d.order_count
+	</select>
+	<select id="getFreeServerMemberListForJuli" parameterType="String" resultType="Map">
+		SELECT * FROM (
+		SELECT 
+		  ROUND(
+	        6378.138 * 2 * ASIN(
+	          SQRT(
+	            POW(
+	              SIN(
+	                (
+	                  '${address_y}' * PI() / 180 - b.lat * PI() / 180
+	                ) / 2
+	              ),
+	              2
+	            ) + COS('${address_y}' * PI() / 180) * COS(b.lat * PI() / 180) * POW(
+	              SIN(
+	                (
+	                  '${address_x}' * PI() / 180 - b.lon * PI() / 180
+	                ) / 2
+	              ),
+	              2
+	            )
+	          )
+	        ) * 1000
+	      ) AS juli,
+		  b.*,
+		  c.nickname,
+		  c.photo,
+		  c.phone,
+		  IFNULL(d.order_count,0) order_count 
+		FROM
+		  shop_server a,
+		  server_member_info b,
+		  member_info c 
+		  LEFT JOIN (SELECT 
+		  COUNT(order_id) order_count,
+		  server_member_no 
+		  FROM order_info 
+		  WHERE order_status IN (1,3,7)
+		  GROUP BY server_member_no ) d
+		  ON c.member_no = d.server_member_no
+		WHERE b.member_no = c.member_no 
+		  AND LOCATE(
+		    a.server_class_id,
+		    b.server_class_id_str
+		  ) > 0 
+		  AND b.order_takes_type != 0 
+		  AND b.in_prohi = 0 
+		  AND a.shop_server_id = '${shop_server_id}' ) a
+		  WHERE 5000 >a.juli
+		  ORDER BY a.order_count
 	</select>
 	<select id="getProhiMemberList" resultType="Map">
 		SELECT 
@@ -71,7 +131,11 @@
 		  DATE_FORMAT(
 		    b.appointment_time_start,
 		    '%Y-%m-%d'
-		  ) the_day 
+		  ) the_day,
+		  DATE_FORMAT(
+		    b.appointment_time_start,
+		    '%m月%d日'
+		  ) the_day_str
 		FROM
 		  member_info a,
 		  order_info b 
@@ -79,4 +143,47 @@
 		  AND a.member_no = '${member_no}' 
 		  AND b.order_status IN (1, 8)
 	</select>
+	<select id="getServerMemberList" resultType="Map">
+		SELECT 
+		  a.age,
+		  a.member_type,
+		  a.nickname,
+		  a.phone,
+		  a.photo,
+		  b.*
+		FROM
+		  member_info a,
+		  server_member_info b 
+		WHERE a.member_no = b.member_no 
+		  AND a.member_type = 2
+	</select>
+	<resultMap id="serverMemberVO" type="com.jisu.WeChatApp.entity.ServerMemberVO" >
+    <id column="member_no" property="memberNo" />
+    <result column="nickname" property="nickname"/>
+    <result column="phone" property="phone"/>
+    <result column="photo" property="photo"/>
+    <result column="server_class_id_str" property="serverClassIdStr"/>
+    <result column="order_takes_type" property="orderTakesType"/>
+    <result  column="server_member_desc" property="serverMemberDesc"/>
+  </resultMap>
+	<select id="getServerMember" parameterType="String" resultMap="serverMemberVO">
+		SELECT 
+		  a.age,
+		  a.member_type,
+		  a.nickname,
+		  a.phone,
+		  a.photo,
+		  b.* 
+		FROM
+		  member_info a,
+		  server_member_info b 
+		WHERE a.member_no = b.member_no 
+		AND a.member_no= #{member_no}
+	</select>
+	<delete id="deleteServerMember" parameterType="String">
+		DELETE 
+		FROM
+		  server_member_info 
+		WHERE member_no = #{member_no}
+	</delete>
 </mapper>

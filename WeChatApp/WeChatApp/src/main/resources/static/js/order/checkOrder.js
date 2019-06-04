@@ -157,7 +157,7 @@ function openUpdateOrder(id) {
 					//$("#serverMember").val(data.serverMember);
 					$.ajax({
 						type : 'GET',
-						url : "/web/server/getServerMember",
+						url : "/web/server/getServerMemberByOrderId",
 						data : {
 							"order_id" : id
 						},

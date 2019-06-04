@@ -1,5 +1,7 @@
 package com.jisu.WeChatApp.service.impl;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +19,12 @@ import com.jisu.WeChatApp.daoSelf.OrderInfoMapperSelf;
 import com.jisu.WeChatApp.daoSelf.WalletChangeRecordMapperSelf;
 import com.jisu.WeChatApp.daoSelf.WalletInfoMapperSelf;
 import com.jisu.WeChatApp.entity.OrderSearchDTO;
-import com.jisu.WeChatApp.pojo.MemberInfo;
 import com.jisu.WeChatApp.pojo.OrderInfo;
 import com.jisu.WeChatApp.pojo.PageDataResult;
 import com.jisu.WeChatApp.service.OrderInfoService;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
+import com.jisu.WeChatApp.tool.util.PayUtils;
+import com.jisu.WeChatApp.tool.util.WeChatURLUtil;
 
 @Service("OrderInfoServiceImpl")
 public class OrderInfoServiceImpl implements OrderInfoService {
@@ -31,8 +34,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 	@Autowired
 	private OrderInfoMapperSelf orderInfoMapperSelf;
-	@Autowired
-	private MemberInfoMapper memberInfoMapper;
 	@Autowired
 	private WalletChangeRecordMapperSelf walletChangeRecordMapperSelf;
 	@Autowired
@@ -57,7 +58,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			Map<String, String> msg = new HashMap<String, String>();
 			msg.put("order_id", order_id);
 			sendMessageServiceImpl.sendOrderPayMessage(msg);
-			sendMessageServiceImpl.sendOrderCheckMessageToShop(msg);
+			sendMessageServiceImpl.sendOrderCheckMessageToServer(msg);
 			sendMessageServiceImpl.sendAddOrderMessage(msg);
 			// 发送消息结束
 		}
@@ -68,9 +69,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	public int AfterOrderAllCheck(String order_id) {
 		// TODO Auto-generated method stub
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
-		int shop_is_check = orderInfo.getShopIsCheck();
 		int server_member_is_check = orderInfo.getServerMemebrIsChenck();
-		if (1 == shop_is_check && 1 == server_member_is_check) {
+		if (1 == server_member_is_check) {
 			orderInfo.setOrderStatus(8);
 			orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
 			// 发送消息
@@ -78,9 +78,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			msg.put("order_id", order_id);
 			sendMessageServiceImpl.sendOrderIsCheckMessage(msg);
 			// 发送消息结束
-		}
-		if (2 == shop_is_check) {
-
 		}
 		return 0;
 	}
@@ -174,6 +171,19 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 				walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
 			}
 			// 结算服务人员收益结束
+
+			// 结算业务员收益
+			String business_memebr_record_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
+			Map<String, String> business_member_map = new HashMap<String, String>();
+			business_member_map.put("order_id", order_id);
+			business_member_map.put("record_id", business_memebr_record_id);
+			int num_business_memebr= walletChangeRecordMapperSelf.insertWalletChangeRecordForBusinessMemebr(business_member_map);
+			if (num_business_memebr > 0) {
+				Map<String, String> record_id_map = new HashMap<String, String>();
+				record_id_map.put("record_id", server_memebr_record_id);
+				walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
+			}
+			// 结算业务员收益结束
 		}
 
 		return 0;
@@ -231,11 +241,42 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		// TODO Auto-generated method stub
 		PageDataResult pdr = new PageDataResult();
 		PageHelper.startPage(page, limit);
-		List<Map<String, String>> refund_order_list=orderInfoMapperSelf.getRefundOrderList(orderSearchDTO);
+		List<Map<String, String>> refund_order_list = orderInfoMapperSelf.getRefundOrderList(orderSearchDTO);
 		PageInfo<Map<String, String>> pageInfo = new PageInfo<Map<String, String>>(refund_order_list);
 		// 设置获取到的总记录数total：
 		pdr.setTotals(Long.valueOf(pageInfo.getTotal()).intValue());
 		pdr.setList(pageInfo.getList());
 		return pdr;
 	}
+
+	@Override
+	public String closeOrderAndRefund(String order_id) {
+		// TODO Auto-generated method stub
+		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
+		// 关闭订单
+		orderInfo.setCloseTime(new Date());
+		orderInfo.setOrderStatus(5);
+		int num = orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+		// 关闭订单结束
+		if (num > 0) {
+			String notify_url = "";
+			String refund_desc = "商家或技术人员未接单";
+			BigDecimal pay_price = orderInfo.getPayPrice();
+			String refund_price = pay_price.multiply(new BigDecimal(100)).toString();
+			Map<String, String> result = new HashMap<String, String>();
+			try {
+				result = PayUtils.wxRefund(null, order_id, refund_price, refund_price, refund_desc);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// 判断是否退款成功
+			if ("ok".equals(result.get("returncode"))) {
+
+				return "ok";
+			}
+		}
+		return null;
+	}
+
 }

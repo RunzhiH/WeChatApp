@@ -22,18 +22,18 @@ import com.aliyun.oss.model.PutObjectResult;
 
 public class OSSUtils {
 	private final static Logger logger = LoggerFactory.getLogger(OSSUtils.class);
-	private static String END_POINT = "oss-cn-beijing.aliyuncs.com";
-	private static String ACCESS_KEY_ID = "LTAIZKA25yfM9T6d";
-	private static String ACCESS_KEY_SECRET = "nCi8gySVs3UexlSkH3nOMFjzqNpNUF";
-	private static String BUCKET_NAME = "test-image-myself";
+	private static String END_POINT = PropertyUtil.getProperty("end_point");
+	private static String ACCESS_KEY_ID = PropertyUtil.getProperty("access_key_id");
+	private static String ACCESS_KEY_SECRET = PropertyUtil.getProperty("access_key_secret");
+	private static String BUCKET_NAME = PropertyUtil.getProperty("bucket_name");
+	private static String FOLDER = PropertyUtil.getProperty("folder");
 	// 文件访问域名
-	public static String FILE_HOST = "http://test-image-myself.oss-cn-beijing.aliyuncs.com/test/";
+	public static String FILE_HOST = "http://"+BUCKET_NAME+"."+END_POINT+"/"+FOLDER;
 	// 阿里云API的内或外网域名
 	// 阿里云API的密钥Access Key ID
 	// 阿里云API的密钥Access Key Secret
 	// 阿里云API的bucket名称
 	// 阿里云API的文件夹名称
-	private static String FOLDER = "test/";
 	// 初始化属性
 //	static {
 //		END_POINT = OSSClientConstants.ENDPOINT;

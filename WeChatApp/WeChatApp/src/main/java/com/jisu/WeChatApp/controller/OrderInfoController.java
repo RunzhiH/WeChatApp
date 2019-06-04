@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,7 @@ import com.jisu.WeChatApp.service.impl.MemberInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.SendMessageServiceImpl;
 import com.jisu.WeChatApp.service.impl.ShopInfoServiceImpl;
+import com.jisu.WeChatApp.tool.util.AESUtil;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
 import com.jisu.WeChatApp.tool.util.MsgModel;
 import com.jisu.WeChatApp.tool.util.PayUtils;
@@ -79,7 +81,7 @@ public class OrderInfoController {
 		String nickname = request.getParameter("nickname");
 		String appointment_time = request.getParameter("appointment_time");// 预约时间
 		String server_address = request.getParameter("server_address");
-		String server_member_no=request.getParameter("server_memner_no");
+		String server_member_no = request.getParameter("server_member_no");
 
 		// 获取商家服务信息
 		ShopServer shopServer = shopServerMapper.selectByPrimaryKey(shop_server_id);
@@ -118,12 +120,17 @@ public class OrderInfoController {
 			}
 		}
 		// 服务地址结束
-		
-		//获取服务人员信息
-		MemberInfo server_member=memberInfoServiceImpl.getMemberInfoByMemberNo(member_no);
-		String server_member_name=server_member.getNickname();
-		//获取服务人员信息结束
-		
+
+		// 获取服务人员信息
+		MemberInfo server_member = memberInfoServiceImpl.getMemberInfoByMemberNo(server_member_no);
+		if (server_member == null) {
+			msg.setMessage("服务人员不能未空");
+			msg.setStatus(MsgModel.ERROR);
+			return msg;
+		}
+		String server_member_name = server_member.getNickname();
+		// 获取服务人员信息结束
+
 		// 创建订单
 		String order_desc = request.getParameter("order_desc");
 		OrderInfo orderInfo = new OrderInfo();
@@ -135,15 +142,21 @@ public class OrderInfoController {
 		orderInfo.setOrderCode(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_ONLY, 16, null));
 		orderInfo.setOrderPrice(server_price);
 		orderInfo.setServerName(server_name);
-		orderInfo.setPayPrice(server_sale_price);
+		orderInfo.setPayPrice(server_price);
 		orderInfo.setOrderStatus(0);
 		orderInfo.setOrderDesc(order_desc);
 		orderInfo.setServerAddress(server_address);
-		if(StringUtils.isNotBlank(appointment_time)) {
-			SimpleDateFormat sdf= new SimpleDateFormat("YYYY-MM-dd HH");
-			Date date= sdf.parse(appointment_time);
+		orderInfo.setServerMemberNo(server_member_no);
+		if (StringUtils.isNotBlank(appointment_time)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH");
+			Date date = sdf.parse(appointment_time);
 			orderInfo.setAppointmentTimeStart(date);
-			date.setHours(date.getHours()+2);
+			if (server_price.compareTo(new BigDecimal(1000)) > 0) {
+				date.setHours(date.getHours() + 24);
+			} else {
+				date.setHours(date.getHours() + 3);
+			}
+
 			orderInfo.setAppointmentTimeEnd(date);
 		}
 		orderInfo.setOrderPhone(phone);
@@ -162,7 +175,7 @@ public class OrderInfoController {
 		}
 		return msg;
 	}
-	
+
 	/**
 	 * 支付订单
 	 * 
@@ -188,17 +201,18 @@ public class OrderInfoController {
 		MemberInfo memberInfo = memberInfoServiceImpl.getMemberInfoByMemberNo(member_no);
 		String open_id = memberInfo.getOpenid();
 
-		String notify_url = PropertyUtil.getProperty("shop.host") + "/order/wxPayNotify";
+		String notify_url = PropertyUtil.getProperty("shop.host") + "/api/order/wxPayNotify";
 		String appid = PropertyUtil.getProperty("wx.appid");
 		String mch_key = PropertyUtil.getProperty("wx.mch_key");
 
 		// 修改订单状态为支付中
 		orderInfo.setOrderStatus(7);
-		orderInfo.setPayWay(Integer.valueOf(pay_way));
+		orderInfo.setPayWay(1);
+		// orderInfo.setPayWay(Integer.valueOf(pay_way));
 		orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
 
 		String nonceStr = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-		String result = PayUtils.wxPay(request, nonceStr, order_desc, order_id, String.valueOf(pay_price), notify_url, open_id);
+		String result = PayUtils.wxPay(request, nonceStr, order_desc, order_id, pay_price.setScale(0, BigDecimal.ROUND_UP).toString(), notify_url, open_id);
 		try {
 			// 将解析结果存储在HashMap中
 			Map map = PayUtils.doXMLParse(result);
@@ -217,6 +231,7 @@ public class OrderInfoController {
 				String paySign = PayUtils.sign(stringSignTemp, mch_key, "utf-8").toUpperCase();
 				result_map.put("paySign", paySign);
 				result_map.put("appid", appid);
+				result_map.put("signType", "MD5");
 				msg.setStatus(MsgModel.SUCCESS);
 				msg.setContext(result_map);
 			} else {
@@ -327,6 +342,7 @@ public class OrderInfoController {
 		condition.put("shop_is_check", request.getParameter("shop_is_check"));
 		condition.put("server_member_is_check", request.getParameter("server_member_is_check"));
 		condition.put("server_member_no", request.getParameter("server_member_no"));
+		condition.put("member_no", request.getParameter("member_no"));
 		String begin = request.getParameter("begin");
 		String end = request.getParameter("end");
 		if (StringUtils.isNotBlank(end) && StringUtils.isBlank(begin)) {
@@ -346,7 +362,7 @@ public class OrderInfoController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	@RequestMapping("checkOrder")
 	public MsgModel checkOrder(HttpServletRequest request, HttpServletResponse response) throws ParseException {
@@ -354,29 +370,24 @@ public class OrderInfoController {
 		String check_type = request.getParameter("check_type");
 		String order_id = request.getParameter("order_id");
 		String is_check = request.getParameter("is_check");
-		
+
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
 		if ("0".equals(check_type)) {
 			orderInfo.setShopIsCheck(Integer.valueOf(is_check));
 			if ("2".equals(is_check)) {
-				//商家自动禁单
-				String shop_id=orderInfo.getShopId();
+				// 商家自动禁单
+				String shop_id = orderInfo.getShopId();
 				shopInfoServiceImpl.shopProhibitOrder(shop_id);
-				//商家自动禁单结束
+				// 商家自动禁单结束
 			}
 		} else if ("1".equals(check_type)) {
-			String end_time=request.getParameter("end_time");
-			if(StringUtils.isNotBlank(end_time)) {
-				SimpleDateFormat sdf= new SimpleDateFormat("YYYY-MM-dd HH");
-				Date date= sdf.parse(end_time);
-				orderInfo.setAppointmentTimeEnd(date);
-			}
-			orderInfo.setServerMemebrIsChenck(Integer.valueOf(is_check));
-			if ("2".equals(is_check)) {
-				//技术人员自动禁单
-				String member_no=orderInfo.getServerMemberNo();
+			if ("1".equals(is_check)) {
+				orderInfo.setServerMemebrIsChenck(Integer.valueOf(is_check));
+			} else if ("2".equals(is_check)) {
+				// 技术人员自动禁单
+				String member_no = orderInfo.getServerMemberNo();
 				memberInfoServiceImpl.memberProhibitOrder(member_no);
-				//技术人员自动禁单结束
+				// 技术人员自动禁单结束
 			}
 		} else {
 			msg.setStatus(MsgModel.WORRING);
@@ -388,6 +399,9 @@ public class OrderInfoController {
 			// 全部预约确认后修改订单状态
 			orderInfoServiceImpl.AfterOrderAllCheck(order_id);
 			// 全部预约确认后修改订单状态结束
+			// 退款
+			orderInfoServiceImpl.closeOrderAndRefund(order_id);
+			// 退款结束
 			msg.setStatus(MsgModel.SUCCESS);
 		} else {
 			msg.setStatus(MsgModel.ERROR);
@@ -434,12 +448,12 @@ public class OrderInfoController {
 		String appointment_time = request.getParameter("appointment_time");// 预约时间
 		order_info.setShopId(shop_id);
 		order_info.setServerAddress(server_address);
-		
-		if(StringUtils.isNotBlank(appointment_time)) {
-			SimpleDateFormat sdf= new SimpleDateFormat("YYYY-MM-dd HH");
-			Date date= sdf.parse(appointment_time);
+
+		if (StringUtils.isNotBlank(appointment_time)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH");
+			Date date = sdf.parse(appointment_time);
 			order_info.setAppointmentTimeStart(date);
-			date.setHours(date.getHours()+2);
+			date.setHours(date.getHours() + 2);
 			order_info.setAppointmentTimeEnd(date);
 		}
 		int update_num = orderInfoMapper.updateByPrimaryKeySelective(order_info);
@@ -538,9 +552,65 @@ public class OrderInfoController {
 		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}
-//	@RequestMapping("applyAfterOrder")
-//	public MsgModel applyAfterOrder(HttpServletRequest request) {
-//		String order_id
-//		return null;
-//	}
+
+	@RequestMapping("wxRefundNotify")
+	public void RefundOrderNotify(HttpServletRequest request, HttpServletResponse response) {
+		// log.info("退款 微信回调接口方法 start");
+		String inputLine = "";
+		String notityXml = "";
+		try {
+			while ((inputLine = request.getReader().readLine()) != null) {
+				notityXml += inputLine;
+			}
+			// 关闭流
+			request.getReader().close();
+			// log.info("退款 微信回调内容信息："+notityXml);
+			// 解析成Map
+			Map<String, String> map = PayUtils.doXMLParse(notityXml);
+			// 判断 退款是否成功
+			if ("SUCCESS".equals(map.get("return_code"))) {
+				// log.info("退款 微信回调返回是否退款成功：是");
+				// 获得 返回的商户订单号
+				String passMap = AESUtil.decryptData(map.get("req_info"));
+				// 拿到解密信息
+				map = PayUtils.doXMLParse(passMap);
+				// 拿到解密后的订单号
+				String outTradeNo = map.get("out_trade_no");
+
+				// log.info("退款 微信回调返回商户订单号："+map.get("out_trade_no"));
+				// 支付成功 修改订单状态 通知微信成功回调
+//                int sqlRow = orderJpaDao.updateOrderStatus("refunded",new Timestamp(System.currentTimeMillis()), outTradeNo);
+//                if(sqlRow == 1) {
+//                    //log.info("退款 微信回调 更改订单状态成功");
+//                }
+			} else {
+				// 获得 返回的商户订单号
+				String passMap = AESUtil.decryptData(map.get("req_info"));
+				// 拿到解密信息
+				map = PayUtils.doXMLParse(passMap);
+				// 拿到解密后的订单号
+				String outTradeNo = map.get("out_trade_no");
+				// 更改 状态为取消
+//                int sqlRow = orderJpaDao.updateOrderStatus("canceled",new Timestamp(System.currentTimeMillis()), outTradeNo);
+//                if(sqlRow == 1) {
+//                  //  log.info("退款 微信回调返回是否退款成功：否");
+//                }
+			}
+
+			// 给微信服务器返回 成功标示 否则会一直询问 咱们服务器 是否回调成功
+			PrintWriter writer = response.getWriter();
+			// 封装 返回值
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("<xml>");
+			buffer.append("<return_code><![CDATA[SUCCESS]]></return_code>");
+			buffer.append("<return_msg><![CDATA[OK]]></return_msg>");
+			buffer.append("</xml>");
+			// 返回
+			writer.print(buffer.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -55,5 +55,4 @@ public class WeChatURLUtil {
 		String access_token = WechatGetUtil.getAccessToken();
 		return String.format(wx_push_message_https, access_token);
 	}
-
 }

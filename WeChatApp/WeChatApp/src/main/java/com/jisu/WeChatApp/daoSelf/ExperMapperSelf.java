@@ -26,4 +26,6 @@ public interface ExperMapperSelf {
 	public List<Map<String, String>> getAllExperList();
 
 	public int deleteExperLikeHistroy(Map<String, String> map);
+
+	public Map<String, String> getExperInfo(String exper_id);
 }

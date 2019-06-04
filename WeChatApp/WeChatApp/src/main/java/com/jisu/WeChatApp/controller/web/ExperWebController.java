@@ -55,7 +55,7 @@ public class ExperWebController {
 
 	@RequestMapping(value = "delExper", method = RequestMethod.POST)
 	@ResponseBody
-	public String delExper(@RequestParam("epxer_id") String id) {
+	public String delExper(@RequestParam("exper_id") String id) {
 		try {
 			if (StringUtils.isNotBlank(id)) {
 				return experServiceImpl.delExper(id);

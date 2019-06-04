@@ -34,6 +34,9 @@
 			    ON a.shop_id = c.shop_id,
 			  member_info b
 			WHERE a.member_no = b.member_no 
+			  <if test = "member_no != null and member_no != ''">
+			  AND a.member_no = '${member_no}'
+			  </if>
 			  <if test = "order_status != null and order_status != ''">
 			  AND a.order_status IN (${order_status}) 
 			  </if>

@@ -85,4 +85,6 @@ public interface OrderInfoService {
 	public Map<String, String> getOrderDatil(String order_id);
 	
 	public PageDataResult getRefundOrderList(Integer page, Integer limit, OrderSearchDTO orderSearchDTO);
+	
+	public String closeOrderAndRefund(String order_id);
 }

@@ -1,10 +1,12 @@
 package com.jisu.WeChatApp.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class ExperServiceImpl implements ExperService {
 	@Override
 	public List<ExperPraiseHistroy> getExperPraiseHistroy(String exper_id, String member_no) {
 		// TODO Auto-generated method stub
-		Map<String, String> condition=new HashMap<String, String>();
+		Map<String, String> condition = new HashMap<String, String>();
 		condition.put("exper_id", exper_id);
 		condition.put("member", member_no);
 		return experPraiseHistroyMapper.getExperPraiseHistroyList(condition);
@@ -64,7 +66,7 @@ public class ExperServiceImpl implements ExperService {
 	@Override
 	public int deleteExperLikeHistroy(String exper_id, String member_no) {
 		// TODO Auto-generated method stub
-		Map<String, String> map=new HashMap<String, String>();
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("member_no", member_no);
 		map.put("exper_id", exper_id);
 		return experMapperSelf.deleteExperLikeHistroy(map);
@@ -104,6 +106,31 @@ public class ExperServiceImpl implements ExperService {
 	public ExperienceInfo getExper(String exper_id) {
 		// TODO Auto-generated method stub
 		return experienceInfoMapper.selectByPrimaryKey(exper_id);
+	}
+
+	@Override
+	public Map<String, Object> getExperInfo(String exper_id) {
+		// TODO Auto-generated method stub
+		Map<String, String> exper_info= experMapperSelf.getExperInfo(exper_id);
+		String server_before_photo=exper_info.get("server_before_photo");
+		String server_after_photo= exper_info.get("server_after_photo");
+		String experience_photo=exper_info.get("experience_photo");
+		List<String> photo_list=new  ArrayList<String>();
+		if(StringUtils.isNotBlank(server_before_photo)) {
+			photo_list.add(server_before_photo);
+		}
+		String[] server_after_photo_arr= null;
+		if(StringUtils.isNotBlank(server_after_photo)) {
+			server_after_photo_arr=server_after_photo.split(",");
+			for (int i = 0; i < server_after_photo_arr.length; i++) {
+				photo_list.add(server_after_photo_arr[i]);
+			}
+		}
+		photo_list.add(experience_photo);
+		Map<String, Object> result_map=new HashMap<String, Object>();
+		result_map.putAll(exper_info);
+		result_map.put("photo_list", photo_list);
+		return result_map;
 	}
 
 }

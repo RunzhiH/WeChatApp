@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aliyun.oss.OSSClient;
 import com.jisu.WeChatApp.dao.ExperienceInfoMapper;
+import com.jisu.WeChatApp.dao.OrderInfoMapper;
 import com.jisu.WeChatApp.pojo.ExperPraiseHistroy;
 import com.jisu.WeChatApp.pojo.ExperienceInfo;
+import com.jisu.WeChatApp.pojo.OrderInfo;
 import com.jisu.WeChatApp.service.impl.ExperServiceImpl;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
 import com.jisu.WeChatApp.tool.util.MsgModel;
@@ -35,6 +37,8 @@ public class ExperienceController {
 	private ExperienceInfoMapper experienceInfoMapper;
 	@Autowired
 	private ExperServiceImpl experServiceImpl;
+	@Autowired
+	private OrderInfoMapper orderInfoMapper;
 
 	/**
 	 * 保存客户体验
@@ -51,7 +55,7 @@ public class ExperienceController {
 		String exper_id = request.getParameter("exper_id");
 		String exper_photo = request.getParameter("exper_photo");
 		String exper_desc = request.getParameter("exper_desc");
-
+		String server_name= request.getParameter("server_name");
 		// 将富文本内容上传
 		String result_url = "";
 		if (StringUtils.isNotBlank(exper_context)) {
@@ -93,7 +97,12 @@ public class ExperienceController {
 		experienceInfo.setServerClassId3(request.getParameter("server_class_id3"));
 		experienceInfo.setServerClassId4(request.getParameter("server_class_id4"));
 		experienceInfo.setServerClassId5(request.getParameter("server_class_id5"));
+		experienceInfo.setServerName(server_name);
 		experienceInfo.setOrderId(request.getParameter("order_id"));
+		experienceInfo.setServerBeforePhoto(request.getParameter("server_before_photo"));
+		experienceInfo.setServerAfterPhoto(request.getParameter("server_after_photo"));
+		OrderInfo orderInfo=orderInfoMapper.selectByPrimaryKey(request.getParameter("order_id"));
+		experienceInfo.setShopServerId(orderInfo.getShopServerId());
 		int save_num = 0;
 		if (StringUtils.isNotBlank(exper_id)) {
 			experienceInfo.setExperienceId(exper_id);
@@ -177,8 +186,17 @@ public class ExperienceController {
 		} else {
 			msg.setStatus(MsgModel.ERROR);
 			msg.setMessage("点赞失败");
-
 		}
+		return msg;
+	}
+
+	@RequestMapping("getExperInfo")
+	public MsgModel getExperInfo(HttpServletRequest request) {
+		String exper_id = request.getParameter("exper_id");
+		Map<String, Object> exper_info = experServiceImpl.getExperInfo(exper_id);
+		MsgModel msg = new MsgModel();
+		msg.setContext(exper_info);
+		msg.setStatus(MsgModel.SUCCESS);
 		return msg;
 	}
 }

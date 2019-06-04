@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jisu.WeChatApp.pojo.ExperienceInfo;
+import com.jisu.WeChatApp.entity.ServerMemberVO;
 import com.jisu.WeChatApp.pojo.ServerClass;
 import com.jisu.WeChatApp.pojo.ShopServer;
 import com.jisu.WeChatApp.service.impl.ServerServiceImpl;
@@ -182,7 +182,7 @@ public class ServerWebController {
 		return null;
 	}
 
-	@RequestMapping("getServerMember")
+	@RequestMapping("getServerMemberByOrderId")
 	@ResponseBody
 	public JSONArray getServerMember(@RequestParam("order_id") String id) {
 		
@@ -192,6 +192,54 @@ public class ServerWebController {
 		}else {
 			return null;
 		}
-		
 	}
+	@RequestMapping("serverMember")
+	public ModelAndView serverMemberPage() {
+		return new ModelAndView("server/serverMember");
+	}
+	
+	@RequestMapping("getAllServerMemberList")
+	@ResponseBody
+	public JSONArray getAllServerMemberList() {
+		
+		return JSONArray.fromObject(serverServiceImpl.getAllServerMemberList());
+	}
+	@RequestMapping("getServerMember")
+	@ResponseBody
+	public ServerMemberVO getServerMemberByMemberNo(@RequestParam("member_no") String member_no) {
+		return serverServiceImpl.getServerMemberByMemberNo(member_no);
+	}
+	@RequestMapping(value="setServerMember",method=RequestMethod.POST)
+	@ResponseBody
+	public String setServerMember(@RequestParam("type") int type, ServerMemberVO serverMemebr) {
+		try {
+			if (null != serverMemebr) {
+				if (0 == type) {
+					serverServiceImpl.updateServerMember(serverMemebr);
+				} else if (1 == type) {
+					serverServiceImpl.addServerMember(serverMemebr);
+				}
+				return "ok";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("异常！", e);
+		}
+		return "设置服务人员出错，请您稍后再试";
+	}
+	
+	@RequestMapping(value="delServerMember",method=RequestMethod.POST)
+	public String delServerMember(@RequestParam("member_no") String member_no) {
+		
+		try {
+			if (StringUtils.isNotBlank(member_no)) {
+				return serverServiceImpl.delServerMember(member_no);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("删除异常！", e);
+		}
+		return "删除服务人员出错，请您稍后再试";
+	}
+	
 }

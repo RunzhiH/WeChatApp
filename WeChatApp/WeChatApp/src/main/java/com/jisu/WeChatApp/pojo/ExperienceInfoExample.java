@@ -1122,6 +1122,356 @@ public class ExperienceInfoExample {
 			addCriterion("server_class_id_5 not between", value1, value2, "serverClassId5");
 			return (Criteria) this;
 		}
+
+		public Criteria andServerBeforePhotoIsNull() {
+			addCriterion("server_before_photo is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoIsNotNull() {
+			addCriterion("server_before_photo is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoEqualTo(String value) {
+			addCriterion("server_before_photo =", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoNotEqualTo(String value) {
+			addCriterion("server_before_photo <>", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoGreaterThan(String value) {
+			addCriterion("server_before_photo >", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoGreaterThanOrEqualTo(String value) {
+			addCriterion("server_before_photo >=", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoLessThan(String value) {
+			addCriterion("server_before_photo <", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoLessThanOrEqualTo(String value) {
+			addCriterion("server_before_photo <=", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoLike(String value) {
+			addCriterion("server_before_photo like", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoNotLike(String value) {
+			addCriterion("server_before_photo not like", value, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoIn(List<String> values) {
+			addCriterion("server_before_photo in", values, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoNotIn(List<String> values) {
+			addCriterion("server_before_photo not in", values, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoBetween(String value1, String value2) {
+			addCriterion("server_before_photo between", value1, value2, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerBeforePhotoNotBetween(String value1, String value2) {
+			addCriterion("server_before_photo not between", value1, value2, "serverBeforePhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoIsNull() {
+			addCriterion("server_after_photo is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoIsNotNull() {
+			addCriterion("server_after_photo is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoEqualTo(String value) {
+			addCriterion("server_after_photo =", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoNotEqualTo(String value) {
+			addCriterion("server_after_photo <>", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoGreaterThan(String value) {
+			addCriterion("server_after_photo >", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoGreaterThanOrEqualTo(String value) {
+			addCriterion("server_after_photo >=", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoLessThan(String value) {
+			addCriterion("server_after_photo <", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoLessThanOrEqualTo(String value) {
+			addCriterion("server_after_photo <=", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoLike(String value) {
+			addCriterion("server_after_photo like", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoNotLike(String value) {
+			addCriterion("server_after_photo not like", value, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoIn(List<String> values) {
+			addCriterion("server_after_photo in", values, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoNotIn(List<String> values) {
+			addCriterion("server_after_photo not in", values, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoBetween(String value1, String value2) {
+			addCriterion("server_after_photo between", value1, value2, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerAfterPhotoNotBetween(String value1, String value2) {
+			addCriterion("server_after_photo not between", value1, value2, "serverAfterPhoto");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionIsNull() {
+			addCriterion("server_condition is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionIsNotNull() {
+			addCriterion("server_condition is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionEqualTo(String value) {
+			addCriterion("server_condition =", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionNotEqualTo(String value) {
+			addCriterion("server_condition <>", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionGreaterThan(String value) {
+			addCriterion("server_condition >", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionGreaterThanOrEqualTo(String value) {
+			addCriterion("server_condition >=", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionLessThan(String value) {
+			addCriterion("server_condition <", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionLessThanOrEqualTo(String value) {
+			addCriterion("server_condition <=", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionLike(String value) {
+			addCriterion("server_condition like", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionNotLike(String value) {
+			addCriterion("server_condition not like", value, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionIn(List<String> values) {
+			addCriterion("server_condition in", values, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionNotIn(List<String> values) {
+			addCriterion("server_condition not in", values, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionBetween(String value1, String value2) {
+			addCriterion("server_condition between", value1, value2, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerConditionNotBetween(String value1, String value2) {
+			addCriterion("server_condition not between", value1, value2, "serverCondition");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdIsNull() {
+			addCriterion("shop_server_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdIsNotNull() {
+			addCriterion("shop_server_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdEqualTo(String value) {
+			addCriterion("shop_server_id =", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdNotEqualTo(String value) {
+			addCriterion("shop_server_id <>", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdGreaterThan(String value) {
+			addCriterion("shop_server_id >", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdGreaterThanOrEqualTo(String value) {
+			addCriterion("shop_server_id >=", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdLessThan(String value) {
+			addCriterion("shop_server_id <", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdLessThanOrEqualTo(String value) {
+			addCriterion("shop_server_id <=", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdLike(String value) {
+			addCriterion("shop_server_id like", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdNotLike(String value) {
+			addCriterion("shop_server_id not like", value, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdIn(List<String> values) {
+			addCriterion("shop_server_id in", values, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdNotIn(List<String> values) {
+			addCriterion("shop_server_id not in", values, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdBetween(String value1, String value2) {
+			addCriterion("shop_server_id between", value1, value2, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShopServerIdNotBetween(String value1, String value2) {
+			addCriterion("shop_server_id not between", value1, value2, "shopServerId");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameIsNull() {
+			addCriterion("server_name is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameIsNotNull() {
+			addCriterion("server_name is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameEqualTo(String value) {
+			addCriterion("server_name =", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameNotEqualTo(String value) {
+			addCriterion("server_name <>", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameGreaterThan(String value) {
+			addCriterion("server_name >", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameGreaterThanOrEqualTo(String value) {
+			addCriterion("server_name >=", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameLessThan(String value) {
+			addCriterion("server_name <", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameLessThanOrEqualTo(String value) {
+			addCriterion("server_name <=", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameLike(String value) {
+			addCriterion("server_name like", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameNotLike(String value) {
+			addCriterion("server_name not like", value, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameIn(List<String> values) {
+			addCriterion("server_name in", values, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameNotIn(List<String> values) {
+			addCriterion("server_name not in", values, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameBetween(String value1, String value2) {
+			addCriterion("server_name between", value1, value2, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andServerNameNotBetween(String value1, String value2) {
+			addCriterion("server_name not between", value1, value2, "serverName");
+			return (Criteria) this;
+		}
 	}
 
 	/**

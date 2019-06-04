@@ -42,8 +42,15 @@
 		  </if>
 	</select>
 	<select id="getMemberDefaultAddress" parameterType="String" resultType="Map">
-		SELECT * FROM member_address
-		WHERE member_no='${member_no}'
+		SELECT 
+		  a.*,
+		  b.nickname,
+		  b.phone 
+		FROM
+		  member_address a,
+		  member_info b 
+		WHERE a.member_no = b.member_no 
+		  AND a.member_no = '${member_no}'
 	</select>
 	<select id="getServerMemberHasServer" parameterType="String" resultType="Map">
 		SELECT 

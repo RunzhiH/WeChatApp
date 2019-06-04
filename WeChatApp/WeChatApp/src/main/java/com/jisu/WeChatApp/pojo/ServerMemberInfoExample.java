@@ -3,6 +3,7 @@ package com.jisu.WeChatApp.pojo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class ServerMemberInfoExample {
     /**
@@ -750,6 +751,126 @@ public class ServerMemberInfoExample {
 
 		public Criteria andInProhiNotBetween(Integer value1, Integer value2) {
 			addCriterion("in_prohi not between", value1, value2, "inProhi");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatIsNull() {
+			addCriterion("lat is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatIsNotNull() {
+			addCriterion("lat is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatEqualTo(BigDecimal value) {
+			addCriterion("lat =", value, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatNotEqualTo(BigDecimal value) {
+			addCriterion("lat <>", value, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatGreaterThan(BigDecimal value) {
+			addCriterion("lat >", value, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatGreaterThanOrEqualTo(BigDecimal value) {
+			addCriterion("lat >=", value, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatLessThan(BigDecimal value) {
+			addCriterion("lat <", value, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatLessThanOrEqualTo(BigDecimal value) {
+			addCriterion("lat <=", value, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatIn(List<BigDecimal> values) {
+			addCriterion("lat in", values, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatNotIn(List<BigDecimal> values) {
+			addCriterion("lat not in", values, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("lat between", value1, value2, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLatNotBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("lat not between", value1, value2, "lat");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonIsNull() {
+			addCriterion("lon is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonIsNotNull() {
+			addCriterion("lon is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonEqualTo(BigDecimal value) {
+			addCriterion("lon =", value, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonNotEqualTo(BigDecimal value) {
+			addCriterion("lon <>", value, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonGreaterThan(BigDecimal value) {
+			addCriterion("lon >", value, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonGreaterThanOrEqualTo(BigDecimal value) {
+			addCriterion("lon >=", value, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonLessThan(BigDecimal value) {
+			addCriterion("lon <", value, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonLessThanOrEqualTo(BigDecimal value) {
+			addCriterion("lon <=", value, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonIn(List<BigDecimal> values) {
+			addCriterion("lon in", values, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonNotIn(List<BigDecimal> values) {
+			addCriterion("lon not in", values, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("lon between", value1, value2, "lon");
+			return (Criteria) this;
+		}
+
+		public Criteria andLonNotBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("lon not between", value1, value2, "lon");
 			return (Criteria) this;
 		}
 	}

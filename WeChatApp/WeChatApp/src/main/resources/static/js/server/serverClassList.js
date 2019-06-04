@@ -84,10 +84,11 @@ function update(id, type) {
 		}, function(data) {
 			// console.log(data);
 			if (null != data) {
-				$("input[name='serverClassUrl']").val(data.serverClassUrl);
-				$("#serverClassUrl").attr("src", data.serverClassUrl);
-				$("input[name='toPage']").val(data.toPage);
-				$("textarea[name='serverClassDesc']").val(data.serverClassDesc);
+				$("input[name='serverClassImg']").val(data.serverClassImg);
+				$("#serverClassImg").attr("src", data.serverClassImg);
+				$("input[name='serverClassName']").val(data.serverClassName);
+				$("input[name='serverClassDesc']").val(data.serverClassDesc);
+				$("input[name='serverClassLevel']").val(data.serverClassLevel);
 				$("#serverClassPid").val(data.serverClassPid);
 				layer.open({
 					type : 1,

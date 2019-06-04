@@ -1,6 +1,9 @@
 package com.jisu.WeChatApp.controller.web;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,10 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jisu.WeChatApp.dao.OrderInfoMapper;
+import com.jisu.WeChatApp.dao.RefundOrderInfoMapper;
 import com.jisu.WeChatApp.entity.OrderSearchDTO;
 import com.jisu.WeChatApp.pojo.OrderInfo;
 import com.jisu.WeChatApp.pojo.PageDataResult;
+import com.jisu.WeChatApp.pojo.RefundOrderInfo;
 import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
+import com.jisu.WeChatApp.tool.util.PayUtils;
 
 @RequestMapping("/web/order")
 @Controller
@@ -29,6 +35,8 @@ public class OrderWebController {
 	private OrderInfoServiceImpl orderInfoServiceImpl;
 	@Autowired
 	private OrderInfoMapper orderInfoMapper;
+	@Autowired
+	private RefundOrderInfoMapper refundOrderInfoMapper;
 
 	@RequestMapping("orderManage")
 	public ModelAndView orderManage() {
@@ -100,10 +108,10 @@ public class OrderWebController {
 	@RequestMapping("getOrder")
 	@ResponseBody
 	public OrderInfo getOrder(@RequestParam("order_id") String id) {
-		OrderInfo order_info=null;
+		OrderInfo order_info = null;
 		try {
 			if (null != id) {
-				order_info= orderInfoServiceImpl.getOrder(id);
+				order_info = orderInfoServiceImpl.getOrder(id);
 			}
 
 		} catch (Exception e) {
@@ -115,7 +123,7 @@ public class OrderWebController {
 	@RequestMapping(value = "updateServerMember", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateServerMember(OrderInfo orderInfo) {
-		if(null==orderInfo.getServerMemberNo()) {
+		if (null == orderInfo.getServerMemberNo()) {
 			return "请选择技术人员";
 		}
 		try {
@@ -153,15 +161,17 @@ public class OrderWebController {
 			return "出错了,请稍后重试";
 		}
 	}
+
 	@RequestMapping("refundOrderManage")
 	public ModelAndView refundOrderPage() {
-		
+
 		return new ModelAndView("order/refundOrderManage");
 	}
+
 	@RequestMapping("getRefundOrderList")
 	@ResponseBody
 	public PageDataResult getRefundOrderList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, OrderSearchDTO orderSearchDTO) {
-		
+
 		PageDataResult pdr = new PageDataResult();
 		try {
 			if (null == page) {
@@ -178,11 +188,11 @@ public class OrderWebController {
 		}
 		return pdr;
 	}
-	
+
 	@RequestMapping("getCheckRefundOrderList")
 	@ResponseBody
 	public PageDataResult getCheckRefundOrderList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, OrderSearchDTO orderSearchDTO) {
-		
+
 		PageDataResult pdr = new PageDataResult();
 		try {
 			if (null == page) {
@@ -199,5 +209,38 @@ public class OrderWebController {
 		}
 		return pdr;
 	}
-	
+
+	/**
+	 * 退款
+	 * 
+	 * @param request
+	 * @param url
+	 * @param data
+	 * @return
+	 * @throws Exception
+	 */
+	public String doRefund(HttpServletRequest request, HttpServletResponse response) {
+		String refund_order_id = request.getParameter("refund_order_id");
+		RefundOrderInfo refundOrderInfo = refundOrderInfoMapper.selectByPrimaryKey(refund_order_id);
+		String orderId = refundOrderInfo.getOrderId();
+		BigDecimal refund_price = refundOrderInfo.getRefundPrice();
+		BigDecimal order_price = refundOrderInfo.getOrderPrice();
+		String refund_fee = refund_price.multiply(new BigDecimal(100)).toString();
+		String total_fee = order_price.multiply(new BigDecimal(100)).toString();
+		String refund_desc=refundOrderInfo.getRefundOrderDesc();
+		Map<String, String> result = new HashMap<String, String>();
+		try {
+			result = PayUtils.wxRefund(refund_order_id, orderId, total_fee, refund_fee, refund_desc);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 判断是否退款成功
+		if ("ok".equals(result.get("returncode"))) {
+			
+			return "ok";
+		}
+		return "微信退款失败";
+	}
+
 }

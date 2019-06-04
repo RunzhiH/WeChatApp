@@ -34,4 +34,6 @@ public interface WalletChangeRecordMapperSelf {
 	 * @return
 	 */
 	public int insertWalletChangeRecordForFirstShareShop(Map<String, String> order_id_map);
+
+	public int insertWalletChangeRecordForBusinessMemebr(Map<String, String> business_member_map);
 }
