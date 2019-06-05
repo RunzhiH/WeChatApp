@@ -70,13 +70,16 @@
 		  a.*,
 		  b.phone,
 		  b.nickname,
-		  b.photo 
+		  b.photo,
+		  d.server_member_desc
 		FROM
 		  experience_info a,
 		  member_info b,
-		  shop_server c
+		  shop_server c,
+		  server_member_info d
 		WHERE a.member_no = b.member_no 
 		  AND a.shop_server_id = c.shop_server_id
+		  AND b.member_no=d.member_no
 		  AND a.experience_id= #{exper_id}
 	</select>
 </mapper>

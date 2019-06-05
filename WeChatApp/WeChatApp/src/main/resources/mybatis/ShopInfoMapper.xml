@@ -34,6 +34,8 @@
     <result column="server_class_id_str" jdbcType="VARCHAR" property="serverClassIdStr" />
     <result column="open_time" jdbcType="VARCHAR" property="openTime" />
     <result column="in_prohi" jdbcType="INTEGER" property="inProhi" />
+    <result column="short_id" jdbcType="VARCHAR" property="shortId" />
+    <result column="qr_code_url" jdbcType="VARCHAR" property="qrCodeUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -109,7 +111,8 @@
     shop_id, shop_name, shop_describe, shop_photo_url, shop_address, shop_sheng, shop_shi, 
     shop_qu, shop_status, create_time, shop_logo_url, shop_phone, praise_points, shop_class_id, 
     shop_x, shop_y, member_no, authorization_book_url, qq, weChat, operator_member_id, 
-    is_open, password, is_default, desc_photo_url, server_class_id_str, open_time, in_prohi
+    is_open, password, is_default, desc_photo_url, server_class_id_str, open_time, in_prohi, 
+    short_id, qr_code_url
   </sql>
   <select id="selectByExample" parameterType="com.jisu.WeChatApp.pojo.ShopInfoExample" resultMap="BaseResultMap">
     <!--
@@ -171,7 +174,8 @@
       qq, weChat, operator_member_id, 
       is_open, password, is_default, 
       desc_photo_url, server_class_id_str, open_time, 
-      in_prohi)
+      in_prohi, short_id, qr_code_url
+      )
     values (#{shopId,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{shopDescribe,jdbcType=VARCHAR}, 
       #{shopPhotoUrl,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, #{shopSheng,jdbcType=VARCHAR}, 
       #{shopShi,jdbcType=VARCHAR}, #{shopQu,jdbcType=VARCHAR}, #{shopStatus,jdbcType=INTEGER}, 
@@ -181,7 +185,8 @@
       #{qq,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{operatorMemberId,jdbcType=VARCHAR}, 
       #{isOpen,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{isDefault,jdbcType=INTEGER}, 
       #{descPhotoUrl,jdbcType=VARCHAR}, #{serverClassIdStr,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, 
-      #{inProhi,jdbcType=INTEGER})
+      #{inProhi,jdbcType=INTEGER}, #{shortId,jdbcType=VARCHAR}, #{qrCodeUrl,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jisu.WeChatApp.pojo.ShopInfo">
     <!--
@@ -274,6 +279,12 @@
       <if test="inProhi != null">
         in_prohi,
       </if>
+      <if test="shortId != null">
+        short_id,
+      </if>
+      <if test="qrCodeUrl != null">
+        qr_code_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopId != null">
@@ -359,6 +370,12 @@
       </if>
       <if test="inProhi != null">
         #{inProhi,jdbcType=INTEGER},
+      </if>
+      <if test="shortId != null">
+        #{shortId,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeUrl != null">
+        #{qrCodeUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -463,6 +480,12 @@
       <if test="record.inProhi != null">
         in_prohi = #{record.inProhi,jdbcType=INTEGER},
       </if>
+      <if test="record.shortId != null">
+        short_id = #{record.shortId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qrCodeUrl != null">
+        qr_code_url = #{record.qrCodeUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -501,7 +524,9 @@
       desc_photo_url = #{record.descPhotoUrl,jdbcType=VARCHAR},
       server_class_id_str = #{record.serverClassIdStr,jdbcType=VARCHAR},
       open_time = #{record.openTime,jdbcType=VARCHAR},
-      in_prohi = #{record.inProhi,jdbcType=INTEGER}
+      in_prohi = #{record.inProhi,jdbcType=INTEGER},
+      short_id = #{record.shortId,jdbcType=VARCHAR},
+      qr_code_url = #{record.qrCodeUrl,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -594,6 +619,12 @@
       <if test="inProhi != null">
         in_prohi = #{inProhi,jdbcType=INTEGER},
       </if>
+      <if test="shortId != null">
+        short_id = #{shortId,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeUrl != null">
+        qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where shop_id = #{shopId,jdbcType=VARCHAR}
   </update>
@@ -629,7 +660,9 @@
       desc_photo_url = #{descPhotoUrl,jdbcType=VARCHAR},
       server_class_id_str = #{serverClassIdStr,jdbcType=VARCHAR},
       open_time = #{openTime,jdbcType=VARCHAR},
-      in_prohi = #{inProhi,jdbcType=INTEGER}
+      in_prohi = #{inProhi,jdbcType=INTEGER},
+      short_id = #{shortId,jdbcType=VARCHAR},
+      qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR}
     where shop_id = #{shopId,jdbcType=VARCHAR}
   </update>
   <select id="getAllShopList" resultMap="BaseResultMap">

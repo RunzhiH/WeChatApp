@@ -1,5 +1,10 @@
 package com.jisu.WeChatApp.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aliyun.oss.OSSClient;
 import com.jisu.WeChatApp.dao.MemberInfoMapper;
 import com.jisu.WeChatApp.dao.ShopInfoMapper;
 import com.jisu.WeChatApp.dao.ShopServerMapper;
@@ -31,6 +37,10 @@ import com.jisu.WeChatApp.service.impl.UserInfoServiceImpl;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
 import com.jisu.WeChatApp.tool.util.MD5Util;
 import com.jisu.WeChatApp.tool.util.MsgModel;
+import com.jisu.WeChatApp.tool.util.OSSUtils;
+import com.jisu.WeChatApp.tool.util.PropertyUtil;
+import com.jisu.WeChatApp.tool.util.QrCodeUtil;
+import com.jisu.WeChatApp.tool.util.WechatGetUtil;
 
 @RequestMapping("/api/shop")
 @RestController
@@ -192,6 +202,7 @@ public class ShopController {
 			shopInfo.setShopStatus(1);
 			shopInfo.setOperatorMemberId(operator_member_id);
 			shopInfo.setIsOpen(2);  //是否接单
+			shopInfo.setShortId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 6, null));
 //			try {
 //				// 加密密码
 //				shopInfo.setPassword(MD5Util.getEncryptedPwd(password));
@@ -235,7 +246,60 @@ public class ShopController {
 				shopInfoServiceImpl.saveShopLableInfo(shop_lable_str, shop_id);
 			}
 			// 保存标签信息结束
+			//生成小程序码
+			
+			String path ="pages/shopbangding/shopbangding";
+			String scene = shop_id;
+			int width = 430;
+			InputStream inputStream = null;
+			OutputStream outputStream = null;
+			String access_token = WechatGetUtil.getAccessToken();
+			if (StringUtils.isNotBlank(access_token)) {
+				try {
+					inputStream = QrCodeUtil.getQrCode(access_token, scene, path, width, false, null);
+					String newFileName= System.currentTimeMillis() + "qr_code.png";
+					String temp_path = PropertyUtil.getProperty("tempImage") + newFileName;
+					File file = new File(temp_path);
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+					outputStream = new FileOutputStream(file);
+					int len = 0;
+					byte[] buf = new byte[1024];
+					while ((len = inputStream.read(buf, 0, 1024)) != -1) {
+						outputStream.write(buf, 0, len);
+					}
+					outputStream.flush();
+					OSSClient ossClient = OSSUtils.getOSSClient();
+					OSSUtils.uploadObject2OSS(ossClient, file, PropertyUtil.getProperty("bucket_name"),
+							PropertyUtil.getProperty("folder"));
 
+					String result_url = OSSUtils.FILE_HOST+newFileName;
+					shopInfo.setQrCodeUrl(result_url);
+					shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
+					file.delete();
+				} catch (Exception e) {
+					//logger.error("调用小程序生成微信永久小程序码URL接口异常", e);
+					e.printStackTrace();
+				} finally {
+					if (inputStream != null) {
+						try {
+							inputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}
+			}
+			//生成小程序码结束
 			msg.setStatus(MsgModel.SUCCESS);
 		} else {
 			msg.setStatus(MsgModel.ERROR);

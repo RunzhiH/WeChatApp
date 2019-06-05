@@ -90,8 +90,8 @@ public class WxLoginController {
 							userInfo.put("country", String.valueOf(userInfoJSON.get("country")));
 							userInfo.put("avatarUrl", String.valueOf(userInfoJSON.get("avatarUrl")));
 							// 解密unionId & openId;
-							if (userInfoJSON.get("unionId") != null) {
-								userInfo.put("unionId", String.valueOf(userInfoJSON.get("unionId")));
+							if (userInfoJSON.get("unionid") != null) {
+								userInfo.put("unionId", String.valueOf(userInfoJSON.get("unionid")));
 							}
 							// 然后根据openid去数据库判断有没有该用户信息，若没有则存入数据库，有则返回用户数据
 							MemberInfo member = userInfoServiceImpl.getMemberInfoByOpenId(openId);

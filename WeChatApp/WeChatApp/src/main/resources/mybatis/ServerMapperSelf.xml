@@ -157,15 +157,16 @@
 		WHERE a.member_no = b.member_no 
 		  AND a.member_type = 2
 	</select>
-	<resultMap id="serverMemberVO" type="com.jisu.WeChatApp.entity.ServerMemberVO" >
-    <id column="member_no" property="memberNo" />
-    <result column="nickname" property="nickname"/>
-    <result column="phone" property="phone"/>
-    <result column="photo" property="photo"/>
-    <result column="server_class_id_str" property="serverClassIdStr"/>
-    <result column="order_takes_type" property="orderTakesType"/>
-    <result  column="server_member_desc" property="serverMemberDesc"/>
-  </resultMap>
+	<resultMap id="serverMemberVO" type="com.jisu.WeChatApp.entity.ServerMemberVO">
+		<id column="member_no" property="memberNo" />
+		<result column="nickname" property="nickname" />
+		<result column="phone" property="phone" />
+		<result column="photo" property="photo" />
+		<result column="server_class_id_str" property="serverClassIdStr" />
+		<result column="order_takes_type" property="orderTakesType" />
+		<result column="server_member_desc" property="serverMemberDesc" />
+		<result column="photo_desc" property="photoDesc" />
+	</resultMap>
 	<select id="getServerMember" parameterType="String" resultMap="serverMemberVO">
 		SELECT 
 		  a.age,

@@ -20,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Base64Utils;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +29,9 @@ import com.alibaba.fastjson.JSONObject;
 public class WechatGetUtil {
 	// 日志记录器
 	private static final Logger log = LoggerFactory.getLogger(WechatGetUtil.class);
+	
+	@Autowired
+    private static RedisUtil redisUtil;
 
 	/**
 	 * 解密用户敏感数据获取用户信息 *
@@ -92,9 +96,8 @@ public class WechatGetUtil {
 	public static String getAccessToken() {
 		// 先获取redis中的
 		String access_token="";
-		RedisUtil redis = new RedisUtil();
-		if (redis.hasKey("access_token")) {
-			access_token=(String) redis.get("access_token");
+		if (redisUtil.exists("access_token")) {
+			access_token=(String) redisUtil.get("access_token", 0);
 		} else {
 			String token_url = WeChatURLUtil.getAccessTokenUrl();
 			String resultStr = HttpsUtil.httpsRequestToString(token_url, "GET", null);
@@ -102,7 +105,9 @@ public class WechatGetUtil {
 			if (null != jsonObject && jsonObject.getString("access_token") != null) {
 				access_token =jsonObject.getString("access_token");
 				//缓存到redis中
-				redis.set("access_token", access_token,1000*60*60*2);
+				//redis.setex("access_token", access_token,1000*60*60*2);
+				redisUtil.set("20182018","这是一条测试数据", 0);
+		        redisUtil.expire("20182018", 1000*60*60*2, 0);//设置key过期时间
 			}
 		}
 		return access_token;

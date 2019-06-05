@@ -114,7 +114,6 @@ public class ExperServiceImpl implements ExperService {
 		Map<String, String> exper_info= experMapperSelf.getExperInfo(exper_id);
 		String server_before_photo=exper_info.get("server_before_photo");
 		String server_after_photo= exper_info.get("server_after_photo");
-		String experience_photo=exper_info.get("experience_photo");
 		List<String> photo_list=new  ArrayList<String>();
 		if(StringUtils.isNotBlank(server_before_photo)) {
 			photo_list.add(server_before_photo);
@@ -126,7 +125,7 @@ public class ExperServiceImpl implements ExperService {
 				photo_list.add(server_after_photo_arr[i]);
 			}
 		}
-		photo_list.add(experience_photo);
+		//photo_list.add(experience_photo);
 		Map<String, Object> result_map=new HashMap<String, Object>();
 		result_map.putAll(exper_info);
 		result_map.put("photo_list", photo_list);

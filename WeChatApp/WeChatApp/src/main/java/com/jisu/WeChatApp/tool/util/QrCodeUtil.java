@@ -28,23 +28,22 @@ public class QrCodeUtil {
 	 *                     urlencode 处理，请使用其他编码方式
 	 * @return 返回路径
 	 */
-	public static InputStream getQrCode(String access_token, String path, int width, boolean auto_color,
-			JSONObject line_color) {
+	public static InputStream getQrCode(String access_token, String scene, String path, int width, boolean auto_color, JSONObject line_color) {
 		RestTemplate rest = new RestTemplate();
 		InputStream inputStream = null;
 		if (StringUtils.isNotBlank(access_token)) {
 			JSONObject param = new JSONObject();
-			param.put("path", path);
+			param.put("page", path);
 			param.put("width", width);
 			param.put("auto_color", auto_color);
+			param.put("scene", scene);
 			if (!auto_color) {
 				param.put("line_color", line_color);
 			}
 			logger.info("调用生成微信URL接口传参:" + param);
 			MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-			HttpEntity requestEntity = new HttpEntity(JSON.toJSONString(param), headers);
-			ResponseEntity<byte[]> entity = rest.exchange(WeChatURLUtil.getWxaCodeunLimit(), HttpMethod.POST,
-					requestEntity, byte[].class, new Object[0]);
+			HttpEntity requestEntity = new HttpEntity(JSONObject.toJSONString(param), headers);
+			ResponseEntity<byte[]> entity = rest.exchange(WeChatURLUtil.getWxaCodeunLimit(), HttpMethod.POST, requestEntity, byte[].class, new Object[0]);
 			logger.info("调用小程序生成微信永久小程序码URL接口返回结果:" + entity.getBody());
 			byte[] result = entity.getBody();
 			logger.info(Base64.encodeBase64String(result));

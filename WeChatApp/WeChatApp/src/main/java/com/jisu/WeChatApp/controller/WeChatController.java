@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSSClient;
@@ -23,6 +24,7 @@ import com.jisu.WeChatApp.tool.util.QrCodeUtil;
 import com.jisu.WeChatApp.tool.util.WechatGetUtil;
 
 @RequestMapping("/api/wx")
+@RestController
 public class WeChatController {
 	private static Logger logger = LoggerFactory.getLogger(QrCodeUtil.class);
 
@@ -56,13 +58,14 @@ public class WeChatController {
 		// String shop_id = request.getParameter("shop_id");
 		// String path = "pages/index/index?shop_id=" + shop_id; // 指向页面
 		String path = request.getParameter("path");
+		String scene = request.getParameter("scene");
 		int width = 430;
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		String access_token = WechatGetUtil.getAccessToken();
 		if (StringUtils.isNotBlank(access_token)) {
 			try {
-				inputStream = QrCodeUtil.getQrCode(access_token, path, width, true, null);
+				inputStream = QrCodeUtil.getQrCode(access_token, scene, path, width, false, null);
 				String newFileName= System.currentTimeMillis() + "qr_code.png";
 				String temp_path = PropertyUtil.getProperty("tempImage") + newFileName;
 				File file = new File(temp_path);

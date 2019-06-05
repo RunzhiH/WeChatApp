@@ -91,6 +91,25 @@ $(function() {
 				// 请求异常回调
 			}
 		});
+		var uploadInst2 = upload.render({
+			elem : '#upload_normal' // 绑定元素
+			,
+			url : '/api/upload/uploadImages' // 上传接口
+			,
+			multiple : true,
+			number : 3,
+			done : function(res) {
+				// 上传完毕回调
+				var imageList = res.context;
+				var imageList_str = $("input[name='photoDesc']").val();
+				$("input[name='photoDesc']").parent().append("<img src='" + res.context[0] + "' style='width: 140px'>");
+				imageList_str += res.context[0] + ",";
+				$("input[name='photoDesc']").val(imageList_str);
+			},
+			error : function() {
+				// 请求异常回调
+			}
+		});
 	});
 
 });
@@ -125,7 +144,16 @@ function update(member_no, type) {
 					}
 					$(":radio[name='orderTakesType'][value='" + data.orderTakesType + "']").prop("checked", "checked");
 					$("textarea[name='serverMemberDesc']").val(data.serverMemberDesc);
-					
+					$("input[name='serverAfterPhoto']").val(data.serverAfterPhoto);
+					if (data.photoDesc) {
+						var image_list = data.photoDesc.split(",");
+						for (var i = 0; i < image_list.length; i++) {
+							if (image_list[i] != "") {
+								$("input[name='photoDesc']").parent().append("<img src='" + image_list[i] + "' style='width: 140px'>");
+
+							}
+						}
+					}
 					if(data.lat){
 				        var marker = new AMap.Marker({
 				        	 position: [data.lon,data.lat],//位置

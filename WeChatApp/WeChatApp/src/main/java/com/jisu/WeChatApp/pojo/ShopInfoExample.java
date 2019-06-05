@@ -2043,6 +2043,146 @@ public class ShopInfoExample {
 			addCriterion("in_prohi not between", value1, value2, "inProhi");
 			return (Criteria) this;
 		}
+
+		public Criteria andShortIdIsNull() {
+			addCriterion("short_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdIsNotNull() {
+			addCriterion("short_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdEqualTo(String value) {
+			addCriterion("short_id =", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdNotEqualTo(String value) {
+			addCriterion("short_id <>", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdGreaterThan(String value) {
+			addCriterion("short_id >", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdGreaterThanOrEqualTo(String value) {
+			addCriterion("short_id >=", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdLessThan(String value) {
+			addCriterion("short_id <", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdLessThanOrEqualTo(String value) {
+			addCriterion("short_id <=", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdLike(String value) {
+			addCriterion("short_id like", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdNotLike(String value) {
+			addCriterion("short_id not like", value, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdIn(List<String> values) {
+			addCriterion("short_id in", values, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdNotIn(List<String> values) {
+			addCriterion("short_id not in", values, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdBetween(String value1, String value2) {
+			addCriterion("short_id between", value1, value2, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortIdNotBetween(String value1, String value2) {
+			addCriterion("short_id not between", value1, value2, "shortId");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlIsNull() {
+			addCriterion("qr_code_url is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlIsNotNull() {
+			addCriterion("qr_code_url is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlEqualTo(String value) {
+			addCriterion("qr_code_url =", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlNotEqualTo(String value) {
+			addCriterion("qr_code_url <>", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlGreaterThan(String value) {
+			addCriterion("qr_code_url >", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlGreaterThanOrEqualTo(String value) {
+			addCriterion("qr_code_url >=", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlLessThan(String value) {
+			addCriterion("qr_code_url <", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlLessThanOrEqualTo(String value) {
+			addCriterion("qr_code_url <=", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlLike(String value) {
+			addCriterion("qr_code_url like", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlNotLike(String value) {
+			addCriterion("qr_code_url not like", value, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlIn(List<String> values) {
+			addCriterion("qr_code_url in", values, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlNotIn(List<String> values) {
+			addCriterion("qr_code_url not in", values, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlBetween(String value1, String value2) {
+			addCriterion("qr_code_url between", value1, value2, "qrCodeUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andQrCodeUrlNotBetween(String value1, String value2) {
+			addCriterion("qr_code_url not between", value1, value2, "qrCodeUrl");
+			return (Criteria) this;
+		}
 	}
 
 	/**

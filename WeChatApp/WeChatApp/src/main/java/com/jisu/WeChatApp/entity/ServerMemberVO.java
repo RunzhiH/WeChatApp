@@ -11,6 +11,7 @@ public class ServerMemberVO {
 	private String serverMemberDesc;
 	private String lat;
 	private String lon;
+	private String photoDesc;
 
 	public String getMemberNo() {
 		return memberNo;
@@ -84,4 +85,12 @@ public class ServerMemberVO {
 		this.lon = lon;
 	}
 
+	public String getPhotoDesc() {
+		return photoDesc;
+	}
+
+	public void setPhotoDesc(String photoDesc) {
+		this.photoDesc = photoDesc;
+	}
+	
 }

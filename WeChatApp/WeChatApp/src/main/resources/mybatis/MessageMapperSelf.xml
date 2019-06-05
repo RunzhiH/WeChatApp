@@ -173,7 +173,7 @@
 		  order_info a,
 		  member_info b,
 		  message_temp_info c,
-		  send_message_info d ,
+		  send_message_info d,
 		  memebr_info e,
 		  (SELECT 
 		    h.* 

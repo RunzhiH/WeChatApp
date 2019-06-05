@@ -15,6 +15,8 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
+import net.sf.json.JSONObject;
+
 /**
  * Created on 17/6/7. 短信API产品的DEMO程序,工程中包含了一个SmsDemo类，直接通过
  * 执行main函数即可体验短信产品API功能(只需要将AK替换成开通了云通信-短信产品功能的AK即可) 工程依赖了2个jar包(存放在工程的libs目录下)
@@ -29,8 +31,8 @@ public class SmsUtil {
 	static final String domain = "dysmsapi.aliyuncs.com";
 
 	// TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-	static final String accessKeyId = "LTAIG9evTM5JWLSW";
-	static final String accessKeySecret = "bYADQgb1UFtLV1UURWU3U3IUDW1G3u";
+	static final String accessKeyId =PropertyUtil.getProperty("aliyun.sms.accessKeyId");
+	static final String accessKeySecret = PropertyUtil.getProperty("aliyun.sms.accessKeySecret");
 
 	/**
 	 * Created on 17/6/7.信API产品的DEMO程序,工程中包含了一个SmsDemo类，直接通过 短
@@ -79,6 +81,7 @@ public class SmsUtil {
 		IAcsClient client = new DefaultAcsClient(profile);
 		String mobile=sendMsgContext.get("phone");
 		String order_code=sendMsgContext.get("order_code");
+		JSONObject sendMsgJSONObject=JSONObject.fromObject(sendMsgContext);
 		CommonRequest request = new CommonRequest();
 		// request.setProtocol(ProtocolType.HTTPS);
 		request.setMethod(MethodType.POST);
@@ -86,9 +89,9 @@ public class SmsUtil {
 		request.setVersion("2017-05-25");
 		request.setAction("SendSms");
 		request.putQueryParameter("PhoneNumbers", mobile);
-		request.putQueryParameter("SignName", "大手艺");
-		request.putQueryParameter("TemplateCode", "SMS_165675844");
-		request.putQueryParameter("TemplateParam", "{\"order_code\":'" + order_code + "'}");
+		request.putQueryParameter("SignName", "大手艺服务平台");
+		request.putQueryParameter("TemplateCode", "SMS_166778602");
+		request.putQueryParameter("TemplateParam", sendMsgJSONObject.toString());
 		CommonResponse response = null;
 		try {
 			response = client.getCommonResponse(request);
@@ -101,18 +104,22 @@ public class SmsUtil {
 		return response;
 	}
 
-//	public static void main(String[] args) throws ClientException, InterruptedException {
-//
-//		// 发短信
-//		Map<String, String> sendMsgContext=new HashMap<String, String>();
-//		sendMsgContext.put("phone", "15958243735");
-//		sendMsgContext.put("order_code", "124323252454");
-//		CommonResponse response = sendSmsRemind(sendMsgContext);
-//		System.out.println("短信接口返回的数据----------------");
-//		System.out.println("DATA=" + response.getData());
-////		System.out.println("Message=" + response.getMessage());
-////		System.out.println("RequestId=" + response.getRequestId());
-////		System.out.println("BizId=" + response.getBizId());
-//
-//	}
+	public static void main(String[] args) throws ClientException, InterruptedException {
+
+		// 发短信
+		Map<String, String> sendMsgContext=new HashMap<String, String>();
+		sendMsgContext.put("phone", "15958243735");
+		sendMsgContext.put("order_code", "124323252454");
+		sendMsgContext.put("server_address", "黄庆苗楼A111");
+		sendMsgContext.put("appointment_time_start", "6月12日");
+		sendMsgContext.put("server_name", "水雾眉");
+		CommonResponse response = sendSmsRemind(sendMsgContext);
+		System.out.println("短信接口返回的数据----------------");
+		System.out.println("DATA=" + response.getData()+",response="+response.toString());
+//		System.out.println("Message=" + response.getMessage());
+//		System.out.println("RequestId=" + response.getRequestId());
+//		System.out.println("BizId=" + response.getBizId());
+		//System.out.println(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_UPPER, 6, null));
+
+	}
 }

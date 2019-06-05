@@ -873,6 +873,76 @@ public class ServerMemberInfoExample {
 			addCriterion("lon not between", value1, value2, "lon");
 			return (Criteria) this;
 		}
+
+		public Criteria andPhotoDescIsNull() {
+			addCriterion("photo_desc is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescIsNotNull() {
+			addCriterion("photo_desc is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescEqualTo(String value) {
+			addCriterion("photo_desc =", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescNotEqualTo(String value) {
+			addCriterion("photo_desc <>", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescGreaterThan(String value) {
+			addCriterion("photo_desc >", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescGreaterThanOrEqualTo(String value) {
+			addCriterion("photo_desc >=", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescLessThan(String value) {
+			addCriterion("photo_desc <", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescLessThanOrEqualTo(String value) {
+			addCriterion("photo_desc <=", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescLike(String value) {
+			addCriterion("photo_desc like", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescNotLike(String value) {
+			addCriterion("photo_desc not like", value, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescIn(List<String> values) {
+			addCriterion("photo_desc in", values, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescNotIn(List<String> values) {
+			addCriterion("photo_desc not in", values, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescBetween(String value1, String value2) {
+			addCriterion("photo_desc between", value1, value2, "photoDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andPhotoDescNotBetween(String value1, String value2) {
+			addCriterion("photo_desc not between", value1, value2, "photoDesc");
+			return (Criteria) this;
+		}
 	}
 
 	/**
