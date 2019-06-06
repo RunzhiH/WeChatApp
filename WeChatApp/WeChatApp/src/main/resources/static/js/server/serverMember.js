@@ -132,6 +132,7 @@ function update(member_no, type) {
 					$("input[name='photo']").val(data.photo);
 					$("input[name='lat']").val(data.lat);
 					$("input[name='lon']").val(data.lon);
+					$("input[name='shortDesc']").val(data.shortDesc);
 					var serverClassIdStr = data.serverClassIdStr;
 					var serverClassId_arr = serverClassIdStr.split(",");
 					var serverClassId_cb = $("input[name=serverClassIdStr]");

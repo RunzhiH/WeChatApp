@@ -166,6 +166,7 @@
 		<result column="order_takes_type" property="orderTakesType" />
 		<result column="server_member_desc" property="serverMemberDesc" />
 		<result column="photo_desc" property="photoDesc" />
+		<result column="short_desc" property="shortDesc" />
 	</resultMap>
 	<select id="getServerMember" parameterType="String" resultMap="serverMemberVO">
 		SELECT 

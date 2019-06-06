@@ -18,6 +18,6 @@ public class AutoDeleteFormTimeTask {
 	@Scheduled(fixedRate = 5000)
 	public void AutoDeleteForm() {
 		// 删除超过7天的formid
-		//sendMessageServiceImpl.deleteFormIdByOvertime();
+		sendMessageServiceImpl.deleteFormIdByOvertime();
 	}
 }

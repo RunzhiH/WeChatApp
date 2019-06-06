@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.jisu.WeChatApp.tool.util.SpringContextUtil;
@@ -17,6 +19,7 @@ import com.jisu.WeChatApp.tool.util.SpringContextUtil;
 @SpringBootApplication
 //@MapperScan("com.jisu.WeChatApp.dao")
 @EnableTransactionManagement(proxyTargetClass = true)
+@ComponentScan("com.jisu.WeChatApp")
 public class WeChatAppApplication {
 
 	public static void main(String[] args) {

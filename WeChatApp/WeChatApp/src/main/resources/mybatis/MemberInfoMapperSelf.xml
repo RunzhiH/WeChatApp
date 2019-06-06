@@ -83,7 +83,12 @@
 		  b.server_class_id_str,
 		  b.server_member_id,
 		  b.shop_id,
-		  b.strat_time
+		  b.strat_time,
+		  b.in_prohi,
+		  b.lat,
+		  b.lon,
+		  b.photo_desc,
+		  b.short_desc
 		FROM
 		  member_info a,
 		  server_member_info b

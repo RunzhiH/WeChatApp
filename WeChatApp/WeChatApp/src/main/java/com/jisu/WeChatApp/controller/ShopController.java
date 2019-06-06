@@ -130,7 +130,7 @@ public class ShopController {
 		String authorization_book_url = request.getParameter("authorization_book_url");
 		String qq = request.getParameter("qq");
 		String wechat = request.getParameter("wechat");
-		String operator_member_id = request.getParameter("operator_memebr_id");
+		String operator_member_id = request.getParameter("operator_member_id");
 		String desc_photo_url = request.getParameter("desc_photo_url");
 		String server_class_id_str = request.getParameter("server_class_id_str");
 		ShopInfo shopInfo = new ShopInfo();
@@ -202,7 +202,6 @@ public class ShopController {
 			shopInfo.setShopStatus(1);
 			shopInfo.setOperatorMemberId(operator_member_id);
 			shopInfo.setIsOpen(2);  //是否接单
-			shopInfo.setShortId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 6, null));
 //			try {
 //				// 加密密码
 //				shopInfo.setPassword(MD5Util.getEncryptedPwd(password));

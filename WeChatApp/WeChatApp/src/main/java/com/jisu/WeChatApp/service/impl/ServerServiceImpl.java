@@ -248,6 +248,7 @@ public class ServerServiceImpl implements ServerService {
 		serverMemberInfo.setOrderTakesType(Integer.valueOf(serverMemebr.getOrderTakesType()));
 		serverMemberInfo.setServerClassIdStr(serverMemebr.getServerClassIdStr());
 		serverMemberInfo.setPhotoDesc(serverMemebr.getPhotoDesc());
+		serverMemberInfo.setShortDesc(serverMemebr.getShortDesc());
 		ServerMemberInfoExample example = new ServerMemberInfoExample();
 		example.createCriteria().andMemberNoEqualTo(serverMemebr.getMemberNo());
 		int num = 0;
@@ -277,6 +278,7 @@ public class ServerServiceImpl implements ServerService {
 			serverMemberInfo.setLon(new BigDecimal(serverMemebr.getLon()));
 		}
 		serverMemberInfo.setPhotoDesc(serverMemebr.getPhotoDesc());
+		serverMemberInfo.setShortDesc(serverMemebr.getShortDesc());
 		int num = 0;
 		serverMemberInfo.setServerMemberId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
 		num = serverMemberInfoMapper.insertSelective(serverMemberInfo);

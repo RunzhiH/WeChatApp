@@ -8,13 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.jisu.WeChatApp.tool.config.ShiroConfig;
 
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
@@ -22,8 +19,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.SortingParams;
 
-@Component
+
 @Slf4j
+@Component
 public class RedisUtil {
 	private static final Logger log = LoggerFactory.getLogger(RedisUtil.class);
 	@Autowired
@@ -2276,23 +2274,23 @@ public class RedisUtil {
 	// RedisUtil.ru = ru;
 	// }
 
-	public static void main(String[] args) {
-		/*
-		 * JedisPool jedisPool = new JedisPool(null,"localhost",6379,100,"123456");
-		 * Jedis jedis = jedisPool.getResource(); //r.get("", RedisConstants.datebase4);
-		 * jedis.select(RedisConstants.datebase4); Set<String> str = jedis.keys("*");
-		 * for (String string : str) { System.out.println(string); }
-		 */
-	}
-
-	@Test
-	public void contextLoads() {
-		Jedis jedis = jedisPool.getResource();
-		System.out.println(jedis.ping());
-		//jedis.
-//		redisTemplate.opsForValue().set("1111" , "222");
-//		// 原本opsForValue()是只能操作字符串的.现在就可以操作对象了
-//		String result= (String) redisTemplate.opsForValue().get("1111");
-//		System.out.println(result);
-	}
+//	public static void main(String[] args) {
+//		/*
+//		 * JedisPool jedisPool = new JedisPool(null,"localhost",6379,100,"123456");
+//		 * Jedis jedis = jedisPool.getResource(); //r.get("", RedisConstants.datebase4);
+//		 * jedis.select(RedisConstants.datebase4); Set<String> str = jedis.keys("*");
+//		 * for (String string : str) { System.out.println(string); }
+//		 */
+//	}
+//
+//	@Test
+//	public void contextLoads() {
+//		Jedis jedis = jedisPool.getResource();
+//		System.out.println(jedis.ping());
+//		//jedis.
+////		redisTemplate.opsForValue().set("1111" , "222");
+////		// 原本opsForValue()是只能操作字符串的.现在就可以操作对象了
+////		String result= (String) redisTemplate.opsForValue().get("1111");
+////		System.out.println(result);
+//	}
 }

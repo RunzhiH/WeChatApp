@@ -943,6 +943,76 @@ public class ServerMemberInfoExample {
 			addCriterion("photo_desc not between", value1, value2, "photoDesc");
 			return (Criteria) this;
 		}
+
+		public Criteria andShortDescIsNull() {
+			addCriterion("short_desc is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescIsNotNull() {
+			addCriterion("short_desc is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescEqualTo(String value) {
+			addCriterion("short_desc =", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescNotEqualTo(String value) {
+			addCriterion("short_desc <>", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescGreaterThan(String value) {
+			addCriterion("short_desc >", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescGreaterThanOrEqualTo(String value) {
+			addCriterion("short_desc >=", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescLessThan(String value) {
+			addCriterion("short_desc <", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescLessThanOrEqualTo(String value) {
+			addCriterion("short_desc <=", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescLike(String value) {
+			addCriterion("short_desc like", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescNotLike(String value) {
+			addCriterion("short_desc not like", value, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescIn(List<String> values) {
+			addCriterion("short_desc in", values, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescNotIn(List<String> values) {
+			addCriterion("short_desc not in", values, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescBetween(String value1, String value2) {
+			addCriterion("short_desc between", value1, value2, "shortDesc");
+			return (Criteria) this;
+		}
+
+		public Criteria andShortDescNotBetween(String value1, String value2) {
+			addCriterion("short_desc not between", value1, value2, "shortDesc");
+			return (Criteria) this;
+		}
 	}
 
 	/**
