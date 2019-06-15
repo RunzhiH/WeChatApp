@@ -35,9 +35,12 @@
 		        ) * 1000
 		      ) AS juli,
 		      </if>
-		      @row := 0 
+		      @row := 0,
+		      GROUP_CONCAT(b.server_class_name SEPARATOR '|') server_class_name_str
 		    FROM
-		      shop_info a
+		      shop_info a 
+		      LEFT JOIN server_class b
+		      ON LOCATE(b.server_class_id, a.server_class_id_str)
 		    WHERE 
 		    a.shop_shi = '${shi_code}' 
 		    <if test="shop_qu != null and shop_qu != ''">
@@ -52,9 +55,10 @@
 		    <if test="shop_name != null and shop_name != ''">
 		    AND a.shop_name like '%${shop_name}%'
 		    </if>
+		    GROUP BY a.shop_id
 		    ORDER BY <choose>
-				<when test="praise_points_type !=null and praise_points_type != ''">a.praise_points DESC</when>
-				<otherwise>a.praise_points</otherwise>
+				<when test="praise_points_type !=null and praise_points_type != ''">a.praise_points</when>
+				<otherwise>a.praise_points DESC</otherwise>
 			</choose>) a
 		     <if test="juli != null and juli != ''">
 		     <![CDATA[  

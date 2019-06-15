@@ -118,4 +118,6 @@ public interface ShopInfoService {
 	public List<Map<String, String>> getFreeServerShopList(String server_class_id);
 	
 	public void shopProhibitOrder(String shop_id);
+	
+	public String updateShopInfo(ShopInfo shopInfo);
 }

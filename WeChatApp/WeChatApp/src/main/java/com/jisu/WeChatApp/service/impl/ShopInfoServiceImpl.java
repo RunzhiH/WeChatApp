@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.jisu.WeChatApp.dao.MemberProhiMapper;
 import com.jisu.WeChatApp.dao.ShopInfoMapper;
@@ -221,6 +222,18 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 		memberProhi.setProhiType(1);
 		memberProhiMapper.insertSelective(memberProhi);
 		//插入封禁记录结束
+	}
+
+	@Override
+	public String updateShopInfo(ShopInfo shopInfo) {
+		// TODO Auto-generated method stub
+		int num = this.shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
+		if (num < 1) {
+			// 事务回滚
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "操作失败";
+		}
+		return "ok";
 	}
 
 }

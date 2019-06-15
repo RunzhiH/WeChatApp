@@ -22,7 +22,7 @@ public class AT0009 extends MessageTemplate {
 		keyword3.setValue(messageData.get("pay_price"));
 		m.put("keyword3", keyword3);
 		TemplateData keyword4 = new TemplateData();
-		keyword4.setValue(messageData.get("appointment_time"));
+		keyword4.setValue(messageData.get("appointment_time_start"));
 		m.put("keyword4", keyword4);
 		TemplateData keyword5 = new TemplateData();
 		keyword5.setValue(messageData.get("server_address"));

@@ -98,6 +98,7 @@ $(function() {
 		var uploadInst = upload.render({
 			elem : '#test-upload-normal', // 绑定元素
 			url : '/api/upload/uploadImages',// 上传接口
+			size :0,
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);
@@ -113,6 +114,7 @@ $(function() {
 		var uploadInst2 = upload.render({
 			elem : '#server_before_photo', // 绑定元素
 			url : '/api/upload/uploadImages',// 上传接口
+			size :0,
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);
@@ -130,6 +132,7 @@ $(function() {
 			url : '/api/upload/uploadImages',// 上传接口
 			multiple : true,
 			number : 3,
+			size :0,
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);

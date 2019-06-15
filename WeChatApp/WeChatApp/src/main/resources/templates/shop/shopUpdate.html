@@ -1,58 +1,160 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="updateRole">
-    <form id="updateRoleForm" class="layui-form" action="" method="post">
-        <input type="hidden" id="id" name="id"  th:value="${roleDetail != null}?(${roleDetail.id != null}? ${roleDetail.id} : '') : ''"/>
-        <input type="hidden" id="rolePermIds" name="rolePermIds"/>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">商家名称：</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="roleName" th:value="${roleDetail != null}?(${roleDetail.roleName != null}? ${roleDetail.roleName} : '') : ''" lay-verify="required" autocomplete="off" class="layui-input"/>
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">角色编号：</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="code" th:value="${roleDetail != null}?(${roleDetail.code != null}? ${roleDetail.code} : '') : ''" lay-verify="required" autocomplete="off" class="layui-input"/>
-                </div>
-            </div>
-        </div>
+	<div th:fragment="updateShop">
+		<form id="updateShopForm" class="layui-form" action="" method="post">
+			<input type="hidden" id="id" name="shopId" th:value="${shopInfo != null}?(${ shopInfo.shopId != null}? ${shopInfo.shopId} : '') : ''" /> 
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">商家名称：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="shopName" th:value="${shopInfo != null}?(${shopInfo.shopName != null}? ${shopInfo.shopName} : '') : ''" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+			</div>
 
-        <!--<div class="layui-form-item">
-            <label class="layui-form-label">角色等级：</label>
-            <div class="layui-input-block">
-                <input type="text" name="grade" th:value="${roleDetail != null}?(${roleDetail.grade != null}? ${roleDetail.grade} : '') : ''" lay-verify="" placeholder="" autocomplete="off" class="layui-input"/>
-            </div>
-        </div>-->
-        <div class="layui-form-item">
-            <label class="layui-form-label">角色描述：</label>
-            <div class="layui-input-block">
-                <input type="text" name="descpt" th:value="${roleDetail != null}?(${roleDetail.descpt != null}? ${roleDetail.descpt} : '') : ''" lay-verify="" placeholder="" autocomplete="off" class="layui-input"/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">权限：</label>
-            <div class="layui-input-block">
-                <ul id="treeDemo" class="ztree"></ul>
-            </div>
-        </div>
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">手机号：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="shopPhone" th:value="${shopInfo != null}?(${shopInfo.shopPhone != null}? ${shopInfo.shopPhone} : '') : ''" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+			</div>
 
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="updateRoleSumbit">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
-        </div>
-    </form>
-    <script src="/js/ztree/jquery.ztree.all.js"></script>
-    <script src="/js/auth/roleUpdate.js"></script>
-    <script th:inline="javascript">
-        var permIdList=[[${perms}]];
-    </script>
-</div>
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">所属人会员号：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="memberNo" th:value="${shopInfo != null}?(${shopInfo.memberNo != null}? ${shopInfo.memberNo} : '') : ''" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">QQ：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="qq" th:value="${shopInfo != null}?(${shopInfo.qq != null}? ${shopInfo.qq} : '') : ''"  class="layui-input" />
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">微信：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="wechat" th:value="${shopInfo != null}?(${shopInfo.wechat != null}? ${shopInfo.wechat} : '') : ''"  class="layui-input" />
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">LOGO：</label>
+					<div class="layui-input-inline">
+						<button class="layui-btn" id="uploadShopLogo" type="button">上传图片</button>
+						<img style="width: 140px" alt="" id="shopLogoUrl" th:src="${shopInfo != null}?(${shopInfo.shopLogoUrl != null}? ${shopInfo.shopLogoUrl} : '') : ''">
+						<input type="hidden"  name="shopLogoUrl" th:value="${shopInfo != null}?(${shopInfo.shopLogoUrl != null}? ${shopInfo.shopLogoUrl} : '') : ''" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">商家简介：</label>
+					<div class="layui-input-inline">
+						<textarea name="shopDescribe" th:text="${shopInfo != null}?(${shopInfo.shopDescribe != null}? ${shopInfo.shopDescribe} : '') : ''" class="layui-textarea" ></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">擅长项目:</label>
+				<div class="layui-input-inline" id="serverClassIdStr">
+					<!-- <input name="serverClassIdStr" title="参考价" type="checkbox" value="1"> 
+						<input name="serverClassIdStr" title="需咨询" type="checkbox" value="2"> -->
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+					<label class="layui-form-label">商家地址:</label>
+					<div class="layui-input-block">
+						<input id="address" name="shopAddress"  th:value="${shopInfo != null}?(${shopInfo.shopAddress != null}? ${shopInfo.shopAddress} : '') : ''" class="layui-input" type="text" />
+						<div onclick="mapSearch()" style="border: solid 1px; width: 45px; text-align: center">搜索</div>
+						<input type="hidden" id="lat" name="shopY" th:value="${shopInfo != null}?(${shopInfo.shopY != null}? ${shopInfo.shopY} : '') : ''"> 
+						<input type="hidden" id="lon" name="shopX" th:value="${shopInfo != null}?(${shopInfo.shopX != null}? ${shopInfo.shopX} : '') : ''">
+						<div id="container" style="height: 400px; width: 665px;"></div>
+					</div>
+				</div>
+			
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="updateShopSumbit">立即提交</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+		</form>
+		<script src="/js/shop/shopUpdate.js"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=9c82bae7791795fc82dcadb438528d3c"></script>
+		<script>
+		var map,marker;
+		window.onload = function(){
+			//直接加载地图
+			
+			var latlon=null;
+			if($("#lat").val()){
+				latlon=($("#lon").val()+","+$("#lat").val()).split(",");
+			}
+			map = new AMap.Map('container', {
+		        zoom:13,//级别
+		        center: latlon,//中心点坐标
+		        resizeEnable: true,
+		    });
+			if($("#lat").val()){
+				 marker = new AMap.Marker({
+		            position: [$("#lon").val(),$("#lat").val()],
+		            offset: new AMap.Pixel(-13, -30)
+		        });
+		        marker.setMap(map);
+			}
+			  //获取用户所在城市信息
+			map.on('click', function(e) {
+		        console.log( e.lnglat.getLng() + ',' + e.lnglat.getLat())
+		    });
+			 
+		}
+		
+		function mapSearch(){   
+	    	AMap.service(["AMap.PlaceSearch"], function() {
+	        	//构造地点查询类
+		        var placeSearch = new AMap.PlaceSearch({ 
+		            pageSize: 7, // 单页显示结果条数
+		            pageIndex: 1, // 页码
+		            city: "330", // 兴趣点城市
+		            citylimit: true,  //是否强制限制在设置的城市内搜索
+		            map: map, // 展现结果的地图实例
+		            //panel: "qq_map_1", // 结果列表将在此容器中进行展示。
+		            autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
+		        });
+		        //关键字查询
+		        placeSearch.search($("#address").val(),function(status,result){
+		        	console.log(result);
+		        	
+		        });
+		      //点击事件
+		        AMap.event.addListener(placeSearch, "markerClick", function(e){
+		            console.log(e.data.location);//当前marker的经纬度信息
+		             //document.getElementById("lnglat").value = e.data.location.lng + ',' + e.data.location.lat;
+		            $("#lat").val(e.data.location.lat);
+		            $("#lon").val(e.data.location.lng);
+		            //console.log( e.data.address);//获取当前marker的具体地址信息
+		            console.log(e.data);//则是包含所有的marker数据
+		            $("#address").val(e.data.pname+e.data.cityname+e.data.adname+e.data.address);
+		            //document.getElementById("input").value =  e.data.address;
+		        });
+	    	});
+		}
+		</script>
+	</div>
 </body>
 </html>

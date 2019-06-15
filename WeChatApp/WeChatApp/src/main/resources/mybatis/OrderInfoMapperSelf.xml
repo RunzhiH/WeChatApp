@@ -6,7 +6,7 @@
 		  order_id 
 		FROM
 		  order_info 
-		WHERE NOW() > DATE_ADD(create_time, INTERVAL 24 HOUR)
+		WHERE NOW() > DATE_ADD(create_time, INTERVAL 72 HOUR)
 		  AND order_status = 1
 	</select>
 	<select id="getOrderListByCondition" parameterType="String" resultType="Map">
@@ -87,7 +87,7 @@
 		  order_info 
 		SET
 		  order_status = 3 
-		WHERE NOW() > DATE_ADD(create_time, INTERVAL 24 HOUR) 
+		WHERE NOW() > DATE_ADD(create_time, INTERVAL 72 HOUR) 
 		  AND order_status = 1 
 	</update>
 	<select id="getOrderList" resultType="Map">
@@ -98,10 +98,11 @@
 		  d.nickname server_member,
 		  DATE_FORMAT(a.create_time ,'%y-%m-%d %h:%i:%s') create_time_str,
 		  CASE order_status
-	        WHEN 0 THEN '未确认'
+	        WHEN 0 THEN '未支付'
 	        WHEN 1 THEN '已下单'
 	        WHEN 3 THEN '已完成'
 	        WHEN 5 THEN '已取消'
+	        WHEN 7 THEN '支付中'
 	        ELSE '未知'
 	      END order_status_tr
 		FROM

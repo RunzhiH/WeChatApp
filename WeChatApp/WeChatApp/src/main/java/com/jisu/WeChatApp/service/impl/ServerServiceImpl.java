@@ -88,6 +88,7 @@ public class ServerServiceImpl implements ServerService {
 		// TODO Auto-generated method stub
 		ServerClassExample example = new ServerClassExample();
 		example.createCriteria().andServerClassLevelEqualTo(1);
+		example.setOrderByClause("ord_num");
 		return serverClassMapper.selectByExample(example);
 	}
 
@@ -96,6 +97,7 @@ public class ServerServiceImpl implements ServerService {
 		// TODO Auto-generated method stub
 		ServerClassExample example = new ServerClassExample();
 		example.createCriteria().andServerClassPidEqualTo(server_class_id);
+		example.setOrderByClause("ord_num");
 		return serverClassMapper.selectByExample(example);
 	}
 

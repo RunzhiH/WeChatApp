@@ -1,8 +1,10 @@
 package com.jisu.WeChatApp.tool.util;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-public class SpringContextUtil {
+public class SpringContextUtil  {
 	private static ApplicationContext applicationContext;
 
 	// 获取上下文
@@ -11,7 +13,7 @@ public class SpringContextUtil {
 	}
 
 	// 设置上下文
-	public static void setApplicationContext(ApplicationContext applicationContext) {
+	public static void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		SpringContextUtil.applicationContext = applicationContext;
 	}
 

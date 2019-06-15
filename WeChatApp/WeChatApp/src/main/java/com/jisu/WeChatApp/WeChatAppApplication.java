@@ -11,8 +11,9 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
 
 import com.jisu.WeChatApp.tool.util.SpringContextUtil;
 
@@ -64,5 +65,15 @@ public class WeChatAppApplication {
 		// 监听到http的端口号后转向到的https的端口号
 		connector.setRedirectPort(httpsPort);
 		return connector;
+	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setConnectTimeout(1000);
+		requestFactory.setReadTimeout(1000);
+
+		RestTemplate restTemplate = new RestTemplate(requestFactory);
+		return restTemplate;
 	}
 }

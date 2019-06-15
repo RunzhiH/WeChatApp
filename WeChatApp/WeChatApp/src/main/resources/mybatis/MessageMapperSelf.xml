@@ -7,6 +7,7 @@
 		  a.order_code,
 		  a.create_time,
 		  a.order_price,
+		  a.pay_price,
 		  a.order_desc,
 		  a.server_address,
 		  a.server_name,
@@ -56,6 +57,7 @@
 		  a.order_code,
 		  a.create_time,
 		  a.order_price,
+		  a.pay_price,
 		  a.order_desc,
 		  a.server_address,
 		  a.server_name,
@@ -105,10 +107,15 @@
 		  a.order_code,
 		  a.create_time,
 		  a.order_price,
+		  a.pay_price,
 		  a.order_desc,
 		  a.server_address,
 		  a.server_name,
 		  a.appointment_time_start,
+		  DATE_FORMAT(
+		    a.appointment_time_start,
+		    '%Y-%m-%d %h:%i:%s'
+		  ) appointment_time_start_str,
 		  a.appointment_time_end,
 		  a.order_phone,
 		  a.order_nickname,
@@ -125,24 +132,11 @@
 		  order_info a,
 		  member_info b,
 		  message_temp_info c,
-		  send_message_info d,
-		   (SELECT 
-		    h.* 
-		  FROM
-		    order_info a,
-		    member_info b,
-		    form_info h 
-		  WHERE a.order_id = '${order_id}'
-		    AND a.member_no = b.member_no 
-		    AND b.openid = h.open_id 
-		    AND h.is_use = 0 
-		  ORDER BY h.create_time 
-		  LIMIT 1) f 
+		  send_message_info d
 		WHERE a.order_id = '${order_id}' 
 		  AND a.server_member_no = b.member_no 
 		  AND d.send_message_type = '${message_type}' 
 		  AND c.message_temp_id = d.message_temp_id 
-		  AND b.openid = f.open_id 
 	</select>
 	<select id="getOrderInfoWithMessageInfoAndMemberInfo" parameterType="String" resultType="Map">
 		SELECT 
@@ -150,6 +144,7 @@
 		  a.order_code,
 		  a.create_time,
 		  a.order_price,
+		  a.pay_price,
 		  a.order_desc,
 		  a.server_address,
 		  a.server_name,
@@ -174,7 +169,7 @@
 		  member_info b,
 		  message_temp_info c,
 		  send_message_info d,
-		  memebr_info e,
+		  member_info e,
 		  (SELECT 
 		    h.* 
 		  FROM
@@ -200,6 +195,7 @@
 		  b.order_code,
 		  b.create_time,
 		  b.order_price,
+		  b.pay_price,
 		  b.order_desc,
 		  b.server_address,
 		  b.server_name,

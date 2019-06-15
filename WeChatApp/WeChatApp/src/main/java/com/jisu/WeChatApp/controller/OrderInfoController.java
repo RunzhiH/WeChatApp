@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +46,8 @@ import com.jisu.WeChatApp.tool.util.PropertyUtil;
 @RequestMapping("/api/order")
 @RestController
 public class OrderInfoController {
+	private static Logger logger = LoggerFactory.getLogger(OrderInfoController.class);
+
 	@Autowired
 	private ShopServerMapper shopServerMapper;
 	@Autowired
@@ -136,6 +140,7 @@ public class OrderInfoController {
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setCreateTime(new Date());
 		orderInfo.setMemberNo(member_no);
+		orderInfo.setShopId(shop_id);
 		orderInfo.setOrderId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
 		orderInfo.setOrderNum(1);
 		orderInfo.setShopServerId(shop_server_id);
@@ -189,7 +194,7 @@ public class OrderInfoController {
 		String order_id = request.getParameter("order_id");
 		String pay_way = request.getParameter("pay_way");
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
-		String order_desc = orderInfo.getOrderDesc();
+		String order_desc = orderInfo.getServerName();
 		BigDecimal pay_price = orderInfo.getPayPrice().multiply(new BigDecimal(100));
 		String member_no = orderInfo.getMemberNo();
 		int order_status = orderInfo.getOrderStatus();
@@ -308,6 +313,7 @@ public class OrderInfoController {
 			} else { // 签名错误，如果数据里没有sign字段，也认为是签名错误
 				resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[通知签名验证失败]]></return_msg>" + "</xml> ";
 				// logger.info("通知签名验证失败");
+
 			}
 			// ------------------------------ //处理业务完毕 //------------------------------
 			BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
@@ -345,8 +351,10 @@ public class OrderInfoController {
 		condition.put("member_no", request.getParameter("member_no"));
 		String begin = request.getParameter("begin");
 		String end = request.getParameter("end");
+		condition.put("begin", begin);
+		condition.put("end", end);
 		if (StringUtils.isNotBlank(end) && StringUtils.isBlank(begin)) {
-			condition.put("begin", begin);
+			condition.put("begin", "0");
 			condition.put("end", end);
 		}
 		List<Map<String, String>> order_list = orderInfoServiceImpl.getOrderListByCondition(condition);
@@ -612,5 +620,21 @@ public class OrderInfoController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@RequestMapping("cancelOrderPay")
+	public MsgModel cancelOrderPay(HttpServletRequest request) {
+		String order_id = request.getParameter("order_id");
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setOrderId(order_id);
+		orderInfo.setOrderStatus(0);
+		int num = orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+		MsgModel msg = new MsgModel();
+		if (num > 0) {
+			msg.setStatus(MsgModel.SUCCESS);
+		} else {
+			msg.setStatus(MsgModel.ERROR);
+		}
+		return msg;
 	}
 }

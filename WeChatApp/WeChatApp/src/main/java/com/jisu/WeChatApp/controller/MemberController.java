@@ -122,7 +122,7 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "memberLogin", method = RequestMethod.POST)
 	public MsgModel memberLogin(HttpServletRequest request, HttpServletResponse response) {
-		String member_no = request.getParameter("memebr_no");
+		String member_no = request.getParameter("member_no");
 		String password = request.getParameter("password");
 
 		MsgModel msg = new MsgModel();
@@ -154,7 +154,7 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "updatePwd", method = RequestMethod.POST)
 	public MsgModel updatePwd(HttpServletRequest request, HttpServletResponse response) {
-		String member_no = request.getParameter("memebr_no");
+		String member_no = request.getParameter("member_no");
 		String password = request.getParameter("password");
 		MsgModel msg = new MsgModel();
 		try {

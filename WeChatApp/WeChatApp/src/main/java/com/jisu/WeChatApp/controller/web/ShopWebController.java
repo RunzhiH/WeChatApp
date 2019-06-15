@@ -1,7 +1,9 @@
 package com.jisu.WeChatApp.controller.web;
 
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +52,7 @@ public class ShopWebController {
 	 * @return PermTreeDTO
 	 */
 	@RequestMapping(value = "/updateShop/{id}", method = RequestMethod.GET)
-	// @ResponseBody
+	@ResponseBody
 	public ModelAndView updateShop(@PathVariable("id") String id) {
 		ModelAndView mv = new ModelAndView("shop/shopManage");
 		try {
@@ -69,5 +71,17 @@ public class ShopWebController {
 		return mv;
 	}
 	
-	
+	@RequestMapping(value = "/setShop", method = RequestMethod.POST)
+	@ResponseBody
+	public String setShop(ShopInfo shopInfo) {
+		try {
+			if (null == shopInfo) {
+				return "请您填写完整的店铺信息";
+			}
+			return shopInfoServiceImpl.updateShopInfo(shopInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "操作错误，请您稍后再试";
+	}
 }

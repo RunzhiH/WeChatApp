@@ -45,12 +45,15 @@ import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.core.util.UuidUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.jisu.WeChatApp.pojo.Transfers;
 
 public class PayUtils {
+	private final static Logger logger = LoggerFactory.getLogger(PayUtils.class);
 	/**
 	 * * 签名字符串 *
 	 * 
@@ -345,10 +348,10 @@ public class PayUtils {
 					+ "<trade_type>" + TRADETYPE + "</trade_type>" 
 					+ "<sign>" + mysign + "</sign>" 
 					+ "</xml>";
-			System.out.println("调试模式_统一下单接口 请求XML数据：" + xml);
+			logger.debug("调试模式_统一下单接口 请求XML数据：" + xml);
 			// 调用统一下单接口，并接受返回的结果
 			String result = PayUtils.httpRequest(pay_url, "POST", xml);
-			System.out.println("调试模式_统一下单接口 返回XML数据：" + result);
+			logger.debug("调试模式_统一下单接口 返回XML数据：" + result);
 
 			return result;
 		} catch (Exception e) {

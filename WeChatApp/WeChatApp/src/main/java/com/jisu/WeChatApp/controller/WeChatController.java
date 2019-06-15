@@ -26,7 +26,7 @@ import com.jisu.WeChatApp.tool.util.WechatGetUtil;
 @RequestMapping("/api/wx")
 @RestController
 public class WeChatController {
-	private static Logger logger = LoggerFactory.getLogger(QrCodeUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(WeChatController.class);
 
 	/**
 	 * 获取解密数据

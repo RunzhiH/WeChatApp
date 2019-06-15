@@ -61,6 +61,7 @@ $(function() {
 			,
 			url : '/api/upload/uploadImages' // 上传接口
 			,
+			size :0,
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);

@@ -3,12 +3,13 @@ package com.jisu.WeChatApp.messge;
 import java.util.Map;
 
 public abstract class MessageTemplate {
-	public String getOpenid() {
-		return openid;
+
+	public String getTouser() {
+		return touser;
 	}
 
-	public void setOpenid(String openid) {
-		this.openid = openid;
+	public void setTouser(String touser) {
+		this.touser = touser;
 	}
 
 	public String getTemplate_id() {
@@ -53,7 +54,7 @@ public abstract class MessageTemplate {
 
 	public abstract void setDataInfo(Map<String, String> messageData);
 
-	private String openid;// 用户openid
+	private String touser;// 用户openid
 	private String template_id;// 模版id
 	private String page = "index";// 默认跳到小程序首页
 	private String form_id;// 收集到的用户formid

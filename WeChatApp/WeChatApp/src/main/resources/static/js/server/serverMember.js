@@ -81,6 +81,7 @@ $(function() {
 			,
 			url : '/api/upload/uploadImages' // 上传接口
 			,
+			size :0,
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);
@@ -98,6 +99,7 @@ $(function() {
 			,
 			multiple : true,
 			number : 3,
+			size :0,
 			done : function(res) {
 				// 上传完毕回调
 				var imageList = res.context;

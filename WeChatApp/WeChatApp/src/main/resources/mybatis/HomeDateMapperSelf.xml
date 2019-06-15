@@ -101,7 +101,7 @@
 		        DATE_FORMAT(create_time, '%Y-%m-%d') create_date 
 		      FROM
 		        order_info 
-		      WHERE order_status IN (1,7,3,6)  ) a 
+		      WHERE order_status IN (1,3,6)  ) a 
 		    GROUP BY a.create_date) b 
 		    ON a.order_date = b.create_date 
 		ORDER BY a.order_date 
@@ -128,7 +128,7 @@
 		        DATE_FORMAT(create_time, '%Y-%m') create_date 
 		      FROM
 		        order_info 
-		      WHERE order_status IN (1,7,3,6)  ) a 
+		      WHERE order_status IN (1,3,6)  ) a 
 		    GROUP BY a.create_date) b 
 		    ON a.order_date = b.create_date 
 		ORDER BY a.order_date 
@@ -155,7 +155,7 @@
 		        DATE_FORMAT(create_time, '%Y') create_date 
 		      FROM
 		        order_info 
-		      WHERE order_status IN (1,7,3,6)  ) a 
+		      WHERE order_status IN (1,3,6)  ) a 
 		    GROUP BY a.create_date) b 
 		    ON a.order_date = b.create_date 
 		ORDER BY a.order_date 
@@ -182,7 +182,7 @@
 		        DATE_FORMAT(create_time, '%Y-%m') create_date 
 		      FROM
 		        order_info 
-		      WHERE order_status IN (1,7,3,6)  ) a 
+		      WHERE order_status IN (1,3,6)  ) a 
 		    GROUP BY a.create_date) b 
 		    ON a.order_date = b.create_date 
 		ORDER BY a.order_date 
@@ -209,7 +209,7 @@
 		        DATE_FORMAT(create_time, '%Y') create_date 
 		      FROM
 		        order_info 
-		      WHERE order_status IN (1,7,3,6)  ) a 
+		      WHERE order_status IN (1,3,6)  ) a 
 		    GROUP BY a.create_date) b 
 		    ON a.order_date = b.create_date 
 		ORDER BY a.order_date 
@@ -236,7 +236,7 @@
 		        DATE_FORMAT(create_time, '%Y-%m-%d') create_date 
 		      FROM
 		        order_info 
-		      WHERE order_status IN (1,7,3,6)  ) a 
+		      WHERE order_status IN (1,3,6)  ) a 
 		    GROUP BY a.create_date) b 
 		    ON a.order_date = b.create_date 
 		ORDER BY a.order_date 

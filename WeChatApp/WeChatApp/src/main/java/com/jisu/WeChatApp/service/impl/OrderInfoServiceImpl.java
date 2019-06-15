@@ -59,7 +59,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			msg.put("order_id", order_id);
 			sendMessageServiceImpl.sendOrderPayMessage(msg);
 			sendMessageServiceImpl.sendOrderCheckMessageToServer(msg);
-			sendMessageServiceImpl.sendAddOrderMessage(msg);
+			//sendMessageServiceImpl.sendAddOrderMessage(msg);
 			// 发送消息结束
 		}
 		return null;

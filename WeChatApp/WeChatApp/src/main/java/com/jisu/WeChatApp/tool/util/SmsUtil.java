@@ -3,6 +3,9 @@ package com.jisu.WeChatApp.tool.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -25,13 +28,14 @@ import net.sf.json.JSONObject;
  * 备注:Demo工程编码采用UTF-8 国际短信发送请勿参照此DEMO
  */
 public class SmsUtil {
+	private final static Logger logger = LoggerFactory.getLogger(SmsUtil.class);
 	// 产品名称:云通信短信API产品,开发者无需替换
 	static final String product = "Dysmsapi";
 	// 产品域名,开发者无需替换
 	static final String domain = "dysmsapi.aliyuncs.com";
 
 	// TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-	static final String accessKeyId =PropertyUtil.getProperty("aliyun.sms.accessKeyId");
+	static final String accessKeyId = PropertyUtil.getProperty("aliyun.sms.accessKeyId");
 	static final String accessKeySecret = PropertyUtil.getProperty("aliyun.sms.accessKeySecret");
 
 	/**
@@ -79,9 +83,14 @@ public class SmsUtil {
 		// 初始化acsClient,暂不支持region化
 		DefaultProfile profile = DefaultProfile.getProfile("default", accessKeyId, accessKeySecret);
 		IAcsClient client = new DefaultAcsClient(profile);
-		String mobile=sendMsgContext.get("phone");
-		String order_code=sendMsgContext.get("order_code");
-		JSONObject sendMsgJSONObject=JSONObject.fromObject(sendMsgContext);
+		String mobile = sendMsgContext.get("phone");
+		// String order_code=sendMsgContext.get("order_code");
+		JSONObject sendMsgJSONObject = new JSONObject();
+		sendMsgJSONObject.put("phone", sendMsgContext.get("phone"));
+		sendMsgJSONObject.put("order_code", sendMsgContext.get("order_code"));
+		sendMsgJSONObject.put("server_address", sendMsgContext.get("server_address"));
+		sendMsgJSONObject.put("appointment_time_start", sendMsgContext.get("appointment_time_start_str"));
+		sendMsgJSONObject.put("server_name", sendMsgContext.get("server_name"));
 		CommonRequest request = new CommonRequest();
 		// request.setProtocol(ProtocolType.HTTPS);
 		request.setMethod(MethodType.POST);
@@ -96,6 +105,9 @@ public class SmsUtil {
 		try {
 			response = client.getCommonResponse(request);
 			System.out.println(response.getData());
+			logger.info(response.getData());
+			System.out.println("短信接口返回的数据----------------");
+			System.out.println("DATA=" + response.getData() + ",response=" + response.toString());
 		} catch (ServerException e) {
 			e.printStackTrace();
 		} catch (ClientException e) {
@@ -107,7 +119,7 @@ public class SmsUtil {
 	public static void main(String[] args) throws ClientException, InterruptedException {
 
 		// 发短信
-		Map<String, String> sendMsgContext=new HashMap<String, String>();
+		Map<String, String> sendMsgContext = new HashMap<String, String>();
 		sendMsgContext.put("phone", "15958243735");
 		sendMsgContext.put("order_code", "124323252454");
 		sendMsgContext.put("server_address", "黄庆苗楼A111");
@@ -115,11 +127,12 @@ public class SmsUtil {
 		sendMsgContext.put("server_name", "水雾眉");
 		CommonResponse response = sendSmsRemind(sendMsgContext);
 		System.out.println("短信接口返回的数据----------------");
-		System.out.println("DATA=" + response.getData()+",response="+response.toString());
+		System.out.println("DATA=" + response.getData() + ",response=" + response.toString());
 //		System.out.println("Message=" + response.getMessage());
 //		System.out.println("RequestId=" + response.getRequestId());
 //		System.out.println("BizId=" + response.getBizId());
-		//System.out.println(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_UPPER, 6, null));
+		// System.out.println(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_UPPER,
+		// 6, null));
 
 	}
 }
