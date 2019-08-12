@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.ProfitInfoMapperSelf">
+	<insert id="insertProfitForServerShop">
+		INSERT INTO profit_info (
+		  profit_id,
+		  price,
+		  create_time,
+		  profit_status,
+		  relation_id,
+		  member_no,
+		  note,
+  		  profit_type
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") profit_id,
+		  TRUNCATE(a.pay_price * 0.15, 2) price,
+		  NOW(),
+		  0,
+		  a.order_id,
+		  b.member_no,
+		        '商家场地收益15%' note,
+		  '1'
+		FROM
+		  order_info a,
+		  shop_info b 
+		WHERE a.shop_id = b.shop_id 
+		  AND a.order_id = #{order_id} 
+		  AND TRUNCATE(a.pay_price * 0.15, 2) > 0      
+	</insert>
+	<insert id="insertProfitForShareShop">
+		INSERT INTO profit_info (
+		  profit_id,
+		  price,
+		  create_time,
+		  profit_status,
+		  relation_id,
+		  member_no,
+		  note,
+		  profit_type
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") profit_id,
+		  TRUNCATE(a.pay_price * 0.15, 2) price,
+		  NOW(),
+		  0,
+		  a.order_id,
+		  c.member_no,
+		       '商家推荐合作收益15%' note,
+		  '2' 
+		FROM
+		  order_info a,
+		  member_info b,
+		  shop_info c 
+		WHERE a.member_no = b.member_no
+		  AND b.share_shop_id=c.shop_id 
+		  AND a.order_id = #{order_id} 
+		  AND TRUNCATE(a.pay_price * 0.15, 2) > 0 
+	</insert>
+	<insert id="insertProfitForServerMember">
+		INSERT INTO profit_info (
+		  profit_id,
+		  price,
+		  create_time,
+		  profit_status,
+		  relation_id,
+		  member_no,
+		  note,
+		  profit_type
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") profit_id,
+		  TRUNCATE(a.pay_price * 0.40, 2) price,
+		  NOW(),
+		  0,
+		  a.order_id,
+		  a.server_member_no,
+		     '技术收益40%' note,
+		  '3'
+		FROM
+		  order_info a 
+		WHERE a.order_id = #{order_id} 
+		  AND TRUNCATE(a.pay_price * 0.4, 2) > 0 
+	</insert>
+	<insert id="insertProftForOnlyShareShop">
+		INSERT INTO profit_info (
+		  profit_id,
+		  price,
+		  create_time,
+		  profit_status,
+		  relation_id,
+		  member_no,
+		  note,
+		  profit_type
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") profit_id,
+		  TRUNCATE(a.pay_price * 0.3, 2) price,
+		  NOW(),
+		  0,
+		  a.order_id,
+		  b.member_no,
+		       '商家独享推荐收益30%' note,
+		  '2'  
+		FROM
+		  order_info a,
+		  shop_info b 
+		WHERE a.shop_id = b.shop_id 
+		  AND a.order_id = #{order_id} 
+		  AND TRUNCATE(a.pay_price * 0.3, 2) > 0 
+	</insert>
+	<insert id="insertProfitForBusinessMemebr">
+		INSERT INTO profit_info (
+		  profit_id,
+		  price,
+		  create_time,
+		  profit_status,
+		  relation_id,
+		  member_no,
+		  note,
+		  profit_type
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") profit_id,
+		  TRUNCATE(a.pay_price * 0.05, 2) price,
+		  NOW(),
+		  0,
+		  a.order_id,
+		  c.operator_member_id,
+		  '推荐入驻收益%5' note,
+		  '4'
+		FROM
+		  order_info a,
+		  member_info b,
+		  shop_info c,
+		  operator_member d 
+		WHERE a.member_no = b.member_no
+		  AND b.share_shop_id=c.shop_id 
+		  AND b.member_no =d.member_no 
+		  AND d.is_share = 1
+		  AND a.order_id = #{order_id}
+		  AND TRUNCATE(a.pay_price * 0.05, 2) > 0
+	</insert>
+	<update id="updateStatusByOrderId">
+		UPDATE profit_info SET 
+		profit_status = 1
+		WHERE relation_id = #{order_id}
+	</update>
+</mapper>

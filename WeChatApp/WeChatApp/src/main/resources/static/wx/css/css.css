@@ -1,0 +1,47 @@
+body {
+　　　　font: normal 100% Helvetica, Arial, sans-serif;word-break:break-all;
+　　}
+small {
+　　　　font-size: 0.875em;
+　　}
+div,p,span,img,dl,dd,ul,li,br,body,html,title{ text-decoration:none; margin:0px; padding:0; border:0px;}
+img { max-width: 100%;}
+ul,li{ list-style:none; margin:0; padding:0;}
+.head{  width:100%;}
+.center { margin:auto; width:80%; }
+.center-bottom { margin:auto; width:80%; }
+.center-bottom1 { width:50%; float:left; margin:0 auto; text-align:center; font-family:"黑体"; font-size:1.5em; font-weight:bold; }
+.center-bottom div{ margin-top:20px;}
+.clear1{ float:none;}
+.jianju{ margin:1em 1em;}
+.content{ background:url(https://dashouyi.oss-cn-hangzhou.aliyuncs.com/image/1562399049126.jpg) no-repeat top; margin:0 auto; float:right;width: 100%; background-size: 100% auto; padding-bottom:50px}
+.content:before{content: ""; display: block; padding-top:20% }
+.content-nr{ width:100%; height:auto; margin:auto;}
+.nr{ width:80%; background-color:#FFF;
+            margin:0 auto;
+			height:auto;
+            border-radius:30px;
+            text-align: left;
+			padding:3%;
+        }
+.picnr{ float:left; width:80%; margin:auto;}
+.mt30{ margin-top: 30px;}
+.mf20{ margin-left:20px;}
+.fl{ float:left;}
+.fr{ float:right;}
+.picul{ width:80%; margin:auto; height:auto;}
+.picul{ width:100%; }
+.flex{display:flex; flex-direction:row;align-items: center; justify-content:flex-start;}
+.join{ width:80%; margin:auto;}
+.join p{ margin-top: 30px; font-family:MicrosoftYaHeiLight}
+.zhushou{ width:80%; margin:auto;}
+.jianjie{font-family:MicrosoftYaHeiLight; font-size:16px; font-weight:500; line-height:30px; color:#000;}
+.ml25{ margin-left:25px;}
+.mt30{ margin-top:30px;}
+.black18{ font-family:"黑体"; font-size:18px;}
+.black14{ font-family:"黑体"; font-size:14px; margin-top:20px;}
+.black16{ font-family:MicrosoftYaHeiLight; font-size:16px;}
+.lh35{ line-height:35px;}
+
+
+

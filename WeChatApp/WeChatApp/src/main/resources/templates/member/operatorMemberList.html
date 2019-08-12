@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead" th:with="title='权限管理'"></head>
+<body class="layui-layout-body">
+	<div class="layui-layout layui-layout-admin">
+		<!--头-->
+		<div th:replace="fragments/head :: header"></div>
+		<div class="layui-body" style="margin: 1%">
+
+			<form id="userSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+				<div class="layui-form-item">
+					<label class="layui-form-label">会员号</label>
+					<div class="layui-input-inline">
+						<input id="memberNo" name="memberNo" autocomplete="off" class="layui-input" type="text" />
+					</div>
+					<label class="layui-form-label">用户名</label>
+					<div class="layui-input-inline">
+						<input id="nickname" name="nickname" autocomplete="off" class="layui-input" type="text" />
+					</div>
+					<label class="layui-form-label">手机号</label>
+					<div class="layui-input-inline">
+						<input id="phone" name="phone" autocomplete="off" class="layui-input" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+					</div>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					<button class="layui-btn" lay-submit="" lay-filter="searchSubmit">提交</button>
+				</div>
+
+				<!-- <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">添加时间</label>
+                        <div class="layui-input-inline" style="width: 175px;">
+                            <input  name="insertTimeStart" id="insertTimeStart" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" type="text"/>
+                        </div>
+                    <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width: 175px;">
+                            <input name="insertTimeEnd" id="insertTimeEnd" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" type="text"/>
+                        </div>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button class="layui-btn"  lay-submit="" lay-filter="searchSubmit">提交</button>
+                </div>
+            </div> -->
+			</form>
+
+			<!--<hr class="layui-bg-blue"/>-->
+			<hr class="layui-bg-black" />
+			<table id="uesrList" lay-filter="userTable"></table>
+
+
+			<script type="text/html" id="optBar">
+            	<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="update">修改级别</a>
+        	</script>
+        	<script type="text/html" id="switchTpl">
+ 		 	<!-- 这里的 checked 的状态只是演示 -->
+  			<input type="checkbox" name="is_share" value="{{d.member_no}}" lay-skin="switch" lay-text="否|是" lay-filter="is_share_filter" {{ d.is_share == 1 ? 'checked' : '' }}>
+			</script>
+		</div>
+
+		<!--底部-->
+		<div th:replace="fragments/footer :: footer"></div>
+		<script src="/js/dateUtils.js"></script>
+		<script src="/js/member/operatorMemberList.js"></script>
+
+	</div>
+</body>
+</html>

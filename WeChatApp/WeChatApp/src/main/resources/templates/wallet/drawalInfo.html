@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<header th:fragment="drawalInfo">
+		<form id="roleForm" class="layui-form" action="=" method="post">
+			<input type="hidden" id="record_id" name="drawal_record_id" th:value="${ drawal_info != null}?(${ drawal_info.withdrawal_record_id != null}? ${ drawal_info.withdrawal_record_id } : '') : ''">
+			<div class="layui-form-item">
+				<label class="layui-form-label">申请人昵称:</label>
+				<div class="layui-input-block">
+					<label class="layui-form-label" th:text="${ drawal_info != null}?( ${  drawal_info.nickname != null}? ${  drawal_info.nickname } : '') : ''"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">会员号:</label>
+				<div class="layui-input-block">
+					<label class="layui-form-label" th:text="${ drawal_info != null}?( ${  drawal_info.member_no != null}? ${  drawal_info.member_no } : '') : ''"></label>
+				</div>
+			</div>
+			<!-- <div class="layui-form-item">
+				<label class="layui-form-label">手机号:</label>
+				<div class="layui-input-block">
+					<label class="layui-form-label" th:text="${ drawal_info != null}?( ${  drawal_info.phone != null}? ${  drawal_info.phone } : '') : ''"></label>
+				</div>
+			</div> -->
+			<div class="layui-form-item">
+				<label class="layui-form-label">支付宝提现账号:</label>
+				<div class="layui-input-block">
+					<label class="layui-form-label" th:text="${ drawal_info != null}?( ${  drawal_info.alipay_account != null}? ${  drawal_info.alipay_account } : '') : ''"></label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">提现金额:</label>
+				<div class="layui-input-block">
+					<label class="layui-form-label"> <label th:text="${ drawal_info != null}?( ${  drawal_info.withdrawal_price != null}? ${  drawal_info.withdrawal_price } : '') : ''"></label>&nbsp;元
+					</label>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">申请时间:</label>
+				<div class="layui-input-block">
+					<label class="layui-form-label" style="width: 120px" th:text="${ drawal_info != null}?( ${  drawal_info.create_time_str != null}? ${  drawal_info.create_time_str } : '') : ''"></label>
+
+				</div>
+			</div>
+			<script type="text/html" id="button">
+			{{#  if( [[${drawal_info != null }?(${drawal_info.withdrawal_status !=null}? ${drawal_info.withdrawal_status}:''):'']] == 0){ }}
+				<div class="layui-form-item">
+					<button type="button" class="layui-btn" onclick="agree()">同意</button>
+					<button type="button" class="layui-btn" onclick="notAgree()">拒绝</button>
+				</div>
+		 	{{# }  }}
+			</script>
+			<div id="view"></div>
+		</form>
+		<script type="text/javascript" src="/js/wallet/drawalInfo.js"></script>
+	</header>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jisu.WeChatApp.daoSelf.CommentInfoMapperSelf">
+	<select id="getCommentList" resultType="Map" parameterType="String">
+		SELECT
+		a.*,
+		b.nickname,
+		b.photo
+		FROM
+		comment_info a,
+		member_info b
+		WHERE a.member_no = b.member_no 
+		AND a.relation_id = #{relation_id}
+		AND a.comment_type = #{comment_type}
+		ORDER BY a.create_time DESC
+	</select>
+	<select id="getReplyCommentList" resultType="Map" parameterType="String">
+		SELECT 
+		  b.*,
+		  c.nickname,
+		  c.photo,
+		  d.nickname to_nickname
+		FROM
+		  comment_info a,
+		  reply_comment_info b
+		  LEFT JOIN member_info d
+		  	ON b.to_member=d.member_no,
+		  member_info c 
+		WHERE a.comment_id = b.comment_id 
+		  AND b.member_no = c.member_no
+		  AND a.relation_id = #{relation_id}
+		  AND a.comment_type = #{comment_type} 
+		ORDER BY b.create_time  
+	</select>
+
+</mapper>

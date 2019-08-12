@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead" th:with="title='权限管理'"></head>
+<body class="layui-layout-body">
+	<div class="layui-layout layui-layout-admin">
+		<!--头-->
+		<div th:replace="fragments/head :: header"></div>
+
+		<div class="layui-body" style="margin: 1%">
+			<div class="demoTable">
+				&nbsp;&nbsp;
+				<button class="layui-btn" onclick="addShopClass('{{r.shopClassId}}',1)">添加分类</button>
+			</div>
+
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>分类名称</th>
+						<th>分类说明</th>
+						<th>分类图片</th>
+						<th style="width: 140px;">操作</th>
+					</tr>
+				</thead>
+				<tbody id="tbody">
+
+				</tbody>
+			</table>
+		</div>
+
+		<!--添加或编辑权限-->
+		<div id="updateShopClass" class="layer_self_wrap" style="width: 500px; display: none;">
+			<form id="shopClassForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+				<input id="shopClassId" type="hidden" name="shopClassId" /> <input id="type" type="hidden" name="type" />
+				<div class="layui-form-item">
+					<label class="layui-form-label">分类名称</label>
+					<div class="layui-input-inline">
+						<input name="shopClassName" class="layui-input" type="text" />
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">示例图</label>
+					<div class="layui-input-block">
+						<div class="layui-upload">
+							<button class="layui-btn" id="test-upload-normal" type="button">上传图片</button>
+							<img style="width: 140px" alt="" id="shopClassPhoto" src=""> <input style="display: none" name="shopClassPhoto"  class="layui-input" type="text" />
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">排序</label>
+					<div class="layui-input-inline">
+						<input name="ord" class="layui-input" type="text" />
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">说明</label>
+					<div class="layui-input-inline">
+						<textarea name="shopClassDesc" placeholder="请输入内容" class="layui-textarea"></textarea>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block" style="margin-left: 10px;">
+						<button class="layui-btn" lay-submit="" lay-filter="shopClassSubmit">提交</button>
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+
+
+
+		<!--底部-->
+		<div th:replace="fragments/footer :: footer"></div>
+		<script src="/js/shop/shopClassList.js"></script>
+		<script src="/js/dateUtils.js"></script>
+		<script th:inline="javascript">
+        var permList=/*[[${permList}]]*/;
+    </script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>大手艺</title>
+		<link rel="stylesheet" href="css/jquery.zySlide.css">
+
+		<!--默认样式-->
+		<link rel="stylesheet" href="css/reset.css">
+
+		<!--响应式框架-->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!--css3动画库-->
+		<link rel="stylesheet" href="css/animate.css">
+
+		<!--banner大图基础样式-->
+		<link rel="stylesheet" href="css/slick.css">
+
+		<!--页面滚动基础样式-->
+		<!-- <link rel="stylesheet" href="css/jquery.fullPage.css" /> -->
+
+		<!--导航样式-->
+		<link rel="stylesheet" href="css/head.css" />
+
+		<!--图片和滚屏样式-->
+		<link rel="stylesheet" href="css/index.css">
+		<meta http-equiv="imagetoolbar" content="no">
+		<style type="text/css">
+			#imageFlow {
+				position: absolute;
+				width: 100%;
+				height: 80%;
+				left: 0%;
+				top: 10%;
+				background: #000;
+			}
+			#imageFlow .diapo {
+				position: absolute;
+				left: -1000px;
+				cursor: pointer;
+				-ms-interpolation-mode: nearest-neighbor;
+				opacity: 1;
+			}
+			#imageFlow .xianshi{
+				opacity: 1;
+			}
+			#imageFlow .link {
+				opacity: 1;
+			}
+			#imageFlow .bank {
+				visibility: hidden;
+			}
+			#imageFlow .top {
+				position: absolute;
+				width: 100%;
+				height: 40%;
+				background: #181818;
+			}
+			#imageFlow .text {
+				position: absolute;
+				left: 0px;
+				width: 100%;
+				bottom: -80px;
+				text-align: center;
+				z-index: 100;
+			}
+			#imageFlow .title {
+				width:140px;
+				font-size:25px;
+				text-align: center;
+				margin: 10px auto;
+				font-family:PingFang-SC-Medium;
+				font-weight:500;
+				color:rgba(255,255,255,1);
+				text-align: center;
+			}
+			#imageFlow .name {
+				font-size:25px;
+				text-align: center;
+				margin: 0px auto;
+				width:50px;
+				font-size:16px;
+				font-family:PingFang-SC-Medium;
+				font-weight:500;
+				color:rgba(255,255,255,1);
+				opacity:0.8;
+				text-align: center;
+			}
+			#imageFlow .legend {
+				width:180px;
+				font-size:10px;
+				line-height: 15px;
+				margin: 10px auto;
+				text-align: center;
+				font-family:MicrosoftYaHeiLight;
+				font-weight:300;
+				color:rgba(255,255,255,1);
+				opacity:0.5;
+			}
+			#imageFlow .scrollbar {
+				position: absolute;
+				left: 10%;
+				bottom: 10%;
+				width: 80%;
+				height: 16px;
+				z-index: 500;
+			}
+			#imageFlow .track {
+				position: absolute;
+				left: 1%;
+				width: 98%;
+				height: 16px;
+				filter: alpha(opacity=30);
+				opacity: 0.3;
+			}
+			#imageFlow .arrow-left {
+				position: absolute;
+			}
+			#imageFlow .arrow-right {
+				position: absolute;
+				right: 0px;
+			}
+			#imageFlow .bar {
+				position: absolute;
+				height: 16px;
+				left: 25px;
+			}
+		</style>
+		<script type="text/javascript">
+		
+		var imf = function () {
+			var lf = 0;
+			var instances = [];
+			//定义一个通过class获得元素的方法
+			function getElementsByClass (object, tag, className) {
+				var o = object.getElementsByTagName(tag);
+				for ( var i = 0, n = o.length, ret = []; i < n; i++)
+					if (o[i].className == className) ret.push(o[i]);
+				if (ret.length == 1) ret = ret[0];
+				return ret;
+			}
+			function addEvent (o, e, f) {
+				if (window.addEventListener) o.addEventListener(e, f, false);
+				else if (window.attachEvent) r = o.attachEvent('on' + e, f);
+			}
+			/* //////////// ==== ImageFlow Constructor ==== //////////// */
+			function ImageFlow(oCont, size, zoom, border) {
+				this.diapos     = [];
+				this.scr        = false;
+				this.size       = 0.4;
+				this.zoom       = zoom;
+				this.bdw        = border;
+				this.oCont      = oCont;
+				this.oc         = document.getElementById(oCont);
+				this.scrollbar  = getElementsByClass(this.oc,   'div', 'scrollbar');
+				this.text       = getElementsByClass(this.oc,   'div', 'text');
+				this.title      = getElementsByClass(this.text, 'div', 'title');
+				this.name       = getElementsByClass(this.text, 'div', 'name');
+				this.legend     = getElementsByClass(this.text, 'div', 'legend');
+				this.view       = this.back       = 2;
+				this.resize();
+				this.oc.onselectstart = function () { return false; }
+				/* ---- create images ---- */
+				var img   = getElementsByClass(this.oc, 'div', 'bank').getElementsByTagName('a');
+				this.NF = img.length;
+				for (var i = 0, o; o = img[i]; i++) {
+					this.diapos[i] = new Diapo(this, i,
+												o.rel,
+												o.title || '- ' + i + ' -',
+												o.innerHTML || o.rel,
+												o.name || '',
+												o.target || '_self'
+					);
+				}
+				/* ==== add mouse wheel events ==== */
+// 				if (window.addEventListener)
+// 					this.oc.addEventListener('DOMMouseScroll', function(e) {
+// 						this.parent.scroll(-e.detail);
+// 					}, false);
+// 				else this.oc.onmousewheel = function () {
+// 					this.parent.scroll(event.wheelDelta);
+// 				}
+			}
+			/* //////////// ==== ImageFlow prototype ==== //////////// */
+			ImageFlow.prototype = {
+				/* ==== targets ==== */
+				calc : function (inc) {
+					if (inc) this.view += inc;
+					var tw = 0;
+					var lw = 0;
+					var o = this.diapos[this.view];
+					if (o && o.loaded) {
+						/* ---- reset ---- */
+						var ob = this.diapos[this.back];
+						if (ob && ob != o) {
+							ob.img.className = 'diapo';
+							ob.z1 = 1;
+						}
+						/* ---- update legend ---- */
+						this.title.replaceChild(document.createTextNode(o.title), this.title.firstChild);
+						this.name.replaceChild(document.createTextNode(o.name), this.name.firstChild);
+						this.legend.replaceChild(document.createTextNode(o.text), this.legend.firstChild);
+						/* ---- update hyperlink ---- */
+						if (o.url) {
+							o.img.className = 'diapo link';
+							window.status = 'hyperlink: ' + o.url;
+						} else {
+							o.img.className = 'diapo xianshi';
+							window.status = '';
+						}
+						/* ---- calculate target sizes & positions ---- */
+						o.w1 = Math.min(o.iw, this.wh * .5) * o.z1;
+						var x0 = o.x1 = (this.wh * .5) - (o.w1 * .5);
+						var x = x0 + o.w1 + this.bdw;
+						for (var i = this.view + 1, o; o = this.diapos[i]; i++) {
+							if (o.loaded) {
+								o.x1 = x;
+								o.w1 = (this.ht / o.r) * this.size;
+								x   += o.w1 + this.bdw;
+								tw  += o.w1 + this.bdw;
+							}
+						}
+						x = x0 - this.bdw;
+						for (var i = this.view - 1, o; o = this.diapos[i]; i--) {
+							if (o.loaded) {
+								o.w1 = (this.ht / o.r) * this.size;
+								o.x1 = x - o.w1;
+								x   -= o.w1 + this.bdw;
+								tw  += o.w1 + this.bdw;
+								lw  += o.w1 + this.bdw;
+							}
+						}
+						/* ---- move scrollbar ---- */
+						if (!this.scr && tw) {
+							var r = (this.ws - this.alw - this.arw - this.bw) / tw;
+							// this.bar.style.left = Math.round(this.alw + lw * r) + 'px';
+						}
+						/* ---- save preview view ---- */
+						this.back = this.view;
+					}
+				},
+				/* ==== mousewheel scrolling ==== */
+				scroll : function (sc) {
+					if (sc < 0) {
+						if (this.view < this.NF - 1) this.calc(1);
+					} else {
+						if (this.view > 0) this.calc(-1);
+					}
+				},
+				/* ==== resize  ==== */
+				resize : function () {
+					this.wh = this.oc.clientWidth;
+					this.ht = this.oc.clientHeight;
+					this.ws = this.scrollbar.offsetWidth;
+					this.calc();
+					this.run(true);
+				},
+				/* ==== move all images  ==== */
+				run : function (res) {
+					var i = this.NF;
+					while (i--) this.diapos[i].move(res);
+				}
+			}
+			/* //////////// ==== Diapo Constructor ==== //////////// */
+			Diapo = function (parent, N, src, title, text, name, url, target) {
+				this.parent        = parent;
+				this.loaded        = false;
+				this.title         = title;
+				this.text          = text;
+				this.name 		   = name;
+				this.url           = url;
+				this.target        = target;
+				this.N             = N;
+				this.img           = document.createElement('img');
+				this.img.src       = src;
+				this.img.parent    = this;
+				this.img.className = 'diapo';
+				this.x0            = 224;
+				this.x1            = this.x0;
+				this.w0            = 0;
+				this.w1            = 0;
+				this.z1            = 1;
+				this.img.parent    = this;
+				this.img.onclick   = function() { this.parent.click(); }
+				this.parent.oc.appendChild(this.img);
+				/* ---- display external link ---- */
+				if (url) {
+					this.img.onmouseover = function () { this.className = 'diapo link';	}
+					this.img.onmouseout  = function () { this.className = 'diapo'; }
+				}
+			}
+			/* //////////// ==== Diapo prototype ==== //////////// */
+			Diapo.prototype = {
+				/* ==== HTML rendering ==== */
+				move : function (res) {
+					if (this.loaded) {
+						var sx = this.x1 - this.x0;
+						var sw = this.w1 - this.w0;
+						if (Math.abs(sx) > 2 || Math.abs(sw) > 2 || res) {
+							/* ---- paint only when moving ---- */
+							this.x0 += sx * .1;
+							this.w0 += sw * .1;
+							if (this.x0 < this.parent.wh && this.x0 + this.w0 > 0) {
+								/* ---- paint only visible images ---- */
+								this.visible = true;
+								var o = this.img.style;
+								var h = this.w0 * this.r;
+								/* ---- diapo ---- */
+								o.left   = Math.round(this.x0) + 'px';
+								o.bottom = Math.floor(this.parent.ht * .25) + 'px';
+								o.width  = Math.round(this.w0) + 'px';
+								o.height = Math.round(h) + 'px';
+								/* ---- reflexion ---- */
+							} else {
+								/* ---- disable invisible images ---- */
+							}
+						}
+					} else {
+						/* ==== image onload ==== */
+						if (this.img.complete && this.img.width) {
+							/* ---- get size image ---- */
+							this.iw     = 224;
+							this.ih     = 287;
+							this.r      = this.ih / this.iw;
+							this.loaded = true;
+							/* ---- create reflexion ---- */
+							// this.flx    = createReflexion(this.parent.oc, this.img);
+							if (this.parent.view < 0) this.parent.view = this.N;
+							this.parent.calc();
+						}
+					}
+				},
+				/* ==== diapo onclick ==== */
+				click : function () {
+					if (this.parent.view == this.N) {
+						/* ---- click on zoomed diapo ---- */
+						if (this.url) {
+							/* ---- open hyperlink ---- */
+							this.z1 = this.z1 == 1 ? this.parent.zoom : 1;
+							this.parent.calc();
+						} else {
+							/* ---- zoom in/out ---- */
+							this.z1 = this.z1 == 1 ? this.parent.zoom : 1;
+							this.parent.calc();
+						}
+					} else {
+						/* ---- select diapo ---- */
+						this.parent.view = this.N;
+						this.parent.calc();
+					}
+					return false;
+				}
+			}
+			/* //////////// ==== public methods ==== //////////// */
+			return {
+				/* ==== initialize script ==== */
+				create : function (div, size, zoom, border) {
+					/* ---- instanciate imageFlow ---- */
+					var load = function () {
+						var loaded = false;
+						var i = instances.length;
+						while (i--) if (instances[i].oCont == div) loaded = true;
+						if (!loaded) {
+							/* ---- push new imageFlow instance ---- */
+							instances.push(
+								new ImageFlow(div, size, zoom, border)
+							);
+							/* ---- init script (once) ---- */
+							if (!imf.initialized) {
+								imf.initialized = true;
+								/* ---- window resize event ---- */
+								addEvent(window, 'resize', function () {
+									var i = instances.length;
+									while (i--) instances[i].resize();
+								});
+								/* ---- stop drag N drop ---- */
+								addEvent(document.getElementById(div), 'mouseout', function (e) {
+									if (!e) e = window.event;
+									var tg = e.relatedTarget || e.toElement;
+									if (tg && tg.tagName == 'HTML') {
+										var i = instances.length;
+										while (i--) instances[i].oc.onmousemove = null;
+									}
+									return false;
+								});
+								/* ---- set interval loop ---- */
+								setInterval(function () {
+									var i = instances.length;
+									while (i--) instances[i].run();
+								}, 16);
+							}
+						}
+					}
+					/* ---- window onload event ---- */
+					addEvent(window, 'load', function () { load(); });
+				}
+			}
+		}();
+		
+		/* ==== create imageFlow ==== */
+		//          div ID    , size, zoom, border
+		imf.create("imageFlow", 0.4, 1.5, 10);
+		
+		</script>
+	</head>
+	<body>
+		<!-- 导航 -->
+		<header class="header">
+			<div class="container clearfix">
+				<div class="logo">大手艺</div>
+				<div class="fr nav">
+					<ul class="navbar_nav" data-in="fadeInDown" data-out="fadeOutUp">
+						<li class="active">
+							<a href="javascript:void(0)">文化愿景</a>
+						</li>
+						<li class="dropdown">
+							<a href="javascript:void(0)">项目介绍</a>
+							<!-- <div class="dropdown_menu">
+								<a href="#">Custom Menu</a>
+								<a href="#">Custom Menu</a>
+								<a href="#">Custom Menu</a>
+							</div> -->
+						</li>
+						<li class="dropdown">
+							<a href="javascript:void(0)">服务流程</a>
+							<!-- <div class="dropdown_menu">
+								<a href="#">Custom Menu</a>
+								<a href="#">Custom Menu</a>
+								<a href="#">Custom Menu</a>
+							</div> -->
+						</li>
+						<li>
+							<a href="javascript:void(0)">公司团队</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">联系我们</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">公司历程</a>
+						</li>
+					</ul>
+				</div>
+				<a href="javascript:void(0)" id="navToggle" style="background-image: url(image/xian.png);background-repeat: no-repeat;">
+					<!-- <span  style="background-image: url(image/xian.png);" ></span> -->
+					
+				</a>
+			</div>
+		</header>
+		<!--移动端的导航-->
+		<div class="m_nav">
+			<div class="top clearfix">
+				<img src="image/closed.png" alt="" class="closed" />
+			</div>
+			<!-- <div class="logo">
+				<img src="image/logo2.jpg" alt="" />
+			</div> -->
+			<ul class="ul" data-in="fadeInDown" data-out="fadeOutUp">
+				<li class="active">
+					<a href="javascript:void(0)">文化愿景</a>
+				</li>
+				<li class="dropdown">
+					<a href="javascript:void(0)">项目介绍</a>
+					<!-- <div class="dropdown_menu">
+						<a href="#">Custom Menu</a>
+						<a href="#">Custom Menu</a>
+						<a href="#">Custom Menu</a>
+					</div> -->
+				</li>
+				<li class="dropdown">
+					<a href="javascript:void(0)">服务流程</a>
+					<!-- <div class="dropdown_menu">
+						<a href="#">Custom Menu</a>
+						<a href="#">Custom Menu</a>
+						<a href="#">Custom Menu</a>
+					</div> -->
+				</li>
+				<li>
+					<a href="javascript:void(0)">公司团队</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)">联系我们</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)">公司历程</a>
+				</li>
+			</ul>
+		</div>
+		<!-- 内容 -->
+		<div id="index_main" class="index_main">
+			<!--导航-->
+			<div class="section1">
+				<div class="index_banner">
+					<div class="item">
+						<div class="items scaleBg" style="background-image: url(image/banner.png);"></div>
+						<div class="inner">
+							<div class="block_txt">
+								<h3> 改变传统 美业格局</h3>
+								<h2>Change the traditional beauty industry</h2>
+								<h4>用互联网思维改变传统美业</h4>
+								<h5>Change traditional beauty industry with Internet thinking</h5>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="items scaleBg" style="background-image: url(image/banner.png);"></div>
+						<div class="inner">
+							<div class="block_txt">
+								<h3> 改变传统 美业格局</h3>
+								<h2>Change the traditional beauty industry</h2>
+								<h4>用互联网思维改变传统美业</h4>
+								<h5>Change traditional beauty industry with Internet thinking</h5>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="items scaleBg" style="background-image: url(image/banner.png);"></div>
+						<div class="inner">
+							<div class="block_txt">
+								<h3> 改变传统 美业格局</h3>
+								<h2>Change the traditional beauty industry</h2>
+								<h4>用互联网思维改变传统美业</h4>
+								<h5>Change traditional beauty industry with Internet thinking</h5>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="items scaleBg" style="background-image: url(image/banner.png);"></div>
+						<div class="inner">
+							<div class="block_txt">
+								<h3> 改变传统 美业格局</h3>
+								<h2>Change the traditional beauty industry</h2>
+								<h4>用互联网思维改变传统美业</h4>
+								<h5>Change traditional beauty industry with Internet thinking</h5>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="items scaleBg" style="background-image: url(image/banner.png);"></div>
+						<div class="inner">
+							<div class="block_txt">
+								<h3> 改变传统 美业格局</h3>
+								<h2>Change the traditional beauty industry</h2>
+								<h4>用互联网思维改变传统美业</h4>
+								<h5>Change traditional beauty industry with Internet thinking</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="left slick_txt">
+					<div class="prev slick_arrow"></div>
+				</div>
+				<div class="right slick_txt">
+					<div class="next slick_arrow"></div>
+				</div>
+				<div class="number">
+					<div class="inner clearfix">
+						<span class="active"></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+			</div>
+			<div class="section2">
+				<div class="block_bt">
+					<div class="name">公司介绍</div>
+					<div class="fen">
+						<div class="xian"></div>
+						<div class="zi">introduce</div>
+						<div class="xian"></div>
+					</div>
+				</div>
+				<div class="block_txt">
+					<center>大手艺商务科技有限公司是一家传承历史技术、具有现代互联网思维</center>
+					<center>拥有未来策划方案的新型美业公司，致力于纹身、纹绣、整形、美发、美甲、美睫、化妆等多项高端品质的美业服务。</center>
+					<center>公司以“提高美业格局，用互联网思维改变传统美业”为宗旨,通过互联网O2O平台技术</center>
+					<center>整合传统美业资源，联结广大美业从业人员，满足消费者对于个性优质的美业服务需求，达成消费者、手艺人、</center>
+					<center>公司平台共赢的目的，从而促进美业格局的转型升级.</center>
+					<center>贯彻“以互联网为核心基础，从单赢到多赢的转化，让实体经济多元化发展”的发展理念，</center>
+					<center>渴求实现公司 “成为开辟美业新格局的领航员”的发展愿景。</center>
+				</div>
+				<img src="image/tu1.png" />
+			</div>
+			<div class="section3">
+				<div class="block_bt">
+					<div class="name">项目介绍</div>
+					<div class="fen">
+						<div class="xian"></div>
+						<div class="zi">introduce</div>
+						<div class="xian"></div>
+					</div>
+				</div>
+				<div class="xiangmu">
+					<div class="kuang">
+						<img class="jysj" src="image/jysj.png" />
+						<center>甲艺设计</center>
+						<div class="xm_text">根据客人的手形、甲形、肤质、服装的色彩和要求进行消毒、清洁、护理、保养、修饰美化指甲的过程具有表现形式多样化的特点</div>
+					</div>
+					<div class="kuang">
+						<img class="jjjm" src="image/jjjm.png" />
+						<center>嫁接睫毛</center>
+						<div class="xm_text">让眼睛变得更大、更灵动、更水润由自己来决定整个睫毛的长度、密度、厚度、颜色美睫师也会根据顾客的眼型为顾客设计</div>
+					</div>
+					<div class="kuang">
+						<img class="fxsj" src="image/fxsj.png" />
+						<center>发型设计</center>
+						<div class="xm_text">发型设计是艺术，利用头发的长度，分区角度色彩搭配，结合被设计人的喜好以及习惯一款好的发型设计不仅可以很好修饰脸型，头骨还能使人心情愉悦!</div>
+					</div>
+					<div class="kuang">
+						<img class="zrdz" src="image/zrdz.png" />
+						<center>妆容定制</center>
+						<div class="xm_text">
+                            运用化妆品和工具对人体的面部、五官及其他部位进行修饰、改善、调整、美化增添美感和魅力一种艺术形式，呈现一场视觉盛宴，表达一种感情
+                        </div>
+					</div>
+					<div class="kuang">
+						<img class="yxzx" src="image/yxzx.png" />
+						<center>医学整形</center>
+						<div class="xm_text">用医学方法，对人形体美化和再塑造达到功能的恢复和重建，形态的改善和美化修饰和改善人的外貌，使其美丽具有人们所需求的样貌</div>
+					</div>
+					<div class="kuang">
+						<img class="byjz" src="image/byjz.png" />
+						<center>半永久妆</center>
+						<div class="xm_text">整形美容术和化妆术相结合的一项艺术在皮肤表皮层美妆，其独特之处是半永久的化妆效果不用卸妆的高级化妆技术</div>
+					</div>
+					<div class="kuang">
+						<img class="ysws" src="image/ysws.png" />
+						<center>艺术纹身</center>
+						<div class="xm_text">一项与上帝争宠的艺术它给艺术家们无限的想象空间纹制出的画面往往表达出特殊情感</div>
+					</div>
+					<div class="kuang">
+						<img class="mrmt" src="image/mrmt.png" />
+						<center>美容美体</center>
+						<div class="xm_text">通过各种方法使身体变得美丽、性感调整经脉脏腑功能，使人体病理变化恢复成正常生理机能</div>
+					</div>
+				</div>
+			</div>
+			<div class="section4">
+				<div class="block_bt">
+					<div class="name">成员介绍</div>
+					<div class="fen">
+						<div class="xian"></div>
+						<div class="zi">members</div>
+						<div class="xian"></div>
+					</div>
+				</div>
+				<div class="jieshao">
+					<div id="imageFlow">
+						<!-- <div class="top">
+						</div> -->
+						<div class="bank">
+							<a rel="image/ren1.png" title="公司董事长" name="崔刘行">大手艺商务科技有限公司董事长、创始人主要负责公司整体策略方针从事美业12年之久，创办过多家公司</a>
+							<a rel="image/ren1.png" title="公司创始人" name="崔刘行">大手艺商务科技有限公司董事长、创始人主要负责公司整体策略方针从事美业12年之久，创办过多家公司</a>
+							<a rel="image/ren1.png" title="公司董事长" name="崔刘行">大手艺商务科技有限公司董事长、创始人主要负责公司整体策略方针从事美业12年之久，创办过多家公司</a>
+							<a rel="image/ren1.png" title="公司创始人" name="崔刘行">大手艺商务科技有限公司董事长、创始人主要负责公司整体策略方针从事美业12年之久，创办过多家公司</a>
+							<a rel="image/ren1.png" title="公司董事长" name="崔刘行">大手艺商务科技有限公司董事长、创始人主要负责公司整体策略方针从事美业12年之久，创办过多家公司</a>
+						</div>
+						<div class="text">
+							<div class="title">Loading</div>
+							<div class="name">aaa</div>
+							<div class="legend">Please wait...</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="section5">
+				<div class="block_bt">
+					<div class="name">公司出品</div>
+					<div class="fen">
+						<div class="xian"></div>
+						<div class="zi">The company</div>
+						<div class="xian"></div>
+					</div>
+				</div>
+				<div class="kuang">
+					<div class="tu"></div>
+					<div class="wenzi">
+						<div class="zi_name">大手艺美业小程序</div>
+						<div class="zi_text">
+							以美业人为出发点，以改革美业经营现状为使命，希望通过互联网技术发展成为一家经营全能美业的科技公司。软件与传统美业门店相比，有着诸多意义。一方面，平台的运行有效减少手艺人漫长的等待时间，实现美业人的灵活就业，改善美业人的生存境况。另一方面，通过公司对美业资源的高效整合，实现美业经营业务全覆盖专注客户服务体验，打造一站式美业服务标杆
+                        </div>
+						<div class="zi_lj">了解更多 ></div>
+					</div>
+				</div>
+			</div>
+			<div class="section6">
+				<div class="block_bt">
+					<div class="name">联系我们</div>
+					<div class="fen">
+						<div class="xian"></div>
+						<div class="zi">Contact us</div>
+						<div class="xian"></div>
+					</div>
+				</div>
+				<div class="lianxi_tu"></div>
+			</div>
+		</div>
+
+		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+		<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+		<script src="js/index_slick.js"></script>
+		<script src="js/index.js"></script>
+
+	</body>
+</html>
