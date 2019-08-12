@@ -253,4 +253,10 @@
       shop_class_photo = #{shopClassPhoto,jdbcType=VARCHAR}
     where shop_class_id = #{shopClassId,jdbcType=VARCHAR}
   </update>
+  <select id="getAllShopClassList" resultMap="BaseResultMap">
+	  	select 
+	    <include refid="Base_Column_List" />
+	    from shop_class
+	    order by ord
+  </select>
 </mapper>

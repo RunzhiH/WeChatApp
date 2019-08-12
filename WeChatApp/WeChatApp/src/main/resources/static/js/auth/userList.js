@@ -121,7 +121,7 @@ function update(member_no) {
 			"member_no" : member_no
 		}, function(data) {
 			var type = data.memberType;
-			$("#memberNo").val(data.memberNo);
+			$("#member_no").val(data.memberNo);
 			$("#name").val(data.nickname);
 			$("select[name='memberType']").val(type);
 			form.render("select");

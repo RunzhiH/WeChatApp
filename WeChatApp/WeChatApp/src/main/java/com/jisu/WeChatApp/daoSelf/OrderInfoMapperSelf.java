@@ -44,4 +44,8 @@ public interface OrderInfoMapperSelf {
 	public Map<String, String> getOrderDatil(Map<String, String> map);
 
 	public List<Map<String, String>> getRefundOrderList(@Param(value = "orderSearch") OrderSearchDTO orderSearchDTO);
+
+	public Map<String, String> getOrderInfoByPayShop(String id);
+
+	public Map<String, String> getShopPayOrder(String member_no);
 }

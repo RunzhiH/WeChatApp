@@ -28,4 +28,6 @@ public interface ExperMapperSelf {
 	public int deleteExperLikeHistroy(Map<String, String> map);
 
 	public Map<String, String> getExperInfo(String exper_id);
+
+	public Map<String, String> getExperInfoByOrderId(String order_id);
 }

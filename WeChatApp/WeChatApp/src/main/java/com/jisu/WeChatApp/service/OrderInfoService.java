@@ -75,16 +75,20 @@ public interface OrderInfoService {
 	 * @return
 	 */
 	public int closeOrderByOrderId(String order_id);
-	
+
 	public PageDataResult getOrderList(Integer page, Integer limit, OrderSearchDTO orderSearchDTO);
-	
+
 	public OrderInfo getOrder(String order_id);
-	
+
 	public void updateServerMember(OrderInfo orderInfo);
-	
+
 	public Map<String, String> getOrderDatil(String order_id);
-	
+
 	public PageDataResult getRefundOrderList(Integer page, Integer limit, OrderSearchDTO orderSearchDTO);
-	
+
 	public String closeOrderAndRefund(String order_id);
+
+	int updateOrderStatus(String order_id, int order_status);
+
+	Map<String, String> getShopPayOrder(String member_no);
 }

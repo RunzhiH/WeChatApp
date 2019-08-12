@@ -18,7 +18,16 @@ $(function() {
 });
 
 function delShop(id) {
-
+	$.post("/web/shop/delShop",{},function(data){
+		if (data == "ok") {
+			layer.alert("操作成功", function() {
+				layer.closeAll();
+				load();
+			});
+		} else {
+			layer.alert(data);
+		}
+	});
 }
 function updateShop(id) {
 	if (id != null) {

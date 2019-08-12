@@ -1162,6 +1162,76 @@ public class MemberInfoExample {
 			addCriterion("share_shop_time not between", value1, value2, "shareShopTime");
 			return (Criteria) this;
 		}
+
+		public Criteria andAlipayAccountIsNull() {
+			addCriterion("alipay_account is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountIsNotNull() {
+			addCriterion("alipay_account is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountEqualTo(String value) {
+			addCriterion("alipay_account =", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountNotEqualTo(String value) {
+			addCriterion("alipay_account <>", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountGreaterThan(String value) {
+			addCriterion("alipay_account >", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountGreaterThanOrEqualTo(String value) {
+			addCriterion("alipay_account >=", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountLessThan(String value) {
+			addCriterion("alipay_account <", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountLessThanOrEqualTo(String value) {
+			addCriterion("alipay_account <=", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountLike(String value) {
+			addCriterion("alipay_account like", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountNotLike(String value) {
+			addCriterion("alipay_account not like", value, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountIn(List<String> values) {
+			addCriterion("alipay_account in", values, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountNotIn(List<String> values) {
+			addCriterion("alipay_account not in", values, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountBetween(String value1, String value2) {
+			addCriterion("alipay_account between", value1, value2, "alipayAccount");
+			return (Criteria) this;
+		}
+
+		public Criteria andAlipayAccountNotBetween(String value1, String value2) {
+			addCriterion("alipay_account not between", value1, value2, "alipayAccount");
+			return (Criteria) this;
+		}
 	}
 
 	/**

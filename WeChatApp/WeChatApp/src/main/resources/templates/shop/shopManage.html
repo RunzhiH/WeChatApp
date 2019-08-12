@@ -11,16 +11,16 @@
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
                 <li id="shopListLi" class="layui-this">商家列表</li>
-                <!-- <li id="verifyShopLi">审核列表</li> -->
+                 <li id="verifyShopLi">审核列表</li>
                 <li id="updateShopLi" style="display:none;">信息更新</li>
             </ul>
             <div class="layui-tab-content" style="height: 100px;">
                 <div id="shopListDiv" class="layui-tab-item layui-show">
                     <div th:include="shop/shopList :: shopList"></div>
                 </div>
-               <!--  <div id="verifyShopDiv" class="layui-tab-item">
-                    <div th:include="shop/shop :: role"></div>
-                </div> -->
+               <div id="verifyShopDiv" class="layui-tab-item">
+                    <div th:include="shop/verifyShop :: verifyShop"></div>
+                </div>
                 <div  id="updateShopDiv" class="layui-tab-item" style="display:none;">
                     <div th:include="shop/shopUpdate :: updateShop"></div>
                 </div>

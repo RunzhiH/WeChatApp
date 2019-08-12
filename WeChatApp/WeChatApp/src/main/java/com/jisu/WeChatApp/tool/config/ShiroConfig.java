@@ -54,14 +54,13 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setSuccessUrl("/home");
 		// 未授权时跳转的界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/error");
-
 		// filterChainDefinitions拦截器=map必须用：LinkedHashMap，因为它必须保证有序
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 		// 配置退出过滤器,具体的退出代码Shiro已经实现
 		filterChainDefinitionMap.put("/logout", "logout");
 		// 配置记住我或认证通过可以访问的地址
 		filterChainDefinitionMap.put("/user/userList", "user");
-		filterChainDefinitionMap.put("/", "user");
+		filterChainDefinitionMap.put("/admin", "user");
 		//
 		// // 配置不会被拦截的链接 从上向下顺序判断
 		filterChainDefinitionMap.put("/api/*/**", "anon");
@@ -71,6 +70,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/*/*", "anon");
 		filterChainDefinitionMap.put("/js/*/*/*", "anon");
 		filterChainDefinitionMap.put("/images/*/**", "anon");
+		filterChainDefinitionMap.put("/**", "anon");
 		filterChainDefinitionMap.put("/layui/*", "anon");
 		filterChainDefinitionMap.put("/layui/*/**", "anon");
 		filterChainDefinitionMap.put("/treegrid/*", "anon");
@@ -79,6 +79,9 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/layout", "anon");
 		filterChainDefinitionMap.put("/index/*", "anon");
 		filterChainDefinitionMap.put("/index/**", "anon");
+		filterChainDefinitionMap.put("/wx/*", "anon");
+		filterChainDefinitionMap.put("/wx/**", "anon");
+		
 
 		filterChainDefinitionMap.put("/user/sendMsg", "anon");
 		filterChainDefinitionMap.put("/login/login", "anon");

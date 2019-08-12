@@ -36,11 +36,11 @@
 		      ) AS juli,
 		      </if>
 		      @row := 0,
-		      GROUP_CONCAT(b.server_class_name SEPARATOR '|') server_class_name_str
+		      GROUP_CONCAT(b.shop_class_name SEPARATOR '|') server_class_name_str
 		    FROM
 		      shop_info a 
-		      LEFT JOIN server_class b
-		      ON LOCATE(b.server_class_id, a.server_class_id_str)
+		      LEFT JOIN shop_class b
+		      ON LOCATE(b.shop_class_id, a.shop_class_id)
 		    WHERE 
 		    a.shop_shi = '${shi_code}' 
 		    <if test="shop_qu != null and shop_qu != ''">
@@ -75,6 +75,10 @@
 		  AND row_num <= ${end}
 		  ]]>
 		  </if>
+	   ORDER BY <choose>
+			<when test="praise_points_type !=null and praise_points_type != ''">a.praise_points</when>
+			<otherwise>a.praise_points DESC</otherwise>
+		</choose>
 	</select>
 	<select id="getShopInfoByShopId" parameterType="String" resultType="Map">
 		SELECT 
@@ -156,9 +160,8 @@
 		    @rownum := @rownum + 1 AS rank_num 
 		  FROM
 		    (SELECT 
-		      @rownum := 0) r,
-		    (SELECT 
-		      *
+		      *,
+		      @rownum := 0
 		    FROM
 		      shop_info 
 		    WHERE shop_shi = '${shi_code}' 
@@ -255,5 +258,8 @@
 		  AND b.order_takes_type != 0 
 		  AND b.in_prohi = 0 
 		  AND a.shop_server_id = '${server_shop_id}' 
+	</select>
+	<select id="getShopListByOperatorMemberNo" parameterType="String" resultType="Map">
+		SELECT * FROM shop_info where operator_member_id = #{member_no}
 	</select>
 </mapper>

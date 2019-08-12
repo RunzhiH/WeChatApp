@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.jisu.WeChatApp.pojo.MemberInfo;
+import com.jisu.WeChatApp.pojo.PageDataResult;
+import com.jisu.WeChatApp.pojo.UserSearchDTO;
 
 public interface MemberInfoService {
 
@@ -44,5 +46,9 @@ public interface MemberInfoService {
 	public void autoCloseMemberProhi();
 	
 	public void memberProhibitOrder(String member_no);
+
+	String updateIsShare(String is_share, String member_no);
+
+	PageDataResult getAllOperatorMemberList(UserSearchDTO userSearch, Integer page, Integer limit);
 	
 }

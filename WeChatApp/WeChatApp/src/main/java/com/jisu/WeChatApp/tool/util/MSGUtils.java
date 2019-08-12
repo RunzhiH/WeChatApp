@@ -40,21 +40,21 @@ public class MSGUtils {
 		return responseEntity.getBody();
 	}
 	
-	public static void main(String[] args) {
-		ApplicationContext app = SpringApplication.run(WeChatAppApplication.class, args);
-		SpringContextUtil.setApplicationContext(app);
-		Map<String, String> sendMsgContext= new HashMap<String, String>();
-		sendMsgContext.put("openid", "oucVK5CFskM1--ssOjqIqd4mgVNU");
-		sendMsgContext.put("temp_no", "AT0009");
-		sendMsgContext.put("message_url", "");
-		sendMsgContext.put("wx_template_id", "5XuR-B5XzC_aNxGkOHui1FsPls--OFy9Ja_LPXZBcvE");
-		sendMsgContext.put("create_time", "2019-06-14 21:11:24");
-		sendMsgContext.put("order_code", "2512387784385283");
-		sendMsgContext.put("pay_price", "0.01");
-		sendMsgContext.put("appointment_time_start", "2018-12-30 12:00:00");
-		sendMsgContext.put("server_name", "剪发设计");
-		sendMsgContext.put("server_address", "浙江省宁波市江北区风华路818宁波大学");
-		String result=pushOneUser("19ae387ca0954b8c8f7bcdc2057bdc11",sendMsgContext);
-		System.out.println(result);
-	}
+//	public static void main(String[] args) {
+//		ApplicationContext app = SpringApplication.run(WeChatAppApplication.class, args);
+//		SpringContextUtil.setApplicationContext(app);
+//		Map<String, String> sendMsgContext= new HashMap<String, String>();
+//		sendMsgContext.put("openid", "oucVK5CFskM1--ssOjqIqd4mgVNU");
+//		sendMsgContext.put("temp_no", "AT0009");
+//		sendMsgContext.put("message_url", "");
+//		sendMsgContext.put("wx_template_id", "5XuR-B5XzC_aNxGkOHui1FsPls--OFy9Ja_LPXZBcvE");
+//		sendMsgContext.put("create_time", "2019-06-14 21:11:24");
+//		sendMsgContext.put("order_code", "2512387784385283");
+//		sendMsgContext.put("pay_price", "0.01");
+//		sendMsgContext.put("appointment_time_start", "2018-12-30 12:00:00");
+//		sendMsgContext.put("server_name", "剪发设计");
+//		sendMsgContext.put("server_address", "浙江省宁波市江北区风华路818宁波大学");
+//		String result=pushOneUser("19ae387ca0954b8c8f7bcdc2057bdc11",sendMsgContext);
+//		System.out.println(result);
+//	}
 }

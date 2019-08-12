@@ -67,7 +67,7 @@ $(function() {
 			,
 			url : '/api/upload/uploadImages' // 上传接口
 			,
-			size :0,
+			size : 0,
 			done : function(res) {
 				// 上传完毕回调
 				console.log(res);
@@ -85,7 +85,7 @@ $(function() {
 function update(id, type) {
 	if (null != id) {
 		$("#type").val(type);
-		$("#serverId").val(id);
+		$("#shopServerId").val(id);
 		$.get("/web/server/getServer", {
 			"shop_server_id" : id
 		}, function(data) {

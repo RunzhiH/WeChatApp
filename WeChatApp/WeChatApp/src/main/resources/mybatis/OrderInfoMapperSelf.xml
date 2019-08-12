@@ -27,7 +27,8 @@
 			  c.shop_address,
 			  c.shop_logo_url,
 			  @row := 0,
-			  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %h:%i:%s') create_time_str
+			  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %H:%i:%s') create_time_str,
+			  DATE_FORMAT(a.appointment_time_start,'%Y年%m月%d日 %H:%i:%s') appointment_time_start_str
 			FROM
 			  order_info a 
 			  LEFT JOIN shop_info c 
@@ -73,6 +74,9 @@
 			  <if test = "server_member_is_check != null and server_member_is_check != ''">
 			  AND a.server_member_is_check = '${server_member_is_check}'
 			  </if>
+			  <if test = "is_delete != null and is_delete != ''">
+			  AND a.is_delete = '${is_delete}' 
+			  </if>
 			  ORDER BY create_time DESC
 			  ) a) a 
 		  <if test="begin != null and end != null">
@@ -96,7 +100,7 @@
 		  a.*,
 		  c.nickname,
 		  d.nickname server_member,
-		  DATE_FORMAT(a.create_time ,'%y-%m-%d %h:%i:%s') create_time_str,
+		  DATE_FORMAT(a.create_time ,'%y-%m-%d %H:%i:%s') create_time_str,
 		  CASE order_status
 	        WHEN 0 THEN '未支付'
 	        WHEN 1 THEN '已下单'
@@ -136,7 +140,13 @@
 		  a.*,
 		  c.nickname,
 		  d.nickname server_member,
-		  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %h:%i:%s') create_time_str
+		  d.phone server_phone,
+		  b.server_class_id,
+		  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %H:%i:%s') create_time_str,
+		  DATE_FORMAT(a.pay_time,'%Y年%m月%d日 %H:%i:%s') pay_time_str,
+		  DATE_FORMAT(a.close_time,'%Y年%m月%d日 %H:%i:%s') close_time_str,
+		  DATE_FORMAT(a.finish_time,'%Y年%m月%d日 %H:%i:%s') finish_time_str,
+		  DATE_FORMAT(a.appointment_time_start,'%Y年%m月%d日 %H:%i:%s') appointment_time_start_str
 		FROM
 		  order_info a 
 		  LEFT JOIN member_info d 
@@ -161,7 +171,7 @@
 			  c.nickname server_member,
 			  DATE_FORMAT(
 			    a.create_time,
-			    '%y-%m-%d %h:%i:%s'
+			    '%y-%m-%d %H:%i:%s'
 			  ) create_time_str,
 			  CASE
 			    a.refund_order_status 
@@ -200,5 +210,11 @@
 				AND a.refund_order_status = #{orderSearch.refundOrderStatus}
 			</if>
 			ORDER BY a.create_time DESC
+	</select>
+	<select id="getOrderInfoByPayShop" parameterType="String" resultType="Map">
+		select * from order_info where shop_id = #{id} and order_type = 1
+	</select>
+	<select id="getShopPayOrder" parameterType="String" resultType="Map">
+		select * from order_info where member_no = #{member_no} and order_type = 1
 	</select>
 </mapper>

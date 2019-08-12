@@ -1,5 +1,6 @@
 package com.jisu.WeChatApp.daoSelf;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -36,4 +37,10 @@ public interface WalletChangeRecordMapperSelf {
 	public int insertWalletChangeRecordForFirstShareShop(Map<String, String> order_id_map);
 
 	public int insertWalletChangeRecordForBusinessMemebr(Map<String, String> business_member_map);
+
+	public int insertWalletChangeRecordForProfit(String order_id);
+
+	public List<String> getRecordIdListByOrderId(String order_id);
+
+	public void insertWalletChangeRecordForDrawal(Map<String, String> map);
 }

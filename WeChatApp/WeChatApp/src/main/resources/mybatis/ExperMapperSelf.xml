@@ -21,6 +21,9 @@
 		      AND b.member_no='${member_no}',
 		      member_info c
 		    WHERE a.member_no=c.member_no
+		    <if test="server_member_no != null and server_member_no != ''">
+		    AND a.member_no='${server_member_no}'
+		    </if>
 		    <if test="server_class_id != null and server_class_id != ''">
 		    AND (a.server_class_id_1='${server_class_id}' 
 		    OR a.server_class_id_2='${server_class_id}'
@@ -81,5 +84,8 @@
 		  AND a.shop_server_id = c.shop_server_id
 		  AND b.member_no=d.member_no
 		  AND a.experience_id= #{exper_id}
+	</select>
+	<select id="getExperInfoByOrderId"  parameterType="String" resultType="Map">
+		SELECT * FROM experience_info WHERE order_id = #{order_id}
 	</select>
 </mapper>

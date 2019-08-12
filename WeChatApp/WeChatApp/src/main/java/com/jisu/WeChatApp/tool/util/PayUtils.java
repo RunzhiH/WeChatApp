@@ -360,9 +360,8 @@ public class PayUtils {
 		return null;
 	}
 
-	private Transfers transfers = new Transfers();
-	// 构造签名的map
-	private SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
+	
+	
 	// 微信的参数
 	private WeixinConfigUtils config = new WeixinConfigUtils();
 
@@ -371,8 +370,8 @@ public class PayUtils {
 	 * 微信提现（企业付款）
 	 * 
 	 */
-	public String weixinWithdraw(String openId, String ip, String money, String doctorId, String desc) {
-		if (StringUtils.isNotBlank(money) && StringUtils.isNotBlank(ip) && StringUtils.isNotBlank(openId) && StringUtils.isNotBlank(doctorId)) {
+	public static String weixinWithdraw(String openId, String ip, String money, String desc) {
+		if (StringUtils.isNotBlank(money) && StringUtils.isNotBlank(ip) && StringUtils.isNotBlank(openId)) {
 			// 参数组
 			String url = "";
 			String appid = PropertyUtil.getProperty("wx.appid");
@@ -387,6 +386,9 @@ public class PayUtils {
 			// 描述
 			// String desc = "健康由我医师助手提现" + amount / 100 + "元";
 			// 参数：开始生成第一次签名
+			
+			// 构造签名的map
+			SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
 			parameters.put("appid", appid);
 			parameters.put("mch_id", mch_id);
 			parameters.put("partner_trade_no", partner_trade_no);
@@ -397,6 +399,7 @@ public class PayUtils {
 			parameters.put("spbill_create_ip", spbill_create_ip);
 			parameters.put("desc", desc);
 			String sign = WXSignUtils.createSign("UTF-8", parameters);
+			Transfers transfers = new Transfers();
 			transfers.setAmount(amount);
 			transfers.setCheck_name(checkName);
 			transfers.setDesc(desc);
@@ -415,13 +418,16 @@ public class PayUtils {
 				if (transferMap.size() > 0) {
 					if (transferMap.get("result_code").equals("SUCCESS") && transferMap.get("return_code").equals("SUCCESS")) {
 						// 成功需要进行的逻辑操作，
-
+						return "转账成功";
+					}else {
+						return transferMap.get("return_msg");
 					}
 				}
 				System.out.println("成功");
 			} catch (Exception e) {
 				// log.error(e.getMessage());
 				// throw new Exception(this, "企业付款异常" + e.getMessage());
+				return "企业付款异常:" + e.getMessage();
 			}
 		} else {
 			System.out.println("失败");

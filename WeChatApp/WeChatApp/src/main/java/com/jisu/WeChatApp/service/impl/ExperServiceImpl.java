@@ -131,5 +131,10 @@ public class ExperServiceImpl implements ExperService {
 		result_map.put("photo_list", photo_list);
 		return result_map;
 	}
+	@Override
+	public Map<String, String> getExperInfoByOrderId(String order_id) {
+		// TODO Auto-generated method stub
+		return experMapperSelf.getExperInfoByOrderId(order_id);
+	}
 
 }

@@ -199,4 +199,30 @@ public class MemberInfoServiceImpl implements MemberInfoService {
 		memberProhiMapper.insertSelective(memberProhi);
 		// 插入封禁记录结束
 	}
+
+	@Override
+	public String updateIsShare(String is_share, String member_no) {
+		// TODO Auto-generated method stub
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("member_no", member_no);
+		map.put("is_share", is_share);
+		int num = memberInfoMapperSelf.updateMemberIsShare(map);
+		if (num > 0) {
+			return "ok";
+		}
+		return "出错了,请稍后重试";
+	}
+	@Override
+	public PageDataResult getAllOperatorMemberList(UserSearchDTO userSearch, Integer page, Integer limit) {
+		// TODO Auto-generated method stub
+		PageDataResult pdr = new PageDataResult();
+		PageHelper.startPage(page, limit);
+		List<Map<String, String>> list = memberInfoMapperSelf.getAllOperatorMemberList(userSearch);
+		PageInfo<Map<String, String>> pageInfo = new PageInfo<>(list);
+		// 设置获取到的总记录数total：
+		pdr.setTotals(Long.valueOf(pageInfo.getTotal()).intValue());
+		pdr.setList(pageInfo.getList());
+		return pdr;
+	}
+	
 }

@@ -3,6 +3,7 @@ package com.jisu.WeChatApp.pojo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class ExperienceInfoExample {
     /**
@@ -1470,6 +1471,136 @@ public class ExperienceInfoExample {
 
 		public Criteria andServerNameNotBetween(String value1, String value2) {
 			addCriterion("server_name not between", value1, value2, "serverName");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaIsNull() {
+			addCriterion("exper_idea is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaIsNotNull() {
+			addCriterion("exper_idea is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaEqualTo(String value) {
+			addCriterion("exper_idea =", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaNotEqualTo(String value) {
+			addCriterion("exper_idea <>", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaGreaterThan(String value) {
+			addCriterion("exper_idea >", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaGreaterThanOrEqualTo(String value) {
+			addCriterion("exper_idea >=", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaLessThan(String value) {
+			addCriterion("exper_idea <", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaLessThanOrEqualTo(String value) {
+			addCriterion("exper_idea <=", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaLike(String value) {
+			addCriterion("exper_idea like", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaNotLike(String value) {
+			addCriterion("exper_idea not like", value, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaIn(List<String> values) {
+			addCriterion("exper_idea in", values, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaNotIn(List<String> values) {
+			addCriterion("exper_idea not in", values, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaBetween(String value1, String value2) {
+			addCriterion("exper_idea between", value1, value2, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperIdeaNotBetween(String value1, String value2) {
+			addCriterion("exper_idea not between", value1, value2, "experIdea");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceIsNull() {
+			addCriterion("exper_price is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceIsNotNull() {
+			addCriterion("exper_price is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceEqualTo(BigDecimal value) {
+			addCriterion("exper_price =", value, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceNotEqualTo(BigDecimal value) {
+			addCriterion("exper_price <>", value, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceGreaterThan(BigDecimal value) {
+			addCriterion("exper_price >", value, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceGreaterThanOrEqualTo(BigDecimal value) {
+			addCriterion("exper_price >=", value, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceLessThan(BigDecimal value) {
+			addCriterion("exper_price <", value, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceLessThanOrEqualTo(BigDecimal value) {
+			addCriterion("exper_price <=", value, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceIn(List<BigDecimal> values) {
+			addCriterion("exper_price in", values, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceNotIn(List<BigDecimal> values) {
+			addCriterion("exper_price not in", values, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("exper_price between", value1, value2, "experPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andExperPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+			addCriterion("exper_price not between", value1, value2, "experPrice");
 			return (Criteria) this;
 		}
 	}

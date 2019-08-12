@@ -22,6 +22,7 @@
 		  FROM
 		    (SELECT 
 		      *,
+		      DATE_FORMAT(a.share_shop_time,'%Y.%m.%d'
 		      @row := 0  
 				FROM
 				  member_info 
@@ -132,4 +133,41 @@
 		  WHERE a.share_shop_id = b.shop_id 
 		    AND b.shop_id = '${shop_id}') c 
 	</select>
+	<update id="updateMemberTypeByShopId">
+		update member_info a,shop_info b
+		set member_type = 0
+		where a.member_no=b.member_no
+		and b.shop_id= #{shop_id}
+	</update>
+	<update id="updateMemberIsShare">
+		update operator_member 
+		set is_share= #{is_share}
+		WHERE member_no = #{member_no}
+	</update>
+	<select id="getAllOperatorMemberList" parameterType="com.jisu.WeChatApp.pojo.UserSearchDTO" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.is_share,
+		  b.operator_type 
+		FROM
+		  member_info a,
+		  operator_member b 
+		WHERE a.member_no = b.member_no 
+		<if test="userSearch.nickname != null and userSearch.nickname != ''">
+	    and a.nickname like '%${userSearch.nickname}%'
+	    </if>
+	    <if test="userSearch.phone != null and userSearch.phone !=''">
+	    and a.phone = '${userSearch.phone}'	
+	    </if>
+	     <if test="userSearch.memberNo != null and userSearch.memberNo !=''">
+	    and a.member_no = '${userSearch.memberNo}'	
+	    </if>
+	</select>
+	<update id="updateMemberShareShop">
+		UPDATE 
+		  member_info 
+		SET
+		  share_shop_id = NULL 
+		WHERE share_shop_id = #{shop_id}
+	</update>
 </mapper>

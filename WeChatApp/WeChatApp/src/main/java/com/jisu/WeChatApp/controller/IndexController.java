@@ -2,11 +2,13 @@ package com.jisu.WeChatApp.controller;
 
 import java.io.UnsupportedEncodingException;
 
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @项目名称：lyd-channel
@@ -18,15 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController {
 	private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
-	@RequestMapping("/index")
+	@RequestMapping("/")
 	public String index() {
 		logger.debug("-------------index------------");
-		return "index2";
+		return "index/index.html";
 	}
+	
 
 	@RequestMapping("/home")
 	public String toHome() {
 		logger.debug("===111-------------home------------");
+		
+		return "home";
+	}
+
+	@RequestMapping("/admin")
+	public String toAdmin() {
 		return "home";
 	}
 

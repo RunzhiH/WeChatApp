@@ -15,9 +15,19 @@ public class UserSearchDTO {
 
 	private String phone;
 
+	private String memberNo;
+
 	private String insertTimeStart;
 
 	private String insertTimeEnd;
+
+	public String getMemberNo() {
+		return memberNo;
+	}
+
+	public void setMemberNo(String memberNo) {
+		this.memberNo = memberNo;
+	}
 
 	public Integer getPage() {
 		return page;

@@ -1,5 +1,6 @@
 package com.jisu.WeChatApp.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,9 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,8 +33,9 @@ import com.jisu.WeChatApp.dao.ShopServerMapper;
 import com.jisu.WeChatApp.pojo.MemberInfo;
 import com.jisu.WeChatApp.pojo.ShopInfo;
 import com.jisu.WeChatApp.pojo.ShopInfoExample;
-import com.jisu.WeChatApp.pojo.ShopPraiseHistory;
 import com.jisu.WeChatApp.pojo.ShopServer;
+import com.jisu.WeChatApp.service.impl.ImageServiceImpl;
+import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.ShopInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.UserInfoServiceImpl;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
@@ -56,6 +60,10 @@ public class ShopController {
 	private MemberInfoMapper memberInfoMapper;
 	@Autowired
 	private UserInfoServiceImpl userInfoServiceImpl;
+	@Autowired
+	private ImageServiceImpl imageServiceImpl;
+	@Autowired
+	private OrderInfoServiceImpl orderInfoServiceImpl;
 
 	/**
 	 * 根据条件获取店铺列表
@@ -132,7 +140,7 @@ public class ShopController {
 		String wechat = request.getParameter("wechat");
 		String operator_member_id = request.getParameter("operator_member_id");
 		String desc_photo_url = request.getParameter("desc_photo_url");
-		String server_class_id_str = request.getParameter("server_class_id_str");
+		String server_class_id_str = PropertyUtil.getProperty("server_class_id_str");
 		ShopInfo shopInfo = new ShopInfo();
 		if (StringUtils.isNotBlank(authorization_book_url)) {
 			shopInfo.setAuthorizationBookUrl(authorization_book_url);
@@ -140,6 +148,12 @@ public class ShopController {
 //			msg.setStatus(MsgModel.ERROR);
 //			msg.setMessage("授权书不能为空");
 //			return msg;
+		}
+		MemberInfo member_Info = memberInfoMapper.selectByPrimaryKey(member_no);
+		if (member_Info == null) {
+			msg.setMessage("该用户不存在");
+			msg.setStatus(MsgModel.ERROR);
+			return msg;
 		}
 		if (StringUtils.isNotBlank(shop_address)) {
 			shopInfo.setShopAddress(shop_address);
@@ -162,12 +176,24 @@ public class ShopController {
 		}
 		if (StringUtils.isNotBlank(shop_sheng)) {
 			shopInfo.setShopSheng(shop_sheng);
+		} else {
+			msg.setMessage("省编号为空");
+			msg.setStatus(MsgModel.ERROR);
+			return msg;
 		}
 		if (StringUtils.isNotBlank(shop_shi)) {
 			shopInfo.setShopShi(shop_shi);
+		} else {
+			msg.setMessage("市编号为空");
+			msg.setStatus(MsgModel.ERROR);
+			return msg;
 		}
 		if (StringUtils.isNotBlank(shop_qu)) {
 			shopInfo.setShopQu(shop_qu);
+		} else {
+			msg.setMessage("区编号为空");
+			msg.setStatus(MsgModel.ERROR);
+			return msg;
 		}
 		if (StringUtils.isNotBlank(shop_x)) {
 			shopInfo.setShopX(new BigDecimal(shop_x));
@@ -199,9 +225,14 @@ public class ShopController {
 			shop_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
 			shopInfo.setShopId(shop_id);
 			shopInfo.setPraisePoints(0);
-			shopInfo.setShopStatus(1);
-			shopInfo.setOperatorMemberId(operator_member_id);
-			shopInfo.setIsOpen(2);  //是否接单
+			if (StringUtils.isNotBlank(operator_member_id)) {
+				shopInfo.setShopStatus(1);
+				shopInfo.setOperatorMemberId(operator_member_id);
+			} else {
+				shopInfo.setShopStatus(0);
+			}
+
+			shopInfo.setIsOpen(2); // 是否接单
 //			try {
 //				// 加密密码
 //				shopInfo.setPassword(MD5Util.getEncryptedPwd(password));
@@ -245,9 +276,9 @@ public class ShopController {
 				shopInfoServiceImpl.saveShopLableInfo(shop_lable_str, shop_id);
 			}
 			// 保存标签信息结束
-			//生成小程序码
-			
-			String path ="pages/shopbangding/shopbangding";
+			// 生成小程序码
+
+			String path = "pages/shopbangding/shopbangding";
 			String scene = shop_id;
 			int width = 430;
 			InputStream inputStream = null;
@@ -255,8 +286,9 @@ public class ShopController {
 			String access_token = WechatGetUtil.getAccessToken();
 			if (StringUtils.isNotBlank(access_token)) {
 				try {
+					// 生成二维码并上传到oss
 					inputStream = QrCodeUtil.getQrCode(access_token, scene, path, width, false, null);
-					String newFileName= System.currentTimeMillis() + "qr_code.png";
+					String newFileName = System.currentTimeMillis() + "qr_code.png";
 					String temp_path = PropertyUtil.getProperty("tempImage") + newFileName;
 					File file = new File(temp_path);
 					if (!file.exists()) {
@@ -270,15 +302,26 @@ public class ShopController {
 					}
 					outputStream.flush();
 					OSSClient ossClient = OSSUtils.getOSSClient();
-					OSSUtils.uploadObject2OSS(ossClient, file, PropertyUtil.getProperty("bucket_name"),
-							PropertyUtil.getProperty("folder"));
+					OSSUtils.uploadObject2OSS(ossClient, file, PropertyUtil.getProperty("bucket_name"), PropertyUtil.getProperty("folder"));
+					String result_url = OSSUtils.FILE_HOST + newFileName;
+					// 生成二维码并上传到oss结束
 
-					String result_url = OSSUtils.FILE_HOST+newFileName;
+					// 生成海报并上传到oss
+					BufferedImage bi = imageServiceImpl.createGoodsPoster(result_url);
+					String post_image_url = System.currentTimeMillis() + "saved.png";
+					File outputfile = new File(PropertyUtil.getProperty("tempImage") + post_image_url);
+					ImageIO.write(bi, "png", outputfile);
+					OSSUtils.uploadObject2OSS(ossClient, outputfile, PropertyUtil.getProperty("bucket_name"), PropertyUtil.getProperty("folder"));
+					String oss_post_image_url = OSSUtils.FILE_HOST + post_image_url;
+					// 生成海报并上传到oss结束
+
 					shopInfo.setQrCodeUrl(result_url);
+					shopInfo.setPostImageUrl(oss_post_image_url);
 					shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
 					file.delete();
+					outputfile.delete();
 				} catch (Exception e) {
-					//logger.error("调用小程序生成微信永久小程序码URL接口异常", e);
+					// logger.error("调用小程序生成微信永久小程序码URL接口异常", e);
 					e.printStackTrace();
 				} finally {
 					if (inputStream != null) {
@@ -298,7 +341,8 @@ public class ShopController {
 
 				}
 			}
-			//生成小程序码结束
+			// 生成小程序码结束
+			msg.setContext(shopInfo);
 			msg.setStatus(MsgModel.SUCCESS);
 		} else {
 			msg.setStatus(MsgModel.ERROR);
@@ -563,7 +607,7 @@ public class ShopController {
 		MemberInfo memberInfo = memberInfoMapper.selectByPrimaryKey(member_no);
 		String share_shop_id = memberInfo.getShareShopId();
 		MsgModel msg = new MsgModel();
-		if (StringUtils.isNotBlank(share_shop_id)) {
+		if (StringUtils.isBlank(share_shop_id)) {
 			memberInfo.setShareShopId(shop_id);
 			int num = memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
 			if (num > 0) {
@@ -624,6 +668,31 @@ public class ShopController {
 		} else {
 			msg.setStatus(MsgModel.ERROR);
 		}
+		return msg;
+	}
+
+	@RequestMapping("getShopListByoperatorMemberNo")
+	public MsgModel getShopListByoperatorMemberNo(HttpServletRequest request) {
+		String member_no = request.getParameter("member_no");
+		List<Map<String, String>> shop_list = shopInfoServiceImpl.getShopListByoperatorMemberNo(member_no);
+		MsgModel msg = new MsgModel();
+		msg.setContext(shop_list);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
+	@RequestMapping("getShopPayOrder")
+	public MsgModel getShopPayOrder(HttpServletRequest request) {
+		String member_no = request.getParameter("member_no");
+		Map<String, String> order_info = orderInfoServiceImpl.getShopPayOrder(member_no);
+		MsgModel msg = new MsgModel();
+		if (MapUtils.isNotEmpty(order_info)) {
+			msg.setContext(order_info);
+			msg.setStatus(MsgModel.SUCCESS);
+		} else {
+			msg.setStatus("400");
+		}
+
 		return msg;
 	}
 }

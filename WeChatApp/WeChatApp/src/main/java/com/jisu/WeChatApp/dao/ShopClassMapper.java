@@ -96,4 +96,6 @@ public interface ShopClassMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ShopClass record);
+
+	List<ShopClass> getAllShopClassList();
 }

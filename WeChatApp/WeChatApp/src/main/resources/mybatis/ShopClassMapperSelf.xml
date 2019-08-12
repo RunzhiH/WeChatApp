@@ -11,6 +11,6 @@
 		</foreach>
 	</delete>
 	<select id="getShopClassList" parameterType="String" resultType="Map">
-		select * from shop_class
+		select * from shop_class order by ord 
 	</select>
 </mapper>

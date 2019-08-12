@@ -3,6 +3,7 @@ package com.jisu.WeChatApp.dao;
 import com.jisu.WeChatApp.pojo.ShopInfo;
 import com.jisu.WeChatApp.pojo.ShopInfoExample;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -75,5 +76,5 @@ public interface ShopInfoMapper {
 	 */
 	int updateByPrimaryKey(ShopInfo record);
 
-	List<ShopInfo> getAllShopList();
+	List<ShopInfo> getAllShopList(Map<String, String> condition);
 }

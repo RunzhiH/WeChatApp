@@ -113,6 +113,45 @@ public class MemberController {
 		return msg;
 	}
 
+	@RequestMapping("updateMemberInfo")
+	public MsgModel updateMemberInfo(HttpServletRequest request) {
+		String member_no = request.getParameter("member_no");
+		String nickname = request.getParameter("nickname");
+		String age = request.getParameter("age");
+		String sex = request.getParameter("sex");
+		String phone = request.getParameter("phone");
+		String photo = request.getParameter("photo");
+		String alipay_account = request.getParameter("alipay_account");
+
+		MemberInfo memberInfo = new MemberInfo();
+		memberInfo.setMemberNo(member_no);
+		memberInfo.setNickname(nickname);
+		if (StringUtils.isNotBlank(age)) {
+			memberInfo.setAge(Integer.valueOf(age));
+		}
+		if (StringUtils.isNotBlank(sex)) {
+			memberInfo.setSex(Integer.valueOf(sex));
+		}
+		memberInfo.setPhone(phone);
+		memberInfo.setPhoto(photo);
+		memberInfo.setAlipayAccount(alipay_account);
+		MemberInfo member= userInfoServiceImpl.editMember(memberInfo);
+		MsgModel msg = new MsgModel();
+		msg.setContext(member);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
+	@RequestMapping("getMemberInfoByMemberNo")
+	public MsgModel getMemberInfoByMemberNo(HttpServletRequest request) {
+		String member_no = request.getParameter("member_no");
+		MemberInfo memberInfo = memberInfoServiceImpl.getMemberInfoByMemberNo(member_no);
+		MsgModel msg = new MsgModel();
+		msg.setContext(memberInfo);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
 	/**
 	 * 后台登陆验证
 	 * 
@@ -240,12 +279,11 @@ public class MemberController {
 		String desc = request.getParameter("desc");
 		String server_class_id_str = request.getParameter("server_class_id_str");
 
-
 		ServerMemberInfo serverMemberInfo = new ServerMemberInfo();
 		serverMemberInfo.setServerMemberDesc(desc);
 		// serverMemberInfo.setEndTime(sdf.parse(end_time));
 		serverMemberInfo.setMemberNo(member_no);
-		
+
 		serverMemberInfo.setOrderTakesType(Integer.valueOf(order_takes_type));
 		serverMemberInfo.setServerClassIdStr(server_class_id_str);
 		// serverMemberInfo.setStratTime(sdf.parse(start_time));
@@ -261,7 +299,7 @@ public class MemberController {
 			serverMemberInfo.setServerMemberId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
 			num = serverMemberInfoMapper.insertSelective(serverMemberInfo);
 		}
-		
+
 		if (num > 0) {
 			MemberInfo memberInfo = new MemberInfo();
 			memberInfo.setMemberNo(member_no);
@@ -271,7 +309,7 @@ public class MemberController {
 			memberInfo.setPhone(phone);
 			userInfoServiceImpl.editMember(memberInfo);
 			msg.setStatus(MsgModel.SUCCESS);
-			
+
 		} else {
 			msg.setStatus(MsgModel.ERROR);
 		}

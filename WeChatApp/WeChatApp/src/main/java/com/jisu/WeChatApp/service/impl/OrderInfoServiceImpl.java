@@ -16,6 +16,7 @@ import com.github.pagehelper.PageInfo;
 import com.jisu.WeChatApp.dao.MemberInfoMapper;
 import com.jisu.WeChatApp.dao.OrderInfoMapper;
 import com.jisu.WeChatApp.daoSelf.OrderInfoMapperSelf;
+import com.jisu.WeChatApp.daoSelf.ProfitInfoMapperSelf;
 import com.jisu.WeChatApp.daoSelf.WalletChangeRecordMapperSelf;
 import com.jisu.WeChatApp.daoSelf.WalletInfoMapperSelf;
 import com.jisu.WeChatApp.entity.OrderSearchDTO;
@@ -40,6 +41,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	private WalletInfoMapperSelf walletInfoMapperSelf;
 	@Autowired
 	private SendMessageServiceImpl sendMessageServiceImpl;
+	@Autowired
+	private WalletInfoServiceImpl walletInfoServiceImpl;
+	@Autowired
+	private ProfitInfoMapperSelf profitInfoMapperSelf;
 
 	@Override
 	public Map<String, String> OrderPayAfter(String order_id) {
@@ -53,13 +58,19 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			orderInfo.setPayTime(new Date());
 			orderInfo.setOrderStatus(1);
 			orderInfoMapper.updateByPrimaryKey(orderInfo);
-			// 订单结算
+			// 订单结算预计收入
+			walletInfoServiceImpl.insertProfitInfo(order_id);
+			// 订单结算预计收入结束
 			// 发送消息
 			Map<String, String> msg = new HashMap<String, String>();
 			msg.put("order_id", order_id);
 			sendMessageServiceImpl.sendOrderPayMessage(msg);
 			sendMessageServiceImpl.sendOrderCheckMessageToServer(msg);
-			//sendMessageServiceImpl.sendAddOrderMessage(msg);
+			String shop_id=orderInfo.getShopId();
+			if(StringUtils.isNotBlank(shop_id)) {
+				sendMessageServiceImpl.sendOrderCheckMessageToShop(msg);
+			}
+			// sendMessageServiceImpl.sendAddOrderMessage(msg);
 			// 发送消息结束
 		}
 		return null;
@@ -117,75 +128,17 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		// TODO Auto-generated method stub
 		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(order_id);
 		if (3 == orderInfo.getOrderStatus()) {
-			String shop_id = orderInfo.getShopId();
-			if (StringUtils.isNotBlank(shop_id)) {
-				// 结算服务店家收益
-				String ServerShop_record_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-				Map<String, String> order_shop_map = new HashMap<String, String>();
-				order_shop_map.put("order_id", order_id);
-				order_shop_map.put("record_id", ServerShop_record_id);
-				int num_order_shop = walletChangeRecordMapperSelf.insertWalletChangeRecordForServerShop(order_shop_map);
-				if (num_order_shop > 0) {
-					Map<String, String> record_id_map = new HashMap<String, String>();
-					record_id_map.put("record_id", ServerShop_record_id);
-					walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
+			int num = walletChangeRecordMapperSelf.insertWalletChangeRecordForProfit(order_id);
+			if (num > 0) {
+				List<String> record_list = walletChangeRecordMapperSelf.getRecordIdListByOrderId(order_id);
+				for (String record_id : record_list) {
+					Map<String, String> record_map = new HashMap<String, String>();
+					record_map.put("record_id", record_id);
+					walletInfoMapperSelf.updateWalletInfoByRecordId(record_map);
 				}
-				// 结算服务店家收益结束
-
-				// 结算推荐店家收益
-				String sharaShop_record_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-				Map<String, String> share_shop_map = new HashMap<String, String>();
-				share_shop_map.put("order_id", order_id);
-				share_shop_map.put("record_id", sharaShop_record_id);
-				int num_share_shop = walletChangeRecordMapperSelf.insertWalletChangeRecordForShareShop(share_shop_map);
-				if (num_share_shop > 0) {
-					Map<String, String> record_id_map = new HashMap<String, String>();
-					record_id_map.put("record_id", sharaShop_record_id);
-					walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
-				}
-				// 结算推荐店家收益结束
-			} else {
-				// 结算推荐店家收益
-				String sharaShop_record_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-				Map<String, String> share_shop_map = new HashMap<String, String>();
-				share_shop_map.put("order_id", order_id);
-				share_shop_map.put("record_id", sharaShop_record_id);
-				int num_share_shop = walletChangeRecordMapperSelf.insertWalletChangeRecordForFirstShareShop(share_shop_map);
-				if (num_share_shop > 0) {
-					Map<String, String> record_id_map = new HashMap<String, String>();
-					record_id_map.put("record_id", sharaShop_record_id);
-					walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
-				}
-				// 结算推荐店家收益结束
+				profitInfoMapperSelf.updateStatusByOrderId(order_id);
 			}
-
-			// 结算服务人员收益
-			String server_memebr_record_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-			Map<String, String> server_memebr_map = new HashMap<String, String>();
-			server_memebr_map.put("order_id", order_id);
-			server_memebr_map.put("record_id", server_memebr_record_id);
-			int num_server_member = walletChangeRecordMapperSelf.insertWalletChangeRecordForServerMember(server_memebr_map);
-			if (num_server_member > 0) {
-				Map<String, String> record_id_map = new HashMap<String, String>();
-				record_id_map.put("record_id", server_memebr_record_id);
-				walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
-			}
-			// 结算服务人员收益结束
-
-			// 结算业务员收益
-			String business_memebr_record_id = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-			Map<String, String> business_member_map = new HashMap<String, String>();
-			business_member_map.put("order_id", order_id);
-			business_member_map.put("record_id", business_memebr_record_id);
-			int num_business_memebr= walletChangeRecordMapperSelf.insertWalletChangeRecordForBusinessMemebr(business_member_map);
-			if (num_business_memebr > 0) {
-				Map<String, String> record_id_map = new HashMap<String, String>();
-				record_id_map.put("record_id", server_memebr_record_id);
-				walletInfoMapperSelf.updateWalletInfoByRecordId(record_id_map);
-			}
-			// 结算业务员收益结束
 		}
-
 		return 0;
 	}
 
@@ -277,6 +230,20 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public int updateOrderStatus(String order_id, int order_status) {
+		// TODO Auto-generated method stub
+		OrderInfo order_info = new OrderInfo();
+		order_info.setOrderId(order_id);
+		order_info.setOrderStatus(order_status);
+		return orderInfoMapper.updateByPrimaryKeySelective(order_info);
+	}
+	@Override
+	public Map<String, String> getShopPayOrder(String member_no) {
+		// TODO Auto-generated method stub
+		return orderInfoMapperSelf.getShopPayOrder(member_no);
 	}
 
 }

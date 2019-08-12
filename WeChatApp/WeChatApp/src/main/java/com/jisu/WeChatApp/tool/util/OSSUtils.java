@@ -28,7 +28,7 @@ public class OSSUtils {
 	private static String BUCKET_NAME = PropertyUtil.getProperty("bucket_name");
 	private static String FOLDER = PropertyUtil.getProperty("folder");
 	// 文件访问域名
-	public static String FILE_HOST = "http://"+BUCKET_NAME+"."+END_POINT+"/"+FOLDER;
+	public static String FILE_HOST = "https://"+BUCKET_NAME+"."+END_POINT+"/"+FOLDER;
 	// 阿里云API的内或外网域名
 	// 阿里云API的密钥Access Key ID
 	// 阿里云API的密钥Access Key Secret

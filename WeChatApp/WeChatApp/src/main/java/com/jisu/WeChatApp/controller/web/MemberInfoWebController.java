@@ -19,9 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.jisu.WeChatApp.dao.MemberInfoMapper;
+import com.jisu.WeChatApp.dao.OperatorMemberMapper;
 import com.jisu.WeChatApp.pojo.MemberInfo;
+import com.jisu.WeChatApp.pojo.OperatorMember;
+import com.jisu.WeChatApp.pojo.OperatorMemberExample;
 import com.jisu.WeChatApp.pojo.PageDataResult;
 import com.jisu.WeChatApp.pojo.Permission;
 import com.jisu.WeChatApp.pojo.Role;
@@ -30,9 +34,11 @@ import com.jisu.WeChatApp.pojo.UserSearchDTO;
 import com.jisu.WeChatApp.service.impl.MemberInfoServiceImpl;
 import com.jisu.WeChatApp.service.impl.RoleServiceImpl;
 import com.jisu.WeChatApp.tool.util.DateUtil;
+import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
 import com.jisu.WeChatApp.tool.util.MsgModel;
 import com.jisu.WeChatApp.tool.util.ValidateUtil;
 
+import net.sf.json.JSONArray;
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.Validator;
 
@@ -47,6 +53,8 @@ public class MemberInfoWebController {
 
 	@Autowired
 	private MemberInfoMapper memberInfoMapper;
+	@Autowired
+	private OperatorMemberMapper peratorMemberMapper;
 
 	@RequestMapping("/userList")
 	public String toUserList() {
@@ -535,13 +543,61 @@ public class MemberInfoWebController {
 		if (null != memberInfo) {
 			try {
 				memberInfoMapper.updateByPrimaryKeySelective(memberInfo);
+				OperatorMemberExample example = new OperatorMemberExample();
+				example.createCriteria().andMemberNoEqualTo(memberInfo.getMemberNo());
+				if (3 == memberInfo.getMemberType()) {
+					
+					List<OperatorMember> operatorMember_list = peratorMemberMapper.selectByExample(example);
+					if (operatorMember_list.size() == 0) {
+
+						OperatorMember operatorMember = new OperatorMember();
+						operatorMember.setOperatorMemberId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
+						operatorMember.setMemberNo(memberInfo.getMemberNo());
+						peratorMemberMapper.insertSelective(operatorMember);
+					}
+				}else {
+					peratorMemberMapper.deleteByExample(example);
+				}
 				return "ok";
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-
 		}
 		return "设置用户身份失败,请稍后重试";
+	}
+
+	@RequestMapping("/operatorMemberList")
+	public ModelAndView toOperatorMemberList() {
+		return new ModelAndView("member/operatorMemberList");
+	}
+
+	@RequestMapping("getOperatorMemberList")
+	@ResponseBody
+	public PageDataResult getOperatorMemberList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, UserSearchDTO userSearch) {
+		PageDataResult pdr = new PageDataResult();
+		try {
+			if (null == page) {
+				page = 1;
+			}
+			if (null == limit) {
+				limit = 10;
+			}
+			pdr = memberInfoServiceImpl.getAllOperatorMemberList(userSearch, page, limit);
+			pdr.setCode(200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("用户列表查询异常！", e);
+		}
+		return pdr;
+	}
+
+	@RequestMapping(value = "updateIsShare", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateIsShare(@RequestParam("is_share") String is_share, @RequestParam("member_no") String member_no) {
+		if (StringUtils.isNotBlank(member_no)) {
+			return memberInfoServiceImpl.updateIsShare(is_share, member_no);
+		}
+		return "设置失败,请稍后重试";
 	}
 }

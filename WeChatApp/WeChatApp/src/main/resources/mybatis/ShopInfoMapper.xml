@@ -36,6 +36,7 @@
     <result column="in_prohi" jdbcType="INTEGER" property="inProhi" />
     <result column="short_id" jdbcType="VARCHAR" property="shortId" />
     <result column="qr_code_url" jdbcType="VARCHAR" property="qrCodeUrl" />
+    <result column="post_image_url" jdbcType="VARCHAR" property="postImageUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -112,7 +113,7 @@
     shop_qu, shop_status, create_time, shop_logo_url, shop_phone, praise_points, shop_class_id, 
     shop_x, shop_y, member_no, authorization_book_url, qq, weChat, operator_member_id, 
     is_open, password, is_default, desc_photo_url, server_class_id_str, open_time, in_prohi, 
-    short_id, qr_code_url
+    short_id, qr_code_url, post_image_url
   </sql>
   <select id="selectByExample" parameterType="com.jisu.WeChatApp.pojo.ShopInfoExample" resultMap="BaseResultMap">
     <!--
@@ -174,8 +175,8 @@
       qq, weChat, operator_member_id, 
       is_open, password, is_default, 
       desc_photo_url, server_class_id_str, open_time, 
-      in_prohi, short_id, qr_code_url
-      )
+      in_prohi, short_id, qr_code_url, 
+      post_image_url)
     values (#{shopId,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{shopDescribe,jdbcType=VARCHAR}, 
       #{shopPhotoUrl,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, #{shopSheng,jdbcType=VARCHAR}, 
       #{shopShi,jdbcType=VARCHAR}, #{shopQu,jdbcType=VARCHAR}, #{shopStatus,jdbcType=INTEGER}, 
@@ -185,8 +186,8 @@
       #{qq,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{operatorMemberId,jdbcType=VARCHAR}, 
       #{isOpen,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{isDefault,jdbcType=INTEGER}, 
       #{descPhotoUrl,jdbcType=VARCHAR}, #{serverClassIdStr,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, 
-      #{inProhi,jdbcType=INTEGER}, #{shortId,jdbcType=VARCHAR}, #{qrCodeUrl,jdbcType=VARCHAR}
-      )
+      #{inProhi,jdbcType=INTEGER}, #{shortId,jdbcType=VARCHAR}, #{qrCodeUrl,jdbcType=VARCHAR}, 
+      #{postImageUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jisu.WeChatApp.pojo.ShopInfo">
     <!--
@@ -285,6 +286,9 @@
       <if test="qrCodeUrl != null">
         qr_code_url,
       </if>
+      <if test="postImageUrl != null">
+        post_image_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopId != null">
@@ -376,6 +380,9 @@
       </if>
       <if test="qrCodeUrl != null">
         #{qrCodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="postImageUrl != null">
+        #{postImageUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -486,6 +493,9 @@
       <if test="record.qrCodeUrl != null">
         qr_code_url = #{record.qrCodeUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.postImageUrl != null">
+        post_image_url = #{record.postImageUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -526,7 +536,8 @@
       open_time = #{record.openTime,jdbcType=VARCHAR},
       in_prohi = #{record.inProhi,jdbcType=INTEGER},
       short_id = #{record.shortId,jdbcType=VARCHAR},
-      qr_code_url = #{record.qrCodeUrl,jdbcType=VARCHAR}
+      qr_code_url = #{record.qrCodeUrl,jdbcType=VARCHAR},
+      post_image_url = #{record.postImageUrl,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -625,6 +636,9 @@
       <if test="qrCodeUrl != null">
         qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR},
       </if>
+      <if test="postImageUrl != null">
+        post_image_url = #{postImageUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where shop_id = #{shopId,jdbcType=VARCHAR}
   </update>
@@ -662,12 +676,17 @@
       open_time = #{openTime,jdbcType=VARCHAR},
       in_prohi = #{inProhi,jdbcType=INTEGER},
       short_id = #{shortId,jdbcType=VARCHAR},
-      qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR}
+      qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR},
+      post_image_url = #{postImageUrl,jdbcType=VARCHAR}
     where shop_id = #{shopId,jdbcType=VARCHAR}
   </update>
-  <select id="getAllShopList" resultMap="BaseResultMap">
+  <select id="getAllShopList" parameterType="String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from shop_info
+    WHERE 1=1
+    <if test="shop_status != null and shop_status != ''">
+    AND shop_status in (#{shop_status})
+    </if>
   </select>
 </mapper>

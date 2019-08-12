@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jisu.WeChatApp.dao.ExperienceInfoMapper;
 import com.jisu.WeChatApp.dao.MemberInfoMapper;
 import com.jisu.WeChatApp.dao.OrderInfoMapper;
 import com.jisu.WeChatApp.dao.ShopInfoMapper;
 import com.jisu.WeChatApp.dao.ShopServerMapper;
+import com.jisu.WeChatApp.pojo.ExperienceInfo;
 import com.jisu.WeChatApp.pojo.MemberInfo;
 import com.jisu.WeChatApp.pojo.OrderInfo;
 import com.jisu.WeChatApp.pojo.ShopInfo;
@@ -64,6 +66,8 @@ public class OrderInfoController {
 	private MemberInfoMapper memberInfoMapper;
 	@Autowired
 	private ShopInfoServiceImpl shopInfoServiceImpl;
+	@Autowired
+	private ExperienceInfoMapper experienceInfoMapper;
 
 	/**
 	 * 下单
@@ -78,7 +82,7 @@ public class OrderInfoController {
 		MsgModel msg = new MsgModel();
 
 		String member_no = request.getParameter("member_no");
-		String shop_server_id = request.getParameter("shop_server_id");
+
 		String shop_id = request.getParameter("shop_id");
 		String server_example_photo = request.getParameter("server_example_photo");
 		String phone = request.getParameter("phone");
@@ -87,16 +91,11 @@ public class OrderInfoController {
 		String server_address = request.getParameter("server_address");
 		String server_member_no = request.getParameter("server_member_no");
 
-		// 获取商家服务信息
-		ShopServer shopServer = shopServerMapper.selectByPrimaryKey(shop_server_id);
-		if (null == shopServer) {
-			msg.setMessage("未获取到服务项目信息");
-			msg.setStatus(MsgModel.ERROR);
-			return msg;
-		}
-		BigDecimal server_price = shopServer.getServerPrice();
-		BigDecimal server_sale_price = shopServer.getServerSalePrice();
-		String server_name = shopServer.getServerName();
+		String exper_id = request.getParameter("exper_id");
+		ExperienceInfo exper_info = experienceInfoMapper.selectByPrimaryKey(exper_id);
+		String shop_server_id = exper_info.getShopServerId();
+		BigDecimal server_price = exper_info.getExperPrice();
+		String server_name = exper_info.getServerName();
 		// 获取商家服务信息结束
 
 		// 服务地址
@@ -152,17 +151,20 @@ public class OrderInfoController {
 		orderInfo.setOrderDesc(order_desc);
 		orderInfo.setServerAddress(server_address);
 		orderInfo.setServerMemberNo(server_member_no);
+		orderInfo.setOrderType(0);
 		if (StringUtils.isNotBlank(appointment_time)) {
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH");
+			appointment_time = appointment_time + ":00:00";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = sdf.parse(appointment_time);
+			Date end_time = sdf.parse(appointment_time);
 			orderInfo.setAppointmentTimeStart(date);
 			if (server_price.compareTo(new BigDecimal(1000)) > 0) {
-				date.setHours(date.getHours() + 24);
+				end_time.setHours(end_time.getHours() + 24);
 			} else {
-				date.setHours(date.getHours() + 3);
+				end_time.setHours(end_time.getHours() + 3);
 			}
 
-			orderInfo.setAppointmentTimeEnd(date);
+			orderInfo.setAppointmentTimeEnd(end_time);
 		}
 		orderInfo.setOrderPhone(phone);
 		orderInfo.setOrderNickname(nickname);
@@ -201,7 +203,7 @@ public class OrderInfoController {
 		if (0 != order_status) { // 订单已支付
 			msg.setStatus(MsgModel.ERROR);
 			msg.setMessage("订单已支付");
-
+			return msg;
 		}
 		MemberInfo memberInfo = memberInfoServiceImpl.getMemberInfoByMemberNo(member_no);
 		String open_id = memberInfo.getOpenid();
@@ -215,39 +217,45 @@ public class OrderInfoController {
 		orderInfo.setPayWay(1);
 		// orderInfo.setPayWay(Integer.valueOf(pay_way));
 		orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+		if ("2".equals(pay_way)) {
+			orderInfoServiceImpl.OrderPayAfter(order_id);
+			msg.setStatus(MsgModel.SUCCESS);
+		} else {
 
-		String nonceStr = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
-		String result = PayUtils.wxPay(request, nonceStr, order_desc, order_id, pay_price.setScale(0, BigDecimal.ROUND_UP).toString(), notify_url, open_id);
-		try {
-			// 将解析结果存储在HashMap中
-			Map map = PayUtils.doXMLParse(result);
+			String nonceStr = DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null);
+			String result = PayUtils.wxPay(request, nonceStr, order_desc, order_id, pay_price.setScale(0, BigDecimal.ROUND_UP).toString(), notify_url, open_id);
+			try {
+				// 将解析结果存储在HashMap中
+				Map map = PayUtils.doXMLParse(result);
 
-			String return_code = (String) map.get("return_code");// 返回状态码
-			Map<String, Object> result_map = new HashMap<String, Object>();// 返回给小程序端需要的参数
-			if (return_code.equals("SUCCESS")) {
-				String prepay_id = (String) map.get("prepay_id");// 返回的预付单信息
-				result_map.put("nonceStr", nonceStr);
-				result_map.put("package", "prepay_id=" + prepay_id);
-				Long timeStamp = System.currentTimeMillis() / 1000;
-				result_map.put("timeStamp", timeStamp + "");// 这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
-				// 拼接签名需要的参数
-				String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonceStr + "&package=prepay_id=" + prepay_id + "&signType=MD5&timeStamp=" + timeStamp;
-				// 再次签名，这个签名用于小程序端调用wx.requesetPayment方法
-				String paySign = PayUtils.sign(stringSignTemp, mch_key, "utf-8").toUpperCase();
-				result_map.put("paySign", paySign);
-				result_map.put("appid", appid);
-				result_map.put("signType", "MD5");
-				msg.setStatus(MsgModel.SUCCESS);
-				msg.setContext(result_map);
-			} else {
-				// 修改订单状态
-				orderInfo.setOrderStatus(0);
-				orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
-				// 修改订单状态结束
+				String return_code = (String) map.get("return_code");// 返回状态码
+				Map<String, Object> result_map = new HashMap<String, Object>();// 返回给小程序端需要的参数
+				if (return_code.equals("SUCCESS")) {
+					String prepay_id = (String) map.get("prepay_id");// 返回的预付单信息
+					result_map.put("nonceStr", nonceStr);
+					result_map.put("package", "prepay_id=" + prepay_id);
+					Long timeStamp = System.currentTimeMillis() / 1000;
+					result_map.put("timeStamp", timeStamp + "");// 这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
+					// 拼接签名需要的参数
+					String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonceStr + "&package=prepay_id=" + prepay_id + "&signType=MD5&timeStamp=" + timeStamp;
+					// 再次签名，这个签名用于小程序端调用wx.requesetPayment方法
+					String paySign = PayUtils.sign(stringSignTemp, mch_key, "utf-8").toUpperCase();
+					result_map.put("paySign", paySign);
+					result_map.put("appid", appid);
+					result_map.put("signType", "MD5");
+					msg.setStatus(MsgModel.SUCCESS);
+					msg.setContext(result_map);
+				} else {
+					// 修改订单状态
+					orderInfo.setOrderStatus(0);
+					orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+					// 修改订单状态结束
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return msg;
 	}
@@ -349,6 +357,7 @@ public class OrderInfoController {
 		condition.put("server_member_is_check", request.getParameter("server_member_is_check"));
 		condition.put("server_member_no", request.getParameter("server_member_no"));
 		condition.put("member_no", request.getParameter("member_no"));
+		condition.put("is_delete", request.getParameter("is_delete"));
 		String begin = request.getParameter("begin");
 		String end = request.getParameter("end");
 		condition.put("begin", begin);
@@ -628,6 +637,22 @@ public class OrderInfoController {
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setOrderId(order_id);
 		orderInfo.setOrderStatus(0);
+		int num = orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+		MsgModel msg = new MsgModel();
+		if (num > 0) {
+			msg.setStatus(MsgModel.SUCCESS);
+		} else {
+			msg.setStatus(MsgModel.ERROR);
+		}
+		return msg;
+	}
+
+	@RequestMapping(value = "deleteOrder", method = RequestMethod.POST)
+	public MsgModel deleteOrder(HttpServletRequest request) {
+		String order_id = request.getParameter("order_id");
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setOrderId(order_id);
+		orderInfo.setIsDelete(1);
 		int num = orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
 		MsgModel msg = new MsgModel();
 		if (num > 0) {

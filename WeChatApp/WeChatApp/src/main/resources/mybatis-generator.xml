@@ -33,6 +33,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		
-		<table tableName="server_member_info"></table>
+		<table tableName="reply_comment_info"></table>
+		<table tableName="comment_info"></table>
 	</context>
 </generatorConfiguration>

@@ -3,6 +3,7 @@ package com.jisu.WeChatApp.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aliyun.oss.OSSClient;
 import com.jisu.WeChatApp.dao.ExperienceInfoMapper;
 import com.jisu.WeChatApp.dao.OrderInfoMapper;
+import com.jisu.WeChatApp.dao.ShopServerMapper;
 import com.jisu.WeChatApp.pojo.ExperPraiseHistroy;
 import com.jisu.WeChatApp.pojo.ExperienceInfo;
 import com.jisu.WeChatApp.pojo.OrderInfo;
+import com.jisu.WeChatApp.pojo.ShopServer;
 import com.jisu.WeChatApp.service.impl.ExperServiceImpl;
+import com.jisu.WeChatApp.service.impl.OrderInfoServiceImpl;
 import com.jisu.WeChatApp.tool.util.DynamicCodeUtil;
 import com.jisu.WeChatApp.tool.util.MsgModel;
 import com.jisu.WeChatApp.tool.util.OSSUtils;
@@ -39,6 +43,10 @@ public class ExperienceController {
 	private ExperServiceImpl experServiceImpl;
 	@Autowired
 	private OrderInfoMapper orderInfoMapper;
+	@Autowired
+	private OrderInfoServiceImpl orderInfoServiceImpl;
+	@Autowired
+	private ShopServerMapper shopServerMapper;
 
 	/**
 	 * 保存客户体验
@@ -55,7 +63,7 @@ public class ExperienceController {
 		String exper_id = request.getParameter("exper_id");
 		String exper_photo = request.getParameter("exper_photo");
 		String exper_desc = request.getParameter("exper_desc");
-		String server_name= request.getParameter("server_name");
+		String server_name = request.getParameter("server_name");
 		// 将富文本内容上传
 		String result_url = "";
 		if (StringUtils.isNotBlank(exper_context)) {
@@ -92,17 +100,20 @@ public class ExperienceController {
 		experienceInfo.setMemberNo(member_no);
 		experienceInfo.setTextUrl(result_url);
 		experienceInfo.setTitle(title);
-		experienceInfo.setServerClassId1(request.getParameter("server_class_id1"));
-		experienceInfo.setServerClassId2(request.getParameter("server_class_id2"));
-		experienceInfo.setServerClassId3(request.getParameter("server_class_id3"));
-		experienceInfo.setServerClassId4(request.getParameter("server_class_id4"));
-		experienceInfo.setServerClassId5(request.getParameter("server_class_id5"));
+		experienceInfo.setExperIdea(request.getParameter("exper_idea"));
 		experienceInfo.setServerName(server_name);
 		experienceInfo.setOrderId(request.getParameter("order_id"));
 		experienceInfo.setServerBeforePhoto(request.getParameter("server_before_photo"));
 		experienceInfo.setServerAfterPhoto(request.getParameter("server_after_photo"));
-		OrderInfo orderInfo=orderInfoMapper.selectByPrimaryKey(request.getParameter("order_id"));
+		OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(request.getParameter("order_id"));
 		experienceInfo.setShopServerId(orderInfo.getShopServerId());
+		ShopServer shop_server = shopServerMapper.selectByPrimaryKey(orderInfo.getShopServerId());
+		experienceInfo.setServerClassId1(shop_server.getServerClassId());
+		experienceInfo.setServerClassId2(request.getParameter("server_class_id2"));
+		experienceInfo.setServerClassId3(request.getParameter("server_class_id3"));
+		experienceInfo.setServerClassId4(request.getParameter("server_class_id4"));
+		experienceInfo.setServerClassId5(request.getParameter("server_class_id5"));
+		experienceInfo.setExperPrice(new BigDecimal(request.getParameter("exper_price")));
 		int save_num = 0;
 		if (StringUtils.isNotBlank(exper_id)) {
 			experienceInfo.setExperienceId(exper_id);
@@ -114,6 +125,16 @@ public class ExperienceController {
 		}
 		MsgModel msg = new MsgModel();
 		if (save_num > 0) {
+			if (StringUtils.isBlank(exper_id)) {
+				String order_id = request.getParameter("order_id");
+
+				int num = orderInfoServiceImpl.updateOrderStatus(order_id, 3);
+				if (num > 0) {
+					// 结算收益
+					orderInfoServiceImpl.settlementOrder(order_id);
+					// 结束收益结束
+				}
+			}
 			msg.setStatus(MsgModel.SUCCESS);
 		} else {
 			msg.setStatus(MsgModel.ERROR);
@@ -134,6 +155,7 @@ public class ExperienceController {
 		String end = request.getParameter("end");
 		String member_no = request.getParameter("member_no");
 		String server_class_id = request.getParameter("server_class_id");
+		String server_member_no= request.getParameter("server_member_no");
 		if (StringUtils.isNotBlank(end) && StringUtils.isBlank(begin)) {
 			begin = "0";
 		}
@@ -141,6 +163,7 @@ public class ExperienceController {
 		condition.put("begin", begin);
 		condition.put("end", end);
 		condition.put("member_no", member_no);
+		condition.put("server_member_no", server_member_no);
 		condition.put("server_class_id", server_class_id);
 		List<Map<String, String>> exper_list = experServiceImpl.getExperList(condition);
 		MsgModel msg = new MsgModel();
@@ -194,6 +217,16 @@ public class ExperienceController {
 	public MsgModel getExperInfo(HttpServletRequest request) {
 		String exper_id = request.getParameter("exper_id");
 		Map<String, Object> exper_info = experServiceImpl.getExperInfo(exper_id);
+		MsgModel msg = new MsgModel();
+		msg.setContext(exper_info);
+		msg.setStatus(MsgModel.SUCCESS);
+		return msg;
+	}
+
+	@RequestMapping("getExperInfoByOrderId")
+	public MsgModel getExperInfoByOrderId(HttpServletRequest request) {
+		String order_id = request.getParameter("order_id");
+		Map<String, String> exper_info = experServiceImpl.getExperInfoByOrderId(order_id);
 		MsgModel msg = new MsgModel();
 		msg.setContext(exper_info);
 		msg.setStatus(MsgModel.SUCCESS);

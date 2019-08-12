@@ -155,7 +155,7 @@ public class SendMessageServiceImpl implements SendMessageService {
 		map.put("order_id", msg.get("order_id"));
 		Map<String, String> message_context = (Map<String, String>) getSendMessageContext(map);
 		if(message_context!=null) {
-			String formid = message_context.get("formid");
+			String formid = message_context.get("form_id");
 			MSGUtils.pushOneUser(formid, message_context);
 			// formid标记为已使用
 			FormInfoExample example = new FormInfoExample();

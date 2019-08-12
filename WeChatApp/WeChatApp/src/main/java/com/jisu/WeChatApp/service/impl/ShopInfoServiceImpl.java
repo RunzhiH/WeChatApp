@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.jisu.WeChatApp.dao.MemberProhiMapper;
+import com.jisu.WeChatApp.dao.ShopClassMapper;
 import com.jisu.WeChatApp.dao.ShopInfoMapper;
 import com.jisu.WeChatApp.dao.ShopLableMapper;
 import com.jisu.WeChatApp.dao.ShopPraiseHistoryMapper;
 import com.jisu.WeChatApp.dao.ShopServerMapper;
+import com.jisu.WeChatApp.daoSelf.MemberInfoMapperSelf;
 import com.jisu.WeChatApp.daoSelf.ShopInfoMapperSelf;
 import com.jisu.WeChatApp.pojo.MemberProhi;
+import com.jisu.WeChatApp.pojo.ShopClass;
 import com.jisu.WeChatApp.pojo.ShopInfo;
 import com.jisu.WeChatApp.pojo.ShopLableExample;
 import com.jisu.WeChatApp.pojo.ShopPraiseHistory;
@@ -41,6 +44,10 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 	private ShopInfoMapper shopInfoMapper;
 	@Autowired
 	private MemberProhiMapper memberProhiMapper;
+	@Autowired
+	private ShopClassMapper shopClassMapper;
+	@Autowired
+	private MemberInfoMapperSelf memberInfoMapperSelf;
 
 	@Override
 	public List<Map<String, String>> getShopListByCondition(Map<String, String> condition) {
@@ -170,9 +177,9 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 	}
 
 	@Override
-	public List<ShopInfo> getAllShopList() {
+	public List<ShopInfo> getAllShopList(Map<String, String> condition) {
 		// TODO Auto-generated method stub
-		return shopInfoMapper.getAllShopList();
+		return shopInfoMapper.getAllShopList(condition);
 	}
 
 	@Override
@@ -210,9 +217,9 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 		shopInfo.setShopId(shop_id);
 		shopInfo.setInProhi(1);
 		shopInfoMapper.updateByPrimaryKeySelective(shopInfo);
-		String member_no= shopInfo.getMemberNo();
-		//插入封禁记录
-		MemberProhi memberProhi= new MemberProhi();
+		String member_no = shopInfo.getMemberNo();
+		// 插入封禁记录
+		MemberProhi memberProhi = new MemberProhi();
 		memberProhi.setMemberProhiId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
 		memberProhi.setMemberType(1);
 		memberProhi.setMemberNo(member_no);
@@ -221,7 +228,7 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 		memberProhi.setCreateTime(new Date());
 		memberProhi.setProhiType(1);
 		memberProhiMapper.insertSelective(memberProhi);
-		//插入封禁记录结束
+		// 插入封禁记录结束
 	}
 
 	@Override
@@ -234,6 +241,73 @@ public class ShopInfoServiceImpl implements ShopInfoService {
 			return "操作失败";
 		}
 		return "ok";
+	}
+
+	@Override
+	public String delShop(String id) {
+		if (shopInfoMapper.deleteByPrimaryKey(id) > 0) {
+			// 更改用户身份
+			memberInfoMapperSelf.updateMemberTypeByShopId(id);
+			// 更改用户身份结束
+			
+			//删除绑定
+			memberInfoMapperSelf.updateMemberShareShop(id);
+			//删除绑定结束
+			return "ok";
+		} else {
+			return "删除失败，请您稍后再试";
+		}
+	}
+
+	@Override
+	public List<ShopClass> getAllShopClassList() {
+		// TODO Auto-generated method stub
+		return shopClassMapper.getAllShopClassList();
+	}
+
+	@Override
+	public void updateShopClass(ShopClass shopClass) {
+		// TODO Auto-generated method stub
+		shopClassMapper.updateByPrimaryKeySelective(shopClass);
+	}
+
+	@Override
+	public void addShopClass(ShopClass shopClass) {
+		// TODO Auto-generated method stub
+		shopClass.setShopClassId(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_ALL_MIXED, 32, null));
+		shopClassMapper.insertSelective(shopClass);
+	}
+
+	@Override
+	public String delShopClass(String id) {
+		if (shopClassMapper.deleteByPrimaryKey(id) > 0) {
+			return "ok";
+		} else {
+			return "删除失败，请您稍后再试";
+		}
+	}
+
+	public ShopClass getShopClass(String id) {
+		// TODO Auto-generated method stub
+		return shopClassMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public String agreeShop(String id) {
+		// TODO Auto-generated method stub
+		ShopInfo shopInfo = new ShopInfo();
+		shopInfo.setShopId(id);
+		shopInfo.setShopStatus(1);
+		if (shopInfoMapper.updateByPrimaryKeySelective(shopInfo) > 0) {
+			return "ok";
+		} else {
+			return "设置失败，请您稍后再试";
+		}
+	}
+	@Override
+	public List<Map<String, String>> getShopListByoperatorMemberNo(String member_no) {
+		// TODO Auto-generated method stub
+		return shopInfoMapperSelf.getShopListByOperatorMemberNo(member_no);
 	}
 
 }

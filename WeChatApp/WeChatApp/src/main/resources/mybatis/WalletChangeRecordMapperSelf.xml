@@ -164,7 +164,7 @@
 		  '商家业务收益' note,
 		  a.record_price + b.rmb left_rmb,
 		  NOW() create_time,
-		  '3' record_type,
+		  '4' record_type,
 		  relation 
 		FROM
 		  (SELECT 
@@ -180,5 +180,68 @@
 		    AND a.order_id = '${order_id}') a,
 		  wallet_info b 
 		WHERE a.member_no = b.member_no 
+	</insert>
+	<insert id="insertWalletChangeRecordForProfit">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") record_id,
+		  a.member_no,
+		  a.price,
+		  1,
+		  a.note,
+		  a.price + b.rmb left_rmb,
+		  NOW(),
+		  a.profit_type,
+		  a.relation_id 
+		FROM
+		  profit_info a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+		  AND a.relation_id = #{order_id}   
+	</insert>
+	<select id="getRecordIdListByOrderId" resultType="String">
+		SELECT 
+		  record_id 
+		FROM
+		  wallet_change_record 
+		WHERE relation = #{order_id} 
+	</select>
+	<insert id="insertWalletChangeRecordForDrawal">
+		INSERT INTO wallet_change_record (
+		  record_id,
+		  member_no,
+		  record_price,
+		  record_status,
+		  note,
+		  left_rmb,
+		  create_time,
+		  record_type,
+		  relation
+		) 
+		SELECT 
+		  REPLACE(UUID(), "-", "") record_id,
+		  a.member_no member_no,
+		  a.withdrawal_price record_price,
+		  0 record_status,
+		  '提现' note,
+		  b.rmb,
+		  NOW() create_time,
+		  5 record_type,
+		  '${drawal_record_id}' relation 
+		FROM
+		  withdrawal_record a,
+		  wallet_info b 
+		WHERE a.member_no = b.member_no 
+		  AND a.withdrawal_record_id = '${drawal_record_id}' 
 	</insert>
 </mapper>

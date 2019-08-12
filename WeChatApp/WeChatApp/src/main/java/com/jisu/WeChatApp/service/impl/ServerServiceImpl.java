@@ -12,12 +12,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jisu.WeChatApp.dao.ExperienceInfoMapper;
 import com.jisu.WeChatApp.dao.MemberInfoMapper;
 import com.jisu.WeChatApp.dao.ServerClassMapper;
 import com.jisu.WeChatApp.dao.ServerMemberInfoMapper;
 import com.jisu.WeChatApp.dao.ShopServerMapper;
 import com.jisu.WeChatApp.daoSelf.ServerMapperSelf;
 import com.jisu.WeChatApp.entity.ServerMemberVO;
+import com.jisu.WeChatApp.pojo.ExperienceInfo;
 import com.jisu.WeChatApp.pojo.MemberInfo;
 import com.jisu.WeChatApp.pojo.ServerClass;
 import com.jisu.WeChatApp.pojo.ServerClassExample;
@@ -43,6 +45,8 @@ public class ServerServiceImpl implements ServerService {
 	private UserInfoServiceImpl userInfoServiceImpl;
 	@Autowired
 	private ServerMemberInfoMapper serverMemberInfoMapper;
+	@Autowired
+	private ExperienceInfoMapper experienceInfoMapper;
 
 	@Override
 	public List<ServerClass> getServerClassList() {
@@ -150,32 +154,41 @@ public class ServerServiceImpl implements ServerService {
 	}
 
 	@Override
-	public List<Map<String, String>> getFreeServerMemberList(String shop_server_id, String address_x, String address_y) {
+	public List<Map<String, String>> getFreeServerMemberList(String exper_id, String address_x, String address_y) {
 		// TODO Auto-generated method stub
-		ShopServer shopServer = shopServerMapper.selectByPrimaryKey(shop_server_id);
-		BigDecimal server_price = shopServer.getServerPrice();
+		//ShopServer shopServer = shopServerMapper.selectByPrimaryKey(shop_server_id);
+		ExperienceInfo exper_info= experienceInfoMapper.selectByPrimaryKey(exper_id);
+		String shop_server_id=exper_info.getShopServerId();
+		BigDecimal server_price = exper_info.getExperPrice();
 		if (server_price.compareTo(new BigDecimal(1000)) > 0) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("shop_server_id", shop_server_id);
 			return serverMapperSelf.getFreeServerMemberList(map);
-		}else {
+		} else {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("shop_server_id", shop_server_id);
 			map.put("address_x", address_x);
 			map.put("address_y", address_y);
 			return serverMapperSelf.getFreeServerMemberListForJuli(map);
 		}
-		
+
 	}
 
 	@Override
-	public List<Map<String, Object>> getAppointmentServerTimeList(String member_no) {
+	public List<Map<String, Object>> getAppointmentServerTimeList(String member_no, String shop_id) {
 		// TODO Auto-generated method stub
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("member_no", member_no);
-		List<Map<String, String>> server_time_list = serverMapperSelf.getAppointmentServerTimeList(map);
 
-		SimpleDateFormat day_sdf = new SimpleDateFormat("YYYY-MM-dd");
+		List<Map<String, String>> server_time_list = serverMapperSelf.getAppointmentServerTimeList(map);
+		List<Map<String, String>> server_rest_time_list = serverMapperSelf.getServerRestTimeList(map);
+		List<Map<String, String>> shop_rest_time_list = null;
+		if (StringUtils.isNotBlank(shop_id)) {
+			map.put("shop_id", shop_id);
+			shop_rest_time_list = serverMapperSelf.getServerRestTimeList(map);
+		}
+
+		SimpleDateFormat day_sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat teh_day_sdf = new SimpleDateFormat("MM月dd日");
 		SimpleDateFormat hour_sdf = new SimpleDateFormat("HH");
 		List<Map<String, Object>> result_list = new ArrayList<Map<String, Object>>();
@@ -198,14 +211,34 @@ public class ServerServiceImpl implements ServerService {
 			}
 			for (Map<String, String> server_time : server_time_list) {
 				if (day_str.equals(server_time.get("the_day"))) {
+					// 订单占用时间
 					String begin_time = server_time.get("appointment_time_start");
 					String end_time = server_time.get("appointment_time_end");
-					for (int k = Integer.valueOf(begin_time); k < Integer.valueOf(end_time); k++) {
-						setup_time.remove(k);
+					for (int k = Integer.valueOf(begin_time); k <= Integer.valueOf(end_time); k++) {
+						setup_time.remove(String.valueOf(k));
+					}
+					// 订单占用时间结束
+				}
+
+			}
+			List<Map<String, String>> setup_time_list = new ArrayList<Map<String, String>>();
+			// 服务人员休息时间
+			for (Map<String, String> server_rest_time : server_rest_time_list) {
+				if (day_str.equals(server_rest_time.get("rest_time"))) {
+					break;
+				}
+			}
+			// 服务人员休息时间结束
+
+			if (StringUtils.isNotBlank(shop_id)) {
+				// 商家休息时间
+				for (Map<String, String> shop_rest_time : shop_rest_time_list) {
+					if (day_str.equals(shop_rest_time.get("rest_time"))) {
+						break;
 					}
 				}
 			}
-			List<Map<String, String>> setup_time_list = new ArrayList<Map<String, String>>();
+			// 商家休息时间结束
 			for (String hour : setup_time) {
 				Map<String, String> setup_time_map = new HashMap<String, String>();
 				setup_time_map.put("time_key", day_str + " " + hour);
@@ -307,5 +340,29 @@ public class ServerServiceImpl implements ServerService {
 		} else {
 			return "删除失败，请您稍后再试";
 		}
+	}
+
+	@Override
+	public int saveMemberRestTime(String member_no, String rest_time_list_str) {
+		// TODO Auto-generated method stub
+		//删除之前的休息时间
+		serverMapperSelf.deleteRestTimeByMemberNo(member_no);
+		//删除之前的休息时间结束
+		JSONArray rest_time_json_arr = JSONArray.fromObject(rest_time_list_str);
+		List<Map<String, String>> rest_time_list = JSONArray.toList(rest_time_json_arr, HashMap.class);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("member_no", member_no);
+		map.put("rest_time_list", rest_time_list);
+		return serverMapperSelf.insertRestTimeList(map);
+	}
+	@Override
+	public List<Map<String, String>> getRestTimeList(String member_no) {
+		// TODO Auto-generated method stub
+		return serverMapperSelf.getRestTimeList(member_no);
+	}
+	@Override
+	public List<Map<String, String>> getServerMemberListRank(Map<String, String> condition) {
+		// TODO Auto-generated method stub
+		return serverMapperSelf.getServerMemberListRank(condition);
 	}
 }

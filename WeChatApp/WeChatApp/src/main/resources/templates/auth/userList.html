@@ -10,6 +10,10 @@
 
 			<form id="userSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
 				<div class="layui-form-item">
+					<label class="layui-form-label">会员号</label>
+					<div class="layui-input-inline">
+						<input id="memberNo" name="memberNo" autocomplete="off" class="layui-input" type="text" />
+					</div>
 					<label class="layui-form-label">用户名</label>
 					<div class="layui-input-inline">
 						<input id="nickname" name="nickname" autocomplete="off" class="layui-input" type="text" />
@@ -109,7 +113,7 @@
 
 		<div id="updateType" class="layer_self_wrap" style="width: 500px; display: none;">
 			<form id="updateTypeForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
-				<input id="memberNo" type="hidden" name="memberNo" />
+				<input id="member_no" type="hidden" name="memberNo" />
 				<div class="layui-form-item">
 					<label class="layui-form-label">用户名</label>
 					<div class="layui-input-inline">

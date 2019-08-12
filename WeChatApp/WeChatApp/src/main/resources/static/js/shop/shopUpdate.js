@@ -24,6 +24,21 @@ $(function() {
 			});
 			return false;
 		});
+		$.ajax({
+			type : 'GET',
+			url : "/api/shopClass/getShopClassList",
+			success : function(data) {
+				var div = $("#shopClassId");
+				if ("200" == data.status) {
+					// select.empty();
+					$.each(data.context, function(index, item) {
+						var input = $("<input lay-skin=\"primary\" name=\"shopClassId\" title=\"" + item.shop_class_name + "\" type=\"checkbox\" value=\"" + item.shop_class_id + "\">");
+						div.append(input);
+					});
+				}
+				form.render();
+			}
+		});
 		form.render();
 	});
 	layui.use('upload', function() {

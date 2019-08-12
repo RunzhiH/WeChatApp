@@ -126,8 +126,8 @@
 	</select>
 	<select id="getAppointmentServerTimeList" parameterType="String" resultType="Map">
 		SELECT 
-		  DATE_FORMAT(b.appointment_time_start, '%d') appointment_time_start,
-		  DATE_FORMAT(b.appointment_time_end, '%d') appointment_time_end,
+		  DATE_FORMAT(b.appointment_time_start, '%H') appointment_time_start,
+		  DATE_FORMAT(b.appointment_time_end, '%H') appointment_time_end,
 		  DATE_FORMAT(
 		    b.appointment_time_start,
 		    '%Y-%m-%d'
@@ -188,4 +188,81 @@
 		  server_member_info 
 		WHERE member_no = #{member_no}
 	</delete>
+	<select id="getServerRestTimeList" parameterType="String" resultType="Map">
+		SELECT * FROM rest_time_info WHERE member_no = '${member_no}'
+	</select>
+	<select id="getShopRestTimeList" parameterType="String" resultType="Map">
+		SELECT * FROM rest_time_info a,shop_info b WHERE a.member_no = b.member_no AND b.shop_id = '${shop_id}'
+	</select>
+	<insert id="insertRestTimeList">
+		INSERT INTO rest_time_info (
+		  rest_time_id,
+		  member_no,
+		  rest_time,
+		  rest_type,
+		  rest_status,
+		  create_time
+		) 
+		VALUES
+		 <foreach close=")" collection="rest_time_list" item="rest_date" open="(" separator="),(">  
+		    REPLACE(UUID(), "-", ""),
+		    '${member_no}',
+		    #{rest_date.rest_time},
+		    3,
+		    1,
+		    NOW()
+		 </foreach>
+	</insert>
+	<select id="getRestTimeList" parameterType="String" resultType="Map">
+		SELECT * FROM rest_time_info WHERE member_no=#{member_no}
+	</select>
+	<delete id="deleteRestTimeByMemberNo">
+		DELETE FROM rest_time_info WHERE member_no=#{member_no}
+	</delete>
+	<select id="getServerMemberListRank" parameterType="String" resultType="Map" >
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    *,
+		    (@row := @row + 1) AS row_num 
+		  FROM
+		    (SELECT 
+		  a.*,
+		  @row := 0,
+		  b.nickname,
+		  b.phone,
+		  b.photo,
+		  b.sex,
+		  IFNULL(d.praise_points_count, 0) / IFNULL(c.order_count, 0) ord_num 
+		FROM
+		  server_member_info a,
+		  member_info b 
+		  LEFT JOIN 
+		    (SELECT 
+		      COUNT(*) order_count,
+		      server_member_no 
+		    FROM
+		      order_info 
+		    GROUP BY server_member_no) c 
+		    ON b.member_no = c.server_member_no 
+		  LEFT JOIN 
+		    (SELECT 
+		      COUNT(*) praise_points_count,
+		      member_no 
+		    FROM
+		      experience_info 
+		    GROUP BY member_no) d 
+		    ON b.member_no = d.member_no 
+		WHERE a.member_no = b.member_no 
+		  AND b.member_type = 2 
+		ORDER BY IFNULL(d.praise_points_count, 0) / IFNULL(c.order_count, 0) DESC 
+		 ) a) a 
+		  <if test="begin != null and end != null">
+		WHERE row_num >= ${begin} 
+		 <![CDATA[  
+		  AND row_num <= ${end}
+		  ]]>
+		  </if>
+	</select>
 </mapper>

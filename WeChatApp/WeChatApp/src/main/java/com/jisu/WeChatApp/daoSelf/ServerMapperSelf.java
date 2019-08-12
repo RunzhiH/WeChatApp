@@ -29,4 +29,18 @@ public interface ServerMapperSelf {
 
 	public List<Map<String, String>> getFreeServerMemberListForJuli(Map<String, String> map);
 
+	public List<Map<String, String>> getFreeShopList(Map<String, String> map);
+
+	public int insertRestTimeList(Map<String, Object> map);
+
+	public List<Map<String, String>> getFreeServerList(Map<String, String> map);
+
+	public List<Map<String, String>> getServerRestTimeList(Map<String, String> map);
+
+	public List<Map<String, String>> getRestTimeList(String member_no);
+
+	public int deleteRestTimeByMemberNo(String member_no);
+
+	public List<Map<String, String>> getServerMemberListRank(Map<String, String> condition);
+
 }

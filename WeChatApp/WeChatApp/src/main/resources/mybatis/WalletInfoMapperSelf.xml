@@ -29,13 +29,13 @@
 		  	  b.appointment_time_end,
 		      b.order_code,
 		      b.server_address,
+		      DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%s') create_time_str,
 		      @row := 0 
 		    FROM
-		      wallet_change_record a 
+		      profit_info a 
 		      LEFT JOIN order_info b 
-		        ON a.relation = b.order_id 
+		        ON a.relation_id = b.order_id 
 		    WHERE a.member_no = '${member_no}'
-		      AND a.record_status = 1 
 		    ORDER BY a.create_time desc) a) a 
 		<if test="begin != null and end != null">
 		WHERE row_num >= ${begin} 
@@ -53,14 +53,14 @@
 		  FROM
 		    wallet_change_record a 
 		  WHERE a.member_no = '${member_no}' 
-		    AND DATE_FORMAT(a.create_time, '%y-%m-%d ') = DATE_FORMAT(NOW(), '%y-%m-%d')
+		    AND DATE_FORMAT(a.create_time, '%y-%m-%d') = DATE_FORMAT(NOW(), '%y-%m-%d')
 		    AND a.record_status = 1) a,
 		  (SELECT 
 		    IFNULL(SUM(a.record_price),0) month_income 
 		  FROM
 		    wallet_change_record a 
 		  WHERE a.member_no = '${member_no}' 
-		    AND DATE_FORMAT(a.create_time, '%y-%m ') = DATE_FORMAT(NOW(), '%y')
+		    AND DATE_FORMAT(a.create_time, '%y-%m') = DATE_FORMAT(NOW(), '%y-%m')
 		    AND a.record_status = 1 ) b,
 		  (SELECT 
 		    IFNULL(SUM(a.record_price),0) year_income 
@@ -69,5 +69,51 @@
 		  WHERE a.member_no = '${member_no}' 
 		    AND DATE_FORMAT(a.create_time, '%y') = DATE_FORMAT(NOW(), '%y')
 		    AND a.record_status = 1 ) c 
+	</select>
+	<select id="getWalletInfo" parameterType="String" resultType="Map">
+		SELECT * FROM wallet_info WHERE member_no =#{member_no}
+	</select>
+	<update id="reduceRmbForDrawal">
+		UPDATE 
+		  wallet_info 
+		SET
+		  rmb = rmb - '${rmb}' 
+		WHERE member_no = '${member_no}' 
+		  AND rmb - '${rmb}' > 0 
+	</update>
+	<select id="getWithDrawalList" parameterType="String" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.nickname,
+		  b.openid,
+		  b.alipay_account,
+		  b.phone,
+		  DATE_FORMAT(a.create_time, '%y-%m-%d %H:%i:%s') create_time_str
+		FROM
+		  withdrawal_record a,
+		  member_info b 
+		WHERE a.member_no = b.member_no 
+		<if test="withdrawal_status != null and withdrawal_status != ''">
+		AND a.withdrawal_status in (${withdrawal_status})
+		</if>
+		<if test="member_no != null and member_no != ''">
+		AND a.member_no = '${member_no}'
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="getWithDrawalRecordWithMemberInfo" parameterType="String" resultType="Map">
+		SELECT 
+		  a.*,
+		  b.nickname,
+		  b.openid,
+		  b.alipay_account,
+		  b.phone,
+		  DATE_FORMAT(a.create_time, '%y-%m-%d %H:%i:%s') create_time_str
+		FROM
+		  withdrawal_record a,
+		  member_info b 
+		WHERE a.member_no = b.member_no 
+		AND withdrawal_record_id = #{record_id}
 	</select>
 </mapper>

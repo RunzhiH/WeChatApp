@@ -2183,6 +2183,76 @@ public class ShopInfoExample {
 			addCriterion("qr_code_url not between", value1, value2, "qrCodeUrl");
 			return (Criteria) this;
 		}
+
+		public Criteria andPostImageUrlIsNull() {
+			addCriterion("post_image_url is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlIsNotNull() {
+			addCriterion("post_image_url is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlEqualTo(String value) {
+			addCriterion("post_image_url =", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlNotEqualTo(String value) {
+			addCriterion("post_image_url <>", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlGreaterThan(String value) {
+			addCriterion("post_image_url >", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlGreaterThanOrEqualTo(String value) {
+			addCriterion("post_image_url >=", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlLessThan(String value) {
+			addCriterion("post_image_url <", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlLessThanOrEqualTo(String value) {
+			addCriterion("post_image_url <=", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlLike(String value) {
+			addCriterion("post_image_url like", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlNotLike(String value) {
+			addCriterion("post_image_url not like", value, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlIn(List<String> values) {
+			addCriterion("post_image_url in", values, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlNotIn(List<String> values) {
+			addCriterion("post_image_url not in", values, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlBetween(String value1, String value2) {
+			addCriterion("post_image_url between", value1, value2, "postImageUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostImageUrlNotBetween(String value1, String value2) {
+			addCriterion("post_image_url not between", value1, value2, "postImageUrl");
+			return (Criteria) this;
+		}
 	}
 
 	/**

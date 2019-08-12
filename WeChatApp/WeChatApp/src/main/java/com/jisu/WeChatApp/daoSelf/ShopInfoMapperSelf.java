@@ -97,4 +97,6 @@ public interface ShopInfoMapperSelf {
 
 	public List<Map<String, String>> getFreeServerShopList(Map<String, String> map);
 
+	public List<Map<String, String>> getShopListByOperatorMemberNo(String member_no);
+
 }

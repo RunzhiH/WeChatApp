@@ -25,6 +25,8 @@
     <result column="server_condition" jdbcType="VARCHAR" property="serverCondition" />
     <result column="shop_server_id" jdbcType="VARCHAR" property="shopServerId" />
     <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="exper_idea" jdbcType="VARCHAR" property="experIdea" />
+    <result column="exper_price" jdbcType="DECIMAL" property="experPrice" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -100,7 +102,7 @@
     experience_id, title, create_time, member_no, text_url, experience_photo, praise_points, 
     experience_desc, order_id, server_class_id_1, server_class_id_2, server_class_id_3, 
     server_class_id_4, server_class_id_5, server_before_photo, server_after_photo, server_condition, 
-    shop_server_id, server_name
+    shop_server_id, server_name, exper_idea, exper_price
   </sql>
   <select id="selectByExample" parameterType="com.jisu.WeChatApp.pojo.ExperienceInfoExample" resultMap="BaseResultMap">
     <!--
@@ -159,14 +161,16 @@
       server_class_id_1, server_class_id_2, server_class_id_3, 
       server_class_id_4, server_class_id_5, server_before_photo, 
       server_after_photo, server_condition, shop_server_id, 
-      server_name)
+      server_name, exper_idea, exper_price
+      )
     values (#{experienceId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{memberNo,jdbcType=VARCHAR}, #{textUrl,jdbcType=VARCHAR}, #{experiencePhoto,jdbcType=VARCHAR}, 
       #{praisePoints,jdbcType=INTEGER}, #{experienceDesc,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
       #{serverClassId1,jdbcType=VARCHAR}, #{serverClassId2,jdbcType=VARCHAR}, #{serverClassId3,jdbcType=VARCHAR}, 
       #{serverClassId4,jdbcType=VARCHAR}, #{serverClassId5,jdbcType=VARCHAR}, #{serverBeforePhoto,jdbcType=VARCHAR}, 
       #{serverAfterPhoto,jdbcType=VARCHAR}, #{serverCondition,jdbcType=VARCHAR}, #{shopServerId,jdbcType=VARCHAR}, 
-      #{serverName,jdbcType=VARCHAR})
+      #{serverName,jdbcType=VARCHAR}, #{experIdea,jdbcType=VARCHAR}, #{experPrice,jdbcType=DECIMAL}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jisu.WeChatApp.pojo.ExperienceInfo">
     <!--
@@ -232,6 +236,12 @@
       <if test="serverName != null">
         server_name,
       </if>
+      <if test="experIdea != null">
+        exper_idea,
+      </if>
+      <if test="experPrice != null">
+        exper_price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="experienceId != null">
@@ -290,6 +300,12 @@
       </if>
       <if test="serverName != null">
         #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="experIdea != null">
+        #{experIdea,jdbcType=VARCHAR},
+      </if>
+      <if test="experPrice != null">
+        #{experPrice,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -367,6 +383,12 @@
       <if test="record.serverName != null">
         server_name = #{record.serverName,jdbcType=VARCHAR},
       </if>
+      <if test="record.experIdea != null">
+        exper_idea = #{record.experIdea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.experPrice != null">
+        exper_price = #{record.experPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -396,7 +418,9 @@
       server_after_photo = #{record.serverAfterPhoto,jdbcType=VARCHAR},
       server_condition = #{record.serverCondition,jdbcType=VARCHAR},
       shop_server_id = #{record.shopServerId,jdbcType=VARCHAR},
-      server_name = #{record.serverName,jdbcType=VARCHAR}
+      server_name = #{record.serverName,jdbcType=VARCHAR},
+      exper_idea = #{record.experIdea,jdbcType=VARCHAR},
+      exper_price = #{record.experPrice,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -462,6 +486,12 @@
       <if test="serverName != null">
         server_name = #{serverName,jdbcType=VARCHAR},
       </if>
+      <if test="experIdea != null">
+        exper_idea = #{experIdea,jdbcType=VARCHAR},
+      </if>
+      <if test="experPrice != null">
+        exper_price = #{experPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     where experience_id = #{experienceId,jdbcType=VARCHAR}
   </update>
@@ -488,7 +518,9 @@
       server_after_photo = #{serverAfterPhoto,jdbcType=VARCHAR},
       server_condition = #{serverCondition,jdbcType=VARCHAR},
       shop_server_id = #{shopServerId,jdbcType=VARCHAR},
-      server_name = #{serverName,jdbcType=VARCHAR}
+      server_name = #{serverName,jdbcType=VARCHAR},
+      exper_idea = #{experIdea,jdbcType=VARCHAR},
+      exper_price = #{experPrice,jdbcType=DECIMAL}
     where experience_id = #{experienceId,jdbcType=VARCHAR}
   </update>
 </mapper>

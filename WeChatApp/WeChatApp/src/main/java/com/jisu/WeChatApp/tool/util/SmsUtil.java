@@ -99,7 +99,7 @@ public class SmsUtil {
 		request.setAction("SendSms");
 		request.putQueryParameter("PhoneNumbers", mobile);
 		request.putQueryParameter("SignName", "大手艺服务平台");
-		request.putQueryParameter("TemplateCode", "SMS_166778602");
+		request.putQueryParameter("TemplateCode", sendMsgContext.get("template_code"));
 		request.putQueryParameter("TemplateParam", sendMsgJSONObject.toString());
 		CommonResponse response = null;
 		try {
@@ -116,23 +116,23 @@ public class SmsUtil {
 		return response;
 	}
 
-	public static void main(String[] args) throws ClientException, InterruptedException {
-
-		// 发短信
-		Map<String, String> sendMsgContext = new HashMap<String, String>();
-		sendMsgContext.put("phone", "15958243735");
-		sendMsgContext.put("order_code", "124323252454");
-		sendMsgContext.put("server_address", "黄庆苗楼A111");
-		sendMsgContext.put("appointment_time_start", "6月12日");
-		sendMsgContext.put("server_name", "水雾眉");
-		CommonResponse response = sendSmsRemind(sendMsgContext);
-		System.out.println("短信接口返回的数据----------------");
-		System.out.println("DATA=" + response.getData() + ",response=" + response.toString());
-//		System.out.println("Message=" + response.getMessage());
-//		System.out.println("RequestId=" + response.getRequestId());
-//		System.out.println("BizId=" + response.getBizId());
-		// System.out.println(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_UPPER,
-		// 6, null));
-
-	}
+//	public static void main(String[] args) throws ClientException, InterruptedException {
+//
+//		// 发短信
+//		Map<String, String> sendMsgContext = new HashMap<String, String>();
+//		sendMsgContext.put("phone", "15958243735");
+//		sendMsgContext.put("order_code", "124323252454");
+//		sendMsgContext.put("server_address", "黄庆苗楼A111");
+//		sendMsgContext.put("appointment_time_start", "6月12日");
+//		sendMsgContext.put("server_name", "水雾眉");
+//		CommonResponse response = sendSmsRemind(sendMsgContext);
+//		System.out.println("短信接口返回的数据----------------");
+//		System.out.println("DATA=" + response.getData() + ",response=" + response.toString());
+////		System.out.println("Message=" + response.getMessage());
+////		System.out.println("RequestId=" + response.getRequestId());
+////		System.out.println("BizId=" + response.getBizId());
+//		// System.out.println(DynamicCodeUtil.generateCode(DynamicCodeUtil.TYPE_NUM_UPPER,
+//		// 6, null));
+//
+//	}
 }

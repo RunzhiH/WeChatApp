@@ -36,7 +36,7 @@ public interface ServerService {
 
 	public List<Map<String, String>> getFreeServerMemberList(String shop_server_id, String address_x, String address_y);
 
-	public List<Map<String, Object>> getAppointmentServerTimeList(String member_no);
+	public List<Map<String, Object>> getAppointmentServerTimeList(String member_no, String shop_id);
 
 	public List<Map<String, String>> getAllServerMemberList();
 
@@ -45,6 +45,12 @@ public interface ServerService {
 	public void updateServerMember(ServerMemberVO serverMemebr);
 
 	public void addServerMember(ServerMemberVO serverMemebr);
-	
+
 	public String delServerMember(String member_no);
+
+	int saveMemberRestTime(String member_no, String rest_time_list_str);
+
+	List<Map<String, String>> getRestTimeList(String member_no);
+
+	List<Map<String, String>> getServerMemberListRank(Map<String, String> condition);
 }

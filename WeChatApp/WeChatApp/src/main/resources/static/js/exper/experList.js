@@ -162,9 +162,15 @@ function update(id, type) {
 				$("input[name='title']").val(data.title);
 				$("input[name='experiencePhoto']").val(data.experiencePhoto);
 				$("#experiencePhoto").attr("src", data.experiencePhoto);
+				$("input[name='serverName']").val(data.serverName);
+				$("input[name='memberNo']").val(data.memberNo);
+				$("input[name='experPrice']").val(data.experPrice);
 				$("input[name='serverBeforePhoto']").val(data.serverBeforePhoto);
 				$("#serverBeforePhoto").attr("src", data.serverBeforePhoto);
 				$("input[name='serverAfterPhoto']").val(data.serverAfterPhoto);
+				$("select[name='shopServerId']").val(data.shopServerId);
+				$("select[name='serverClassId1']").val(data.serverClassId1);
+				$("input[name='experIdea']").val(data.experIdea);
 				if (data.serverAfterPhoto) {
 					var image_list = data.serverAfterPhoto.split(",");
 					for (var i = 0; i < image_list.length; i++) {
@@ -174,22 +180,22 @@ function update(id, type) {
 						}
 					}
 				}
-
+				
 				$("textarea[name='experienceDesc']").val(data.experienceDesc);
 				layer.open({
 					type : 1,
-					title : "更新轮播图",
+					title : "更新体验详情",
 					fixed : false,
 					resize : false,
 					shadeClose : true,
-					area : [ '500px', '580px' ],
+					area : [ '700px', '580px' ],
 					content : $('#updateExper'),
 					end : function() {
 						location.reload();
 					}
 				});
 			} else {
-				layer.alert("获取轮播图数据出错，请您稍后再试");
+				layer.alert("获取体验详情数据出错，请您稍后再试");
 			}
 		});
 

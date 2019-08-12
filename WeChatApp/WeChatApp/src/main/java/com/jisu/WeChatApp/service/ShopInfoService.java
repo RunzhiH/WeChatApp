@@ -3,8 +3,8 @@ package com.jisu.WeChatApp.service;
 import java.util.List;
 import java.util.Map;
 
+import com.jisu.WeChatApp.pojo.ShopClass;
 import com.jisu.WeChatApp.pojo.ShopInfo;
-import com.jisu.WeChatApp.pojo.ShopPraiseHistory;
 
 public interface ShopInfoService {
 	/**
@@ -62,7 +62,7 @@ public interface ShopInfoService {
 	 * @param shi_code
 	 * @return
 	 */
-	public Map<String, String> getShopInfoRank(String shop_id, String shi_code,String member_no);
+	public Map<String, String> getShopInfoRank(String shop_id, String shi_code, String member_no);
 
 	/**
 	 * 根据会员号获取商家点赞历史纪录
@@ -106,18 +106,31 @@ public interface ShopInfoService {
 	 */
 	public List<Map<String, String>> getMyLatelyShopList(String member_no);
 
-	
 	public List<Map<String, String>> getRecommendShopList(String shop_server_id);
-	
-	public List<ShopInfo> getAllShopList();
-	
+
+	public List<ShopInfo> getAllShopList(Map<String, String> condition);
+
 	public Map<String, Object> getshopInfoByMemberNo(String member_no);
-	
+
 	public Map<String, String> getShopInfoByShopIdAndClassId(String shop_id, String server_class_id);
-	
+
 	public List<Map<String, String>> getFreeServerShopList(String server_class_id);
-	
+
 	public void shopProhibitOrder(String shop_id);
-	
+
 	public String updateShopInfo(ShopInfo shopInfo);
+
+	String delShop(String id);
+
+	List<ShopClass> getAllShopClassList();
+
+	void updateShopClass(ShopClass shopClass);
+
+	void addShopClass(ShopClass shopClass);
+
+	String delShopClass(String id);
+
+	String agreeShop(String id);
+
+	List<Map<String, String>> getShopListByoperatorMemberNo(String member_no);
 }

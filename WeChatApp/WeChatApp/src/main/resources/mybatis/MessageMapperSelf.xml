@@ -6,6 +6,8 @@
 		  a.order_id,
 		  a.order_code,
 		  a.create_time,
+		  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %H:%i:%s') create_time_str,
+		  DATE_FORMAT(a.appointment_time_start,'%Y年%m月%d日 %H:%i:%s') appointment_time_start_str,
 		  a.order_price,
 		  a.pay_price,
 		  a.order_desc,
@@ -62,6 +64,7 @@
 		  a.server_address,
 		  a.server_name,
 		  a.appointment_time_start,
+		  DATE_FORMAT(a.appointment_time_start,'%Y年%m月%d日 %H:%i:%s') appointment_time_start_str,
 		  a.appointment_time_end,
 		  a.order_phone,
 		  a.order_nickname,
@@ -71,35 +74,22 @@
 		  b.shop_name,
 		  d.temp_no,
 		  d.wx_template_id,
+		  d.template_code,
 		  e.message_body,
 		  e.message_url,
 		  e.message_title,
-		  e.send_message_type,
-		  f.form_id
+		  e.send_message_type
 		FROM
 		  order_info a,
 		  shop_info b,
 		  member_info c,
 		  message_temp_info d,
-		  send_message_info e,
-		  (SELECT 
-		    h.* 
-		  FROM
-		    order_info a,
-		    member_info b,
-		    form_info h 
-		  WHERE a.order_id = '${order_id}'
-		    AND a.member_no = b.member_no 
-		    AND b.openid = h.open_id 
-		    AND h.is_use = 0 
-		  ORDER BY h.create_time 
-		  LIMIT 1) f 
+		  send_message_info e
 		WHERE a.order_id = '${order_id}' 
 		  AND a.shop_id = b.shop_id 
 		  AND c.member_no = b.member_no 
 		  AND e.send_message_type = '${message_type}' 
 		  AND d.message_temp_id = e.message_temp_id 
-		  AND c.openid = f.open_id 
 	</select>
 	<select id="getOrderInfoWithMessageInfoAndServerMemberInfo" parameterType="String" resultType="Map">
 		SELECT 
@@ -114,7 +104,7 @@
 		  a.appointment_time_start,
 		  DATE_FORMAT(
 		    a.appointment_time_start,
-		    '%Y-%m-%d %h:%i:%s'
+		    '%Y-%m-%d %H:%i:%s'
 		  ) appointment_time_start_str,
 		  a.appointment_time_end,
 		  a.order_phone,
@@ -124,6 +114,7 @@
 		  b.phone,
 		  c.temp_no,
 		  c.wx_template_id,
+		  c.template_code,
 		  d.message_body,
 		  d.message_url,
 		  d.message_title,
@@ -150,6 +141,8 @@
 		  a.server_name,
 		  a.appointment_time_start,
 		  a.appointment_time_end,
+		  DATE_FORMAT(a.create_time,'%Y年%m月%d日 %H:%i:%s') create_time_str,
+		  DATE_FORMAT(a.appointment_time_start,'%Y年%m月%d日 %H:%i:%s') appointment_time_start_str,
 		  a.order_phone,
 		  a.order_nickname,
 		  b.nickname,

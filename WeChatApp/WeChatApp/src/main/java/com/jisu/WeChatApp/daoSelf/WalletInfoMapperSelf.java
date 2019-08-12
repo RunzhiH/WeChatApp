@@ -30,4 +30,12 @@ public interface WalletInfoMapperSelf {
 	 * @return
 	 */
 	public Map<String, String> getMemberTotalIncome(Map<String, String> member_no_map);
+
+	public Map<String, String> getWalletInfo(String member_no);
+
+	public int reduceRmbForDrawal(Map<String, String> map);
+
+	public List<Map<String, String>> getWithDrawalList(Map<String, String> condition);
+
+	public Map<String, String> getWithDrawalRecordWithMemberInfo(String record_id);
 }
